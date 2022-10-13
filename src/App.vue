@@ -1,20 +1,7 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <nav class="font-bold text-slate-700 dark:text-slate-300">
+        <router-link to="/">Start</router-link> |
+        <router-link to="/about">Om</router-link>
+    </nav>
+    <router-view/>
 </template>
-
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style>
-body, html {
-    @apply bg-slate-50
-}
-</style>
