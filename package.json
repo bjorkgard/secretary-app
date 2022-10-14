@@ -8,10 +8,9 @@
     "email": "nathanael@bjorkgard.se"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
+    "electron:build": "vue-cli-service electron:build --mac --win --linux --publish never",
+    "electron:publish": "vue-cli-service electron:build --mac --win --linux --publish always",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
@@ -100,6 +99,10 @@
     "url": "https://github.com/bjorkgard/secretary-app/issues"
   },
   "homepage": "https://github.com/bjorkgard/secretary-app",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/bjorkgard/secretary-app.git"
+  },
   "overrides": {
     "vue-cli-plugin-electron-builder": {
       "electron-builder": "^23.0.3"
