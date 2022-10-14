@@ -116,3 +116,7 @@ autoUpdater.on('update-available', () => {
 autoUpdater.on('update-downloaded', () => {
     win.webContents.send('update_downloaded');
 });
+
+autoUpdater.on('error', (error) => {
+    console.error(error)
+})
