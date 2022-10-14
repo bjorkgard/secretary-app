@@ -6,6 +6,9 @@ import { createProtocol }                        from 'vue-cli-plugin-electron-b
 import installExtension, { VUEJS3_DEVTOOLS }     from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
+autoUpdater.logger                       = require("electron-log")
+autoUpdater.logger.transports.file.level = "info"
+
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
@@ -90,6 +93,26 @@ if (isDevelopment) {
   }
 }
 
-ipcMain.on('app_version', (event) => {
-    event.sender.send('app_version', {version: app.getVersion()})
+app.whenReady().then(() => {
+    ipcMain.on('restart_app', () => {
+        console.log('in restaring')
+        autoUpdater.quitAndInstall();
+    });
+
+    ipcMain.on('app_version', (event) => {
+        console.log('app_version', app.getVersion());
+        event.sender.send('app_version', {version: app.getVersion()})
+    })
 })
+
+
+
+
+
+autoUpdater.on('update-available', () => {
+    win.webContents.send('update_available');
+});
+
+autoUpdater.on('update-downloaded', () => {
+    win.webContents.send('update_downloaded');
+});
