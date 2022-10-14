@@ -16,7 +16,7 @@
                                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                                     <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">En uppdatering är tillgänglig!</DialogTitle>
                                     <div class="mt-2">
-                                        <p class="text-sm text-gray-500">Klicka på Starta om för att påbörja uppdateringen av applikationen. Det tar någon minut innan du kan fortsätta.</p>
+                                        <p class="text-sm text-gray-500">En ny version av applikationen har laddats ner. Klicka på Starta om för att installera uppdateringen.</p>
                                     </div>
                                 </div>
                             </div>
@@ -51,13 +51,9 @@ const closeModal = () => {
 }
 
 const restartApp = () => {
-    console.info('Restarting')
+    console.log('Restarting')
     ipcRenderer.send('restart_app');
 }
-
-ipcRenderer.on('update_available', () => {
-  ipcRenderer.removeAllListeners('update_available');
-});
 
 ipcRenderer.on('update_downloaded', () => {
   ipcRenderer.removeAllListeners('update_downloaded');

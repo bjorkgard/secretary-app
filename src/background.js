@@ -1,9 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
-import { autoUpdater }                           from "electron-updater"
-import { createProtocol }                        from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS }     from 'electron-devtools-installer'
+import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
+import { autoUpdater }                                   from "electron-updater"
+import { createProtocol }                                from 'vue-cli-plugin-electron-builder/lib'
+import installExtension, { VUEJS3_DEVTOOLS }             from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 autoUpdater.logger                       = require("electron-log")
@@ -28,7 +28,7 @@ async function createWindow() {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration  : process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation : !process.env.ELECTRON_NODE_INTEGRATION
+      contextIsolation : !process.env.ELECTRON_NODE_INTEGRATION,
     }
   })
 
@@ -94,29 +94,28 @@ if (isDevelopment) {
 }
 
 app.whenReady().then(() => {
-    ipcMain.on('restart_app', () => {
-        console.log('in restaring')
-        autoUpdater.quitAndInstall();
-    });
-
     ipcMain.on('app_version', (event) => {
-        console.log('app_version', app.getVersion());
         event.sender.send('app_version', {version: app.getVersion()})
     })
 })
 
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+    //win.webContents.send('update_downloaded');
+    const dialogOpts = {
+        type    : 'info',
+        buttons : ['Restart', 'Later'],
+        title   : 'Application Update',
+        message : process.platform === 'win32' ? releaseNotes : releaseName,
+        detail  :
+          'A new version has been downloaded. Restart the application to apply the updates.',
+      }
 
-
-
-
-autoUpdater.on('update-available', () => {
-    win.webContents.send('update_available');
-});
-
-autoUpdater.on('update-downloaded', () => {
-    win.webContents.send('update_downloaded');
+      dialog.showMessageBox(dialogOpts).then((returnValue) => {
+        if (returnValue.response === 0) autoUpdater.quitAndInstall()
+      })
 });
 
 autoUpdater.on('error', (error) => {
+    console.error('There was a problem updating the application')
     console.error(error)
 })
