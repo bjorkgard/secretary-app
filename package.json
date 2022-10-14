@@ -1,6 +1,6 @@
 {
   "name": "secretary",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "An application for the secretary of the congregation",
   "author": {
@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build --mac --win --linux --publish never",
-    "electron:publish": "vue-cli-service electron:build --mac --win --linux --publish always",
+    "electron:publish": "vue-cli-service electron:build --mac --publish always",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
