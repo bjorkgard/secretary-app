@@ -103,11 +103,11 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     //win.webContents.send('update_downloaded');
     const dialogOpts = {
         type    : 'info',
-        buttons : ['Restart', 'Later'],
-        title   : 'Application Update',
+        buttons : ['Starta om', 'Vänta'],
+        title   : 'Programuppdatering',
         message : process.platform === 'win32' ? releaseNotes : releaseName,
         detail  :
-          'A new version has been downloaded. Restart the application to apply the updates.',
+          'En ny version har laddats ner. Starta om programmet för att installera uppdateringarna.',
       }
 
       dialog.showMessageBox(dialogOpts).then((returnValue) => {
