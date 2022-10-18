@@ -2,8 +2,12 @@
 
 import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
 import { autoUpdater }                                   from "electron-updater"
+import windowStateKeeper                                 from 'electron-window-state'
 import { createProtocol }                                from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS }             from 'electron-devtools-installer'
+
+import { setupMenus } from './menus.js';
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 autoUpdater.logger                       = require("electron-log")
@@ -19,11 +23,17 @@ protocol.registerSchemesAsPrivileged([
 let win
 
 async function createWindow() {
+    let mainWindowState = windowStateKeeper({
+        defaultWidth  : 1400,
+        defaultHeight : 768
+      });
+
   // Create the browser window.
   win = new BrowserWindow({
-    width          : 1400,
-    height         : 900,
-    center         : true,
+    width          : mainWindowState.width,
+    height         : mainWindowState.height,
+    x              : mainWindowState.x,
+    y              : mainWindowState.y,
     webPreferences : {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
@@ -31,6 +41,11 @@ async function createWindow() {
       contextIsolation : !process.env.ELECTRON_NODE_INTEGRATION,
     }
   })
+
+  // Let us register listeners on the window, so we can update the state
+  // automatically (the listeners will be removed when the window is closed)
+  // and restore the maximized or full screen state
+  mainWindowState.manage(win);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -76,7 +91,10 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+
+  setupMenus(app, win);
 })
+
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
