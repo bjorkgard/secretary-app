@@ -4,12 +4,12 @@
             <router-view/>
         </main>
         <footer class="min-w-full">
-            <div class="mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row border-t border-slate-200 bg-slate-50">
-                <div class="text-center text-sm text-slate-500 sm:text-left">
+            <div class="mx-auto px-2 pt-1 pb-2 flex flex-col sm:flex-row border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-700">
+                <div class="text-center text-sm text-slate-500 sm:text-left dark:text-slate-400">
                     {{version}}
                 </div>
                 <div class="sm:grow"></div>
-                <div class="text-center text-sm text-slate-500 sm:text-right">
+                <div class="text-center text-sm text-slate-500 sm:text-right dark:text-slate-400">
                     ©{{ new Date().getFullYear() }} Secretary - All rights reserved.
                 </div>
             </div>

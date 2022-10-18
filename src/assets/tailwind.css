@@ -1,9 +1,17 @@
 @tailwind base;
-
 @tailwind components;
-
 @tailwind utilities;
 
 body, html {
     @apply bg-slate-100 dark:bg-slate-700
+}
+
+html {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont;
+    font-size: 14px;
+}
+
+*, a, button {
+    cursor: default;
+    user-select: none;
 }
