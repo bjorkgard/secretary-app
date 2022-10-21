@@ -1,17 +1,17 @@
 <template>
-  <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h1 class="text-3xl font-bold leading-tight text-center">
+      Secretary - Startsida
+    </h1>
+    <pre>
+        {{ settings }}
+    </pre>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+<script setup>
+import { useSettingsStore } from '@/stores'
 
-export default {
-  name       : 'HomeView',
-  components : {
-    HelloWorld
-  }
-}
+const settings = useSettingsStore()
+
 </script>

@@ -17,6 +17,11 @@ const routes = [
         component : () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue')
     },
     {
+        path      : '/settings',
+        name      : 'settings',
+        component : () => import(/* webpackChunkName: "about" */ '../views/SettingsView.vue')
+    },
+    {
         path      : '/about',
         name      : 'about',
         component : () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
@@ -25,7 +30,18 @@ const routes = [
 
 const router = createRouter({
     history: process.env.IS_ELECTRON ? createWebHashHistory() : createWebHistory(),
-    routes
+    routes,
+    scrollBehavior(to) {
+        if (to && to.hash) {
+            return {
+                selector : to.hash,
+                offset   : { x: 0, y: 80 }, // avoid blocking the view when having fixed components
+                behavior : 'smooth'
+            }
+        }
+
+        return { x: 0, y: 0, behavior: 'smooth' }
+    },
 })
 
 export default router

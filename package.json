@@ -1,6 +1,6 @@
 {
   "name": "secretary",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "private": true,
   "description": "An application for the secretary of the congregation",
   "author": {
@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build --mac --win --linux --publish never",
-    "electron:publish": "vue-cli-service electron:build -- --mac --publish always",
+    "electron:publish": "vue-cli-service electron:build --mac --publish always",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps"
@@ -19,12 +19,20 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.3",
     "@heroicons/vue": "^2.0.12",
+    "ajv": "^8.11.0",
+    "ajv-formats": "^2.1.1",
     "autoprefixer": "^10",
     "core-js": "^3.8.3",
     "electron-log": "^4.4.8",
     "electron-updater": "^5.3.0",
+    "electron-window-state": "^5.0.3",
+    "nedb-promises": "^6.2.1",
+    "pinia": "^2.0.23",
+    "pinia-plugin-persistedstate": "^2.3.0",
     "postcss": "^8",
+    "register-service-worker": "^1.7.2",
     "tailwindcss": "^3",
+    "uuid": "^9.0.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
   },
@@ -40,61 +48,13 @@
     "@vue/cli-service": "~5.0.0",
     "electron": "^13.0.0",
     "electron-devtools-installer": "^3.1.0",
+    "electron-notarize": "^1.2.1",
     "eslint": "^7.32.0",
     "eslint-plugin-align-assignments": "^1.1.2",
     "eslint-plugin-align-import": "^1.0.0",
     "eslint-plugin-vue": "^8.7.1",
     "vue-cli-plugin-electron-builder": "~2.1.1",
     "vue-cli-plugin-tailwind": "~3.0.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "plugins": [
-      "align-assignments",
-      "align-import"
-    ],
-    "parserOptions": {
-      "sourceType": "module",
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {
-      "vue/multi-word-component-names": "off",
-      "no-multi-spaces": [
-        "error",
-        {
-          "exceptions": {
-            "AssignmentExpression": true,
-            "ImportDeclaration": true,
-            "VariableDeclarator": true
-          }
-        }
-      ],
-      "align-import/align-import": "error",
-      "key-spacing": [
-        "error",
-        {
-          "mode": "minimum",
-          "align": {
-            "beforeColon": true,
-            "afterColon": true,
-            "on": "colon"
-          }
-        }
-      ],
-      "align-assignments/align-assignments": [
-        2,
-        {
-          "requiresOnly": false
-        }
-      ]
-    }
   },
   "browserslist": [
     "> 1%",

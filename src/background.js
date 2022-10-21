@@ -2,11 +2,17 @@
 
 import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
 import { autoUpdater }                                   from "electron-updater"
+import windowStateKeeper                                 from 'electron-window-state'
 import { createProtocol }                                from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS }             from 'electron-devtools-installer'
+import log                                               from 'electron-log'
+
+import { setupMenus } from './menus'
+import { enableIPC }  from './ipcMains'
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-autoUpdater.logger                       = require("electron-log")
+autoUpdater.logger                       = log
 autoUpdater.logger.transports.file.level = "info"
 
 // Scheme must be registered before the app is ready
@@ -19,18 +25,36 @@ protocol.registerSchemesAsPrivileged([
 let win
 
 async function createWindow() {
+    let mainWindowState = windowStateKeeper({
+        defaultWidth  : 1400,
+        defaultHeight : 768
+    });
+
   // Create the browser window.
   win = new BrowserWindow({
-    width          : 1400,
-    height         : 900,
-    center         : true,
-    webPreferences : {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration  : process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation : !process.env.ELECTRON_NODE_INTEGRATION,
+    width                : mainWindowState.width,
+    height               : mainWindowState.height,
+    x                    : mainWindowState.x,
+    y                    : mainWindowState.y,
+    titleBarStyle        : 'hidden',
+    titleBarOverlay      : true,
+    trafficLightPosition : {
+        x : 20,
+        y : 20,
+    },
+    webPreferences: {
+        // Use pluginOptions.nodeIntegration, leave this alone
+        // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+        nodeIntegrationInWorker : process.env.ELECTRON_NODE_INTEGRATION,
+        nodeIntegration         : true,
+        contextIsolation        : false,
     }
-  })
+})
+
+  // Let us register listeners on the window, so we can update the state
+  // automatically (the listeners will be removed when the window is closed)
+  // and restore the maximized or full screen state
+  mainWindowState.manage(win);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -76,6 +100,8 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+  enableIPC()
+  setupMenus(app, win);
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -97,10 +123,15 @@ app.whenReady().then(() => {
     ipcMain.on('app_version', (event) => {
         event.sender.send('app_version', {version: app.getVersion()})
     })
+
+    ipcMain.on ("window-focus", (event, boolFocus) => {
+        const webContents = event.sender
+        if (webContents.backgroundThrottling && !isDevelopment)
+            webContents.send ("window-focus-throttling", boolFocus)
+    })
 })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    //win.webContents.send('update_downloaded');
     const dialogOpts = {
         type    : 'info',
         buttons : ['Starta om', 'Vänta'],
