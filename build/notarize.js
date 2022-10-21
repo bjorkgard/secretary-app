@@ -10,9 +10,7 @@ exports.default = async function notarizing(context) {
     let appId     = 'se.bjorkgard.secretary'
     const appName = context.packager.appInfo.productFilename
 
-    console.log(`Notarizing ${appId}`)
-    console.log(process.env.APPLEID)
-    console.log(process.env.APPLEIDPASS)
+    console.log(`Notarizing ${appId} for ${appOutDir}/${appName}.app`)
 
     return await notarize({
       appBundleId     : appId,
