@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
 
 export const useSettingsStore = defineStore('settings', {
     state: () => ({
@@ -17,3 +17,7 @@ export const useSettingsStore = defineStore('settings', {
         storage: sessionStorage,
     }
 })
+
+if (import.meta.hot) {
+    import.meta.hot.accept(acceptHMRUpdate(useSettingsStore, import.meta.hot))
+}
