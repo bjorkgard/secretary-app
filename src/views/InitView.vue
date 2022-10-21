@@ -1,12 +1,18 @@
 <template>
-    <div class="min-h-full grid">
-        <div v-if="!showRegistration" class="justify-self-center text-slate-900 dark:text-slate-300">
-            <h1 class="text-3xl font-bold leading-tight text-center">Välkommen till Secretary</h1>
-            <p class="animate-pulse text-center">Laddar in data</p>
-            <p>{{settings}}</p>
-        </div>
-        <Registration v-show="showRegistration" />
+  <div class="min-h-full grid">
+    <div
+      v-if="!showRegistration"
+      class="justify-self-center text-slate-900 dark:text-slate-300"
+    >
+      <h1 class="text-3xl font-bold leading-tight text-center">
+        Välkommen till Secretary
+      </h1>
+      <p class="animate-pulse text-center">
+        Laddar in data
+      </p>
     </div>
+    <Registration v-show="showRegistration" />
+  </div>
 </template>
 
 <script setup>
@@ -20,7 +26,7 @@ const settingsStore    = useSettingsStore()
 const showRegistration = ref(false)
 const settings         = ref(null)
 
-const getSettings = async () => {
+const initializeData = async () => {
     settings.value = await ipcRenderer.invoke('getSettings')
 
     if (settings.value) {
@@ -35,6 +41,6 @@ const getSettings = async () => {
     }
 }
 
-onMounted(() => getSettings());
+onMounted(() => initializeData());
 
 </script>

@@ -1,8 +1,10 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold leading-tight text-center">Secretary - Startsida</h1>
+    <h1 class="text-3xl font-bold leading-tight text-center">
+      Secretary - Startsida
+    </h1>
     <pre>
-        {{settings}}
+        {{ settings }}
     </pre>
   </div>
 </template>
