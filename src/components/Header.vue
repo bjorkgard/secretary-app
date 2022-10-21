@@ -1,0 +1,74 @@
+<template>
+    <Disclosure as="nav" class="bg-white shadow dark:bg-slate-800" v-slot="{ open }">
+        <div class="mx-auto px-2 sm:px-4 lg:px-8">
+            <div class="flex h-16 justify-between">
+                <div class="flex px-2 lg:px-0">
+                    <div class="flex flex-shrink-0 items-center">
+                        <img class="block h-8 w-auto lg:hidden" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
+                        <img class="hidden h-8 w-auto lg:block" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
+                    </div>
+                    <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
+                        <!-- Current: "border-sky-500 text-slate-900", Default: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700" -->
+                        <router-link to="/home" class="inline-flex items-center border-b-2 border-sky-500 px-1 pt-1 text-sm font-medium text-slate-900 dark:bg-slate-900 dark:text-white">Startsida</router-link>
+                        <router-link to="/settings" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white">Inställningar</router-link>
+                        <router-link to="/about" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white">Om Secretary</router-link>
+                    </div>
+                </div>
+                <div class="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
+                    <div class="w-full max-w-lg lg:max-w-xs">
+                        <div class="relative">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <MagnifyingGlassIcon class="h-5 w-5 text-slate-400" aria-hidden="true" />
+                            </div>
+                            <input id="search" name="search" class="block w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-slate-500 focus:border-sky-500 focus:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm dark:border-transparent dark:bg-slate-700 dark:text-slate-300 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white" placeholder="Sök" type="search" />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center lg:hidden">
+                    <!-- Mobile menu button -->
+                    <DisclosureButton class="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white dark:focus:ring-white dark:focus:ring-offset-slate-800">
+                        <span class="sr-only">Open main menu</span>
+                        <Bars3Icon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
+                        <XMarkIcon v-else class="block h-6 w-6" aria-hidden="true" />
+                    </DisclosureButton>
+                </div>
+                <div class="hidden lg:ml-4 lg:flex lg:items-center">
+                    <button type="button" class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white dark:focus:ring-white dark:focus:ring-offset-slate-800">
+                        <span class="sr-only">View notifications</span>
+                        <BellIcon class="h-6 w-6" aria-hidden="true" />
+                    </button>
+
+                    <button @click="abortApplication" type="button" class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white dark:focus:ring-white dark:focus:ring-offset-slate-800">
+                        <span class="sr-only">Avsluta</span>
+                        <ArrowRightOnRectangleIcon class="h-6 w-6" aria-hidden="true" />
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <DisclosurePanel class="lg:hidden">
+            <div class="space-y-1 pt-2 pb-3">
+                <!-- Current: "bg-sky-50 border-sky-500 text-sky-700", Default: "border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800" -->
+                <DisclosureButton as="span" @click="changeRoute('home')" class="block border-l-4 border-sky-500 bg-sky-50 py-2 pl-3 pr-4 text-base font-medium text-sky-700 dark:bg-slate-900 dark:text-white">Startsida</DisclosureButton>
+                <DisclosureButton as="span" @click="changeRoute('settings')" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white">Inställningar</DisclosureButton>
+                <DisclosureButton as="span"  @click="changeRoute('about')" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white">Om Secretary</DisclosureButton>
+            </div>
+        </DisclosurePanel>
+    </Disclosure>
+</template>
+
+<script setup>
+import { ipcRenderer }                                               from 'electron'
+import { Disclosure, DisclosureButton, DisclosurePanel }             from '@headlessui/vue'
+import { MagnifyingGlassIcon }                                       from '@heroicons/vue/20/solid'
+import { Bars3Icon, BellIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
+import router                                                        from '@/router';
+
+const changeRoute = (routeName) => {
+    router.push({name: routeName})
+}
+
+const abortApplication = () => {
+    ipcRenderer.invoke('quit')
+}
+</script>
