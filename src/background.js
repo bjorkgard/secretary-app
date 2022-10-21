@@ -32,11 +32,17 @@ async function createWindow() {
 
   // Create the browser window.
   win = new BrowserWindow({
-    width          : mainWindowState.width,
-    height         : mainWindowState.height,
-    x              : mainWindowState.x,
-    y              : mainWindowState.y,
-    webPreferences : {
+    width                : mainWindowState.width,
+    height               : mainWindowState.height,
+    x                    : mainWindowState.x,
+    y                    : mainWindowState.y,
+    titleBarStyle        : 'hidden',
+    titleBarOverlay      : true,
+    trafficLightPosition : {
+        x : 20,
+        y : 20,
+    },
+    webPreferences: {
         // Use pluginOptions.nodeIntegration, leave this alone
         // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
         nodeIntegrationInWorker : process.env.ELECTRON_NODE_INTEGRATION,
@@ -98,7 +104,6 @@ app.on('ready', async () => {
   setupMenus(app, win);
 })
 
-
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
   if (process.platform === 'win32') {
@@ -117,6 +122,12 @@ if (isDevelopment) {
 app.whenReady().then(() => {
     ipcMain.on('app_version', (event) => {
         event.sender.send('app_version', {version: app.getVersion()})
+    })
+
+    ipcMain.on ("window-focus", (event, boolFocus) => {
+        const webContents = event.sender
+        if (webContents.backgroundThrottling && !isDevelopment)
+            webContents.send ("window-focus-throttling", boolFocus)
     })
 })
 

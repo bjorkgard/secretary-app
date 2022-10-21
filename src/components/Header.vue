@@ -4,22 +4,10 @@
     as="nav"
     class="bg-white shadow dark:bg-slate-800"
   >
-    <div class="mx-auto px-2 sm:px-4 lg:px-8">
-      <div class="flex h-16 justify-between">
+    <div class="mx-auto pl-16 pr-4">
+      <div class="flex h-14 justify-between">
         <div class="flex px-2 lg:px-0">
-          <div class="flex flex-shrink-0 items-center">
-            <img
-              class="block h-8 w-auto lg:hidden"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            >
-            <img
-              class="hidden h-8 w-auto lg:block"
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              alt="Your Company"
-            >
-          </div>
-          <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
+          <div class="hidden lg:ml-6 lg:flex lg:space-x-6">
             <!-- Current: "border-sky-500 text-slate-900", Default: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700" -->
             <router-link
               to="/home"
@@ -53,7 +41,7 @@
               <input
                 id="search"
                 name="search"
-                class="block w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-slate-500 focus:border-sky-500 focus:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm dark:border-transparent dark:bg-slate-700 dark:text-slate-300 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white"
+                class="block w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-slate-500 focus:border-sky-500 focus:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm dark:border-transparent dark:bg-slate-700 dark:text-slate-300 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white no-drag"
                 placeholder="Sök"
                 type="search"
               >
