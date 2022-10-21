@@ -10,5 +10,8 @@ export const useSettingsStore = defineStore('settings', {
             this.congregation = settings.congregation
             this.user         = settings.user
         }
+    },
+    persist: {
+        storage: sessionStorage,
     }
 })
