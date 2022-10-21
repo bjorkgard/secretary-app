@@ -1,8 +1,13 @@
-import { ipcMain }     from 'electron'
-import SettingsService from '@/services/settingsService'
+import { app, ipcMain } from 'electron'
+import SettingsService  from '@/services/settingsService'
 
 export const enableIPC = () => {
     const settingsService = new SettingsService()
+
+    /** Main features ***/
+    ipcMain.handle('quit', async() => {
+        app.quit()
+    })
 
     /*** Settings store ***/
     ipcMain.handle('getSettings', async () => {

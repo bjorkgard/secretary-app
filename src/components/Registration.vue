@@ -54,7 +54,7 @@
             </div>
 
             <div class="flex justify-end">
-                <button type="button" class="rounded-md border border-slate-300 bg-white py-2 px-4 text-sm font-medium text-slate-700 shadow-sm ring-offset-slate-100 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:ring-offset-slate-700">Avsluta</button>
+                <button @click="abortApplication" type="button" class="rounded-md border border-slate-300 bg-white py-2 px-4 text-sm font-medium text-slate-700 shadow-sm ring-offset-slate-100 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:ring-offset-slate-700">Avsluta</button>
                 <button type="submit" class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-slate-100 shadow-sm ring-offset-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:ring-offset-slate-700">Spara</button>
             </div>
         </form>
@@ -96,5 +96,9 @@ const validateForm = async () => {
    settingsStore.set(settingsModel)
 
     router.push({name: 'home'})
+}
+
+const abortApplication = () => {
+    ipcRenderer.invoke('quit')
 }
 </script>
