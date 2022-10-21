@@ -6,60 +6,89 @@ export function setupMenus(app,mainWindow){
 
     const help = {
         label   : 'Hjälp',
-        submenu : [{
-            label: 'Dokumentation',
-            click() {
-                shell.openExternal('https://github.com/bjorkgard/secretary-app');
-            }
-        },
-        {
-            label: 'View Repository',
-            click() {
-                shell.openExternal('https://github.com/bjorkgard/secretary-app');
-            }
-        },
-        {
-            label: 'Search Issues',
-            click() {
-                shell.openExternal('https://github.com/bjorkgard/secretary-app/issues');
-            }
-        }]
+        submenu : [
+            {
+                type: 'separator'
+            },
+            {
+                label: 'Dokumentation',
+                click() {
+                    shell.openExternal('https://github.com/bjorkgard/secretary-app/wiki');
+                }
+            },
+            {
+                label: 'Rapportera fel / förslag',
+                click() {
+                    shell.openExternal('https://github.com/bjorkgard/secretary-app/issues/new/choose');
+                }
+            },
+            {
+                label: 'Aktuella problem',
+                click() {
+                    shell.openExternal('https://github.com/bjorkgard/secretary-app/issues');
+                }
+            },
+        ]
     }
 
     if (process.platform === 'darwin') {
         template = [
             {
-                label   : 'Edit',
-                submenu : [{
-                    type: 'separator'
-                }, {
-                    label       : 'Cut',
-                    accelerator : 'Command+X',
-                    selector    : 'cut:'
-                }, {
-                    label       : 'Copy',
-                    accelerator : 'Command+C',
-                    selector    : 'copy:'
-                }, {
-                    label       : 'Paste',
-                    accelerator : 'Command+V',
-                    selector    : 'paste:'
-                }, {
-                    label       : 'Select All',
-                    accelerator : 'Command+A',
-                    selector    : 'selectAll:'
-                }]
-            },
-            {
-                label   : 'Visa',
-                submenu : (process.env.NODE_ENV === 'development') ? [
+                label   : 'Arkiv',
+                submenu : [
                     {
-                        label       : 'Reload',
-                        accelerator : 'Command+R',
+                        label: 'Om Secretary',
                         click() {
-                            mainWindow.restart();
+                            //todo: show page in application
+                            shell.openExternal('https://github.com/bjorkgard/secretary-app');
                         }
                     },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        label       : 'Göm Secretary',
+                        accelerator : 'Command+H',
+                        click       : () => { app.hide(); }
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        label       : 'Avsluta',
+                        accelerator : 'Command+Q',
+                        click       : () => { app.quit(); }
+                    },
+                ]
+            },
+            {
+                label   : 'Redigera',
+                submenu : [
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        label       : 'Klipp ut',
+                        accelerator : 'Command+X',
+                        selector    : 'cut:'
+                    }, {
+                        label       : 'Kopiera',
+                        accelerator : 'Command+C',
+                        selector    : 'copy:'
+                    }, {
+                        label       : 'Klistra in',
+                        accelerator : 'Command+V',
+                        selector    : 'paste:'
+                    }, {
+                        label       : 'Markera allt',
+                        accelerator : 'Command+A',
+                        selector    : 'selectAll:'
+                    }
+                ]
+            },
+            {
+                label   : 'Fönster',
+                submenu : (process.env.NODE_ENV === 'development') ? [
                     {
                         label       : 'Toggle Full Screen',
                         accelerator : 'Ctrl+Command+F',
@@ -68,10 +97,25 @@ export function setupMenus(app,mainWindow){
                         }
                     },
                     {
+                        label       : 'Minimize',
+                        accelerator : 'Command+M',
+                        selector    : 'performMiniaturize:'
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
                         label       : 'Toggle Developer Tools',
                         accelerator : 'Alt+Command+I',
                         click() {
                             mainWindow.toggleDevTools();
+                        }
+                    },
+                    {
+                        label       : 'Clear database',
+                        accelerator : 'Ctrl+Command+D',
+                        click() {
+                            console.log('delete db')
                         }
                     }
                 ] : [
@@ -83,33 +127,11 @@ export function setupMenus(app,mainWindow){
                         }
                     },
                     {
-                        type: 'separator'
+                        label       : 'Minimize',
+                        accelerator : 'Command+M',
+                        selector    : 'performMiniaturize:'
                     },
-                    {
-                        label       : 'Toggle Developer Tools',
-                        accelerator : 'Alt+Command+I',
-                        click() {
-                            mainWindow.toggleDevTools();
-                        }
-                    }
                 ]
-            },
-            {
-                label   : 'Window',
-                submenu : [{
-                    label       : 'Minimize',
-                    accelerator : 'Command+M',
-                    selector    : 'performMiniaturize:'
-                }, {
-                    label       : 'Close',
-                    accelerator : 'Command+W',
-                    selector    : 'performClose:'
-                }, {
-                    type: 'separator'
-                }, {
-                    label    : 'Bring All to Front',
-                    selector : 'arrangeInFront:'
-                }]
             }, help]
 
             menu = Menu.buildFromTemplate(template)

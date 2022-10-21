@@ -14,14 +14,12 @@
                 </div>
             </div>
         </footer>
-        <UpdateModal />
     </div>
 </template>
 
 <script setup>
 import { ref }         from 'vue'
 import { ipcRenderer } from 'electron'
-import UpdateModal     from '@/components/UpdateModal.vue'
 
 const version = ref(null)
 

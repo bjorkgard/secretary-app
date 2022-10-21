@@ -5,12 +5,14 @@ import { autoUpdater }                                   from "electron-updater"
 import windowStateKeeper                                 from 'electron-window-state'
 import { createProtocol }                                from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS }             from 'electron-devtools-installer'
+import log                                               from 'electron-log'
 
-import { setupMenus } from './menus.js';
+import { setupMenus } from './menus'
+import { enableIPC }  from './ipcMains'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
-autoUpdater.logger                       = require("electron-log")
+autoUpdater.logger                       = log
 autoUpdater.logger.transports.file.level = "info"
 
 // Scheme must be registered before the app is ready
@@ -26,7 +28,7 @@ async function createWindow() {
     let mainWindowState = windowStateKeeper({
         defaultWidth  : 1400,
         defaultHeight : 768
-      });
+    });
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -35,12 +37,13 @@ async function createWindow() {
     x              : mainWindowState.x,
     y              : mainWindowState.y,
     webPreferences : {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration  : process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation : !process.env.ELECTRON_NODE_INTEGRATION,
+        // Use pluginOptions.nodeIntegration, leave this alone
+        // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+        nodeIntegrationInWorker : process.env.ELECTRON_NODE_INTEGRATION,
+        nodeIntegration         : true,
+        contextIsolation        : false,
     }
-  })
+})
 
   // Let us register listeners on the window, so we can update the state
   // automatically (the listeners will be removed when the window is closed)
@@ -91,7 +94,7 @@ app.on('ready', async () => {
     }
   }
   createWindow()
-
+  enableIPC()
   setupMenus(app, win);
 })
 
@@ -118,7 +121,6 @@ app.whenReady().then(() => {
 })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    //win.webContents.send('update_downloaded');
     const dialogOpts = {
         type    : 'info',
         buttons : ['Starta om', 'Vänta'],
