@@ -7,6 +7,7 @@
     "name": "Nathanael Björkgård",
     "email": "nathanael@bjorkgard.se"
   },
+  "license": "MIT",
   "scripts": {
     "lint": "vue-cli-service lint",
     "electron:build": "vue-cli-service electron:build --mac --win --linux --publish never",
@@ -47,6 +48,7 @@
     "@vue/cli-plugin-router": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "electron": "^15.5.5",
+    "electron-builder": "^23.6.0",
     "electron-devtools-installer": "^3.1.0",
     "electron-notarize": "^1.2.1",
     "eslint": "^7.32.0",
@@ -70,9 +72,10 @@
     "type": "git",
     "url": "https://github.com/bjorkgard/secretary-app.git"
   },
+  "keywords": ["secretary", "jwapp"],
   "overrides": {
     "vue-cli-plugin-electron-builder": {
-      "electron-builder": "^23.0.3"
+      "electron-builder": "^23.6.0"
     }
   }
 }
