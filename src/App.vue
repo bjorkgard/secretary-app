@@ -1,6 +1,5 @@
 <template>
   <div class="w-screen h-screen flex flex-col drag">
-    <Blur v-if="!focus" />
     <header v-if="settings.identifier">
       <Header />
     </header>
@@ -29,7 +28,6 @@
 import { ref }              from 'vue'
 import { ipcRenderer }      from 'electron'
 import { useSettingsStore } from '@/stores'
-import Blur                 from '@/components/Blur.vue'
 import Header               from '@/components/Header.vue'
 
 const settings = useSettingsStore()
@@ -43,7 +41,7 @@ ipcRenderer.on('app_version', (event, arg) => {
     version.value = 'v ' + arg.version;
 });
 
-
+/*
 window.addEventListener ( "blur", ()=>{
     ipcRenderer.send ("window-focus", 0)
 })
@@ -56,4 +54,5 @@ window.addEventListener ( "focus", ()=>{
 ipcRenderer.on ("window-focus-throttling", (event, boolFocus) => {
     focus.value = boolFocus ? true : false
 })
+*/
 </script>

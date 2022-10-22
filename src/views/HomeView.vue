@@ -4,14 +4,17 @@
       Secretary - Startsida
     </h1>
     <pre>
-        {{ settings }}
+        {{ congegation }}
     </pre>
   </div>
 </template>
 
 <script setup>
+import { computed }         from 'vue'
 import { useSettingsStore } from '@/stores'
 
 const settings = useSettingsStore()
+
+const congegation = computed(() => settings.congregation)
 
 </script>
