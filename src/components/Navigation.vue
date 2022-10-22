@@ -8,25 +8,18 @@
       <div class="flex h-14 justify-between">
         <div class="flex px-2 lg:px-0">
           <div class="hidden lg:ml-6 lg:flex lg:space-x-6">
-            <!-- Current: "border-sky-500 text-slate-900", Default: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700" -->
-            <router-link
-              to="/home"
-              class="inline-flex items-center border-b-2 border-sky-500 px-1 pt-1 text-sm font-medium text-slate-900 dark:bg-slate-900 dark:text-white"
-            >
-              Startsida
-            </router-link>
-            <router-link
-              to="/settings"
-              class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
-            >
-              Inställningar
-            </router-link>
-            <router-link
-              to="/about"
-              class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
-            >
-              Om Secretary
-            </router-link>
+            <NavigationLink
+              name="Startsida"
+              to="home"
+            />
+            <NavigationLink
+              name="Inställningar"
+              to="settings"
+            />
+            <NavigationLink
+              name="Om Secretary"
+              to="about"
+            />
           </div>
         </div>
         <div class="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
@@ -93,28 +86,18 @@
 
     <DisclosurePanel class="lg:hidden">
       <div class="space-y-1 pt-2 pb-3">
-        <!-- Current: "bg-sky-50 border-sky-500 text-sky-700", Default: "border-transparent text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800" -->
-        <DisclosureButton
-          as="span"
-          class="block border-l-4 border-sky-500 bg-sky-50 py-2 pl-3 pr-4 text-base font-medium text-sky-700 dark:bg-slate-900 dark:text-white"
-          @click="changeRoute('home')"
-        >
-          Startsida
-        </DisclosureButton>
-        <DisclosureButton
-          as="span"
-          class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
-          @click="changeRoute('settings')"
-        >
-          Inställningar
-        </DisclosureButton>
-        <DisclosureButton
-          as="span"
-          class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-slate-600 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
-          @click="changeRoute('about')"
-        >
-          Om Secretary
-        </DisclosureButton>
+        <NavigationSmallLink
+          name="Startsida"
+          to="home"
+        />
+        <NavigationSmallLink
+          name="Inställningar"
+          to="settings"
+        />
+        <NavigationSmallLink
+          name="Om Secretary"
+          to="about"
+        />
       </div>
     </DisclosurePanel>
   </Disclosure>
@@ -125,11 +108,8 @@ import { ipcRenderer }                                               from 'elect
 import { Disclosure, DisclosureButton, DisclosurePanel }             from '@headlessui/vue'
 import { MagnifyingGlassIcon }                                       from '@heroicons/vue/20/solid'
 import { Bars3Icon, BellIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
-import router                                                        from '@/router';
-
-const changeRoute = (routeName) => {
-    router.push({name: routeName})
-}
+import NavigationLink                                                from './NavigationLink.vue'
+import NavigationSmallLink                                           from './NavigationSmallLink.vue'
 
 const abortApplication = () => {
     ipcRenderer.invoke('quit')
