@@ -6,7 +6,7 @@
   >
     <div class="mx-auto pl-16 pr-4">
       <div class="flex h-14 justify-between">
-        <div class="flex px-2 lg:px-0">
+        <div class="flex dark:items-center px-2 lg:px-0">
           <div class="hidden lg:ml-6 lg:flex lg:space-x-6">
             <NavigationLink
               name="Startsida"
@@ -85,7 +85,7 @@
     </div>
 
     <DisclosurePanel class="lg:hidden">
-      <div class="space-y-1 pt-2 pb-3">
+      <div class="space-y-1 pt-2 pb-3 dark:px-2">
         <NavigationSmallLink
           name="Startsida"
           to="home"
