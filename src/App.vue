@@ -1,7 +1,7 @@
 <template>
   <div class="w-screen h-screen flex flex-col drag">
     <header v-if="settings.identifier">
-      <Header />
+      <Navigation />
     </header>
     <main class="p-8 grow no-drag">
       <router-view v-slot="{Component}">
@@ -28,12 +28,10 @@
 import { ref }              from 'vue'
 import { ipcRenderer }      from 'electron'
 import { useSettingsStore } from '@/stores'
-import Header               from '@/components/Header.vue'
+import Navigation           from '@/components/Navigation.vue'
 
 const settings = useSettingsStore()
-
-const focus   = ref(true)
-const version = ref(null)
+const version  = ref(null)
 
 ipcRenderer.send('app_version')
 ipcRenderer.on('app_version', (event, arg) => {
