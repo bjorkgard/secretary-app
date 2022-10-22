@@ -41,7 +41,7 @@ ipcRenderer.on('app_version', (event, arg) => {
     version.value = 'v ' + arg.version;
 });
 
-
+/*
 window.addEventListener ( "blur", ()=>{
     ipcRenderer.send ("window-focus", 0)
 })
@@ -54,4 +54,5 @@ window.addEventListener ( "focus", ()=>{
 ipcRenderer.on ("window-focus-throttling", (event, boolFocus) => {
     focus.value = boolFocus ? true : false
 })
+*/
 </script>
