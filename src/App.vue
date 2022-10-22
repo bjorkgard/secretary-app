@@ -1,6 +1,5 @@
 <template>
   <div class="w-screen h-screen flex flex-col drag">
-    <Blur v-if="!focus" />
     <header v-if="settings.identifier">
       <Header />
     </header>
