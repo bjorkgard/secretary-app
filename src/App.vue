@@ -28,7 +28,6 @@
 import { ref }              from 'vue'
 import { ipcRenderer }      from 'electron'
 import { useSettingsStore } from '@/stores'
-import Blur                 from '@/components/Blur.vue'
 import Header               from '@/components/Header.vue'
 
 const settings = useSettingsStore()
