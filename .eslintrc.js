@@ -4,24 +4,33 @@ module.exports = {
         'plugin:vue/vue3-recommended',
     ],
     plugins: [
-        "align-assignments",
-        "align-import",
+        'align-assignments',
+        'align-import',
     ],
     rules: {
         'vue/multi-word-component-names' : 'off',
-        "no-multi-spaces"                : [ "error", { "exceptions": { "AssignmentExpression": true, "ImportDeclaration": true, "VariableDeclarator": true } } ],
-        "align-import/align-import"      : "error",
-        "key-spacing"                    : [ "error", {
-            "mode"  : "minimum",
-            "align" : {
-                "beforeColon" : true,
-                "afterColon"  : true,
-                "on"          : "colon"
-            }
+        'no-multi-spaces'                : [ 'error', {
+            'exceptions': {
+                'AssignmentExpression' : true,
+                'ImportDeclaration'    : true,
+                'VariableDeclarator'   : true,
+            },
         } ],
-        "align-assignments/align-assignments" : [ 2, { "requiresOnly": false } ],
-        "object-curly-spacing"                : [ "error", "always" ],
-        "array-bracket-spacing"               : [ "error", "always" ],
-        "computed-property-spacing"           : [ "error", "always" ],
+        'align-import/align-import' : 'error',
+        'key-spacing'               : [ 'error', {
+            'mode'  : 'minimum',
+            'align' : {
+                'beforeColon' : true,
+                'afterColon'  : true,
+                'on'          : 'colon',
+            },
+        } ],
+        'align-assignments/align-assignments' : [ 2, { 'requiresOnly': false } ],
+        'object-curly-spacing'                : [ 'error', 'always' ],
+        'array-bracket-spacing'               : [ 'error', 'always' ],
+        'computed-property-spacing'           : [ 'error', 'always' ],
+        'semi'                                : [ 'error', 'never' ],
+        'comma-dangle'                        : [ 'error', 'always-multiline' ],
+        'quotes'                              : [ 'error', 'single' ],
     },
 }

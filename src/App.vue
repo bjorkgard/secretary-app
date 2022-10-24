@@ -1,6 +1,6 @@
 <template>
   <div class="w-screen h-screen flex flex-col drag">
-    <header v-if="settings.identifier">
+    <header>
       <Navigation />
     </header>
     <main class="p-8 grow no-drag">
@@ -17,7 +17,7 @@
         </div>
         <div class="sm:grow" />
         <div class="text-center text-sm text-slate-500 sm:text-right dark:text-slate-400">
-          {{ version }}
+          {{ `${locale} | ${version}` }}
         </div>
       </div>
     </footer>
@@ -25,20 +25,53 @@
 </template>
 
 <script setup>
-import { ref }              from 'vue'
-import { ipcRenderer }      from 'electron'
-import { useSettingsStore } from '@/stores'
-import Navigation           from '@/components/Navigation.vue'
+import { ref }                                    from 'vue'
+import { ipcRenderer }                            from 'electron'
+import { defineRule, configure }                  from 'vee-validate'
+import { required, email }                        from '@vee-validate/rules'
+import { localize, loadLocaleFromURL, setLocale } from '@vee-validate/i18n'
+import Navigation                                 from '@/components/Navigation.vue'
 
-const settings = useSettingsStore()
-const version  = ref(null)
+// define vee rules
+defineRule('required', required)
+defineRule('email', email)
+defineRule('allowed_domain', (value) => {
+    if (!value || !value.length) {
+        return true
+    }
+    if(value.includes('jwpub.org')){
+        return 'E-postdomänen är inte tillåten'
+    }
+    return true
+})
 
-ipcRenderer.send('app_version')
-ipcRenderer.on('app_version', (event, arg) => {
-    ipcRenderer.removeAllListeners('app_version');
-    version.value = 'v ' + arg.version;
-});
+const version = ref(null)
+const locale  = ref(null)
 
+configure({
+    generateMessage: localize({
+        sv: {
+            names: {
+                congregationName   : 'Församlingsnamn',
+                congregationNumber : 'Församlingsnummer',
+                firstName          : 'Förnamn',
+                lastName           : 'Efternamn',
+                email              : 'E-postadress',
+            },
+        },
+    }),
+})
+
+
+ipcRenderer.invoke('version').then(value => {
+    version.value = value
+})
+ipcRenderer.invoke('locale').then(value => {
+    locale.value = value
+    loadLocaleFromURL(`https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/${value}.json`)
+
+    setLocale(value)
+})
 /*
 window.addEventListener ( "blur", ()=>{
     ipcRenderer.send ("window-focus", 0)

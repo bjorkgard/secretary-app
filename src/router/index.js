@@ -1,7 +1,7 @@
 import {
     createRouter,
     createWebHashHistory,
-    createWebHistory
+    createWebHistory,
 } from 'vue-router'
 import InitView from '../views/InitView.vue'
 
@@ -14,18 +14,18 @@ const routes = [
     {
         path      : '/home',
         name      : 'home',
-        component : () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue')
+        component : () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),
     },
     {
         path      : '/settings',
         name      : 'settings',
-        component : () => import(/* webpackChunkName: "about" */ '../views/SettingsView.vue')
+        component : () => import(/* webpackChunkName: "about" */ '../views/SettingsView.vue'),
     },
     {
         path      : '/about',
         name      : 'about',
-        component : () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-    }
+        component : () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    },
 ]
 
 const router = createRouter({
@@ -36,7 +36,7 @@ const router = createRouter({
             return {
                 selector : to.hash,
                 offset   : { x: 0, y: 80 }, // avoid blocking the view when having fixed components
-                behavior : 'smooth'
+                behavior : 'smooth',
             }
         }
 

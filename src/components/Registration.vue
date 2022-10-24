@@ -2,7 +2,6 @@
   <div
     id="registration"
     class="justify-self-center text-slate-900 dark:text-slate-300"
-    @submit.prevent="validateForm"
   >
     <h1 class="text-3xl font-bold leading-tight text-center">
       Välkommen till Secretary
@@ -13,8 +12,7 @@
 
     <form
       class="space-y-6 pt-6 max-w-4xl"
-      action="#"
-      method="POST"
+      @submit="onSubmit"
     >
       <div class="bg-white px-4 py-5 shadow sm:rounded-lg sm:p-6 dark:bg-slate-900 dark:border dark:border-slate-500">
         <div class="md:grid md:grid-cols-3 md:gap-6">
@@ -31,20 +29,16 @@
               <div class="col-span-6">
                 <Input
                   id="congregationName"
-                  v-model="form.congregation"
                   label="Församlingsnamn"
                   name="congregationName"
-                  :required="true"
                 />
               </div>
 
               <div class="col-span-6">
                 <Input
                   id="congregationNumber"
-                  v-model="form.congregationNumber"
                   label="Församlingsnummer"
                   name="congregationNumber"
-                  :required="true"
                 />
               </div>
             </div>
@@ -67,31 +61,25 @@
               <div class="col-span-6">
                 <Input
                   id="firstName"
-                  v-model="form.firstname"
                   label="Förnamn"
                   name="firstName"
-                  :required="true"
                 />
               </div>
 
               <div class="col-span-6">
                 <Input
                   id="lastName"
-                  v-model="form.lastname"
                   label="Efternamn"
                   name="lastName"
-                  :required="true"
                 />
               </div>
 
               <div class="col-span-6">
                 <Input
                   id="email"
-                  v-model="form.email"
                   label="E-postadress"
                   name="email"
                   type="email"
-                  :required="true"
                 />
               </div>
             </div>
@@ -109,7 +97,8 @@
         </button>
         <button
           type="submit"
-          class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-slate-100 shadow-sm ring-offset-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:ring-offset-slate-700"
+          class="ml-3 inline-flex justify-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-slate-100 shadow-sm ring-offset-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:ring-offset-slate-700 :disabled:opacity-75 :disabled:cursor-not-allowed"
+          :disabled="isSubmitting"
         >
           Spara
         </button>
@@ -119,42 +108,63 @@
 </template>
 
 <script setup>
-import { ipcRenderer }      from 'electron'
-import { ref }              from 'vue'
-import { v4 as uuidv4 }     from 'uuid'
-import router               from '@/router';
-import { useSettingsStore } from '@/stores'
-import Input                from '@/components/form/Input.vue'
+import { ipcRenderer, Notification } from 'electron'
+import { v4 as uuidv4 }              from 'uuid'
+import { useForm }                   from 'vee-validate'
+import router                        from '@/router'
+import { useSettingsStore }          from '@/stores'
+import Input                         from '@/components/form/Input.vue'
 
-const settingsStore = useSettingsStore()
-const form          = ref({
-    congregation       : null,
-    congregationNumber : null,
-    firstname          : null,
-    lastname           : null,
-    email              : null,
+const initialFormValues = {
+    congregationName   : '',
+    congregationNumber : '',
+    firstName          : '',
+    lastName           : '',
+    email              : '',
+}
+
+const validationSchema = {
+    congregationName   : 'required',
+    congregationNumber : 'required',
+    firstName          : 'required',
+    lastName           : 'required',
+    email              : 'required|email|allowed_domain',
+}
+
+const settingsStore                  = useSettingsStore()
+const { handleSubmit, isSubmitting } = useForm({
+  initialValues    : initialFormValues,
+  validationSchema : validationSchema,
 })
 
-const validateForm = async () => {
-    //todo: validate form
+
+
+function onInvalidSubmit({ values, errors, results }) {
+  //console.log(values) // current form values
+  //console.log(errors) // a map of field names and their first error message
+  //console.log(results) // a detailed map of field names and their validation results
+}
+
+const onSubmit = handleSubmit(async (values, { resetForm }) => {
     const settings = {
         identifier   : uuidv4(),
         congregation : {
-            name   : form.value.congregation,
-            number : form.value.congregationNumber,
+            name   : values.congregationName,
+            number : values.congregationNumber,
         },
         user: {
-            firstname : form.value.firstname,
-            lastname  : form.value.lastname,
-            email     : form.value.email,
-        }
+            firstname : values.firstName,
+            lastname  : values.lastName,
+            email     : values.email,
+        },
     }
 
-   const settingsModel = await ipcRenderer.invoke('storeSettings', JSON.parse(JSON.stringify(settings)))
-   settingsStore.set(settingsModel)
+    const settingsModel = await ipcRenderer.invoke('storeSettings', JSON.parse(JSON.stringify(settings)))
+    settingsStore.set(settingsModel)
 
+    resetForm()
     router.push({ name: 'home' })
-}
+}, onInvalidSubmit)
 
 const abortApplication = () => {
     ipcRenderer.invoke('quit')

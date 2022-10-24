@@ -1,7 +1,7 @@
 'use strict'
 
 import { app, protocol, BrowserWindow, ipcMain, dialog, Menu } from 'electron'
-import { autoUpdater }                                         from "electron-updater"
+import { autoUpdater }                                         from 'electron-updater'
 import windowStateKeeper                                       from 'electron-window-state'
 import { createProtocol }                                      from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS }                   from 'electron-devtools-installer'
@@ -19,11 +19,11 @@ import windowMenu from '@/menu/window_menu'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 autoUpdater.logger                       = log
-autoUpdater.logger.transports.file.level = "info"
+autoUpdater.logger.transports.file.level = 'info'
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
-  { scheme: 'app', privileges: { secure: true, standard: true } }
+  { scheme: 'app', privileges: { secure: true, standard: true } },
 ])
 
 const setApplicationMenu = () => {
@@ -32,7 +32,7 @@ const setApplicationMenu = () => {
         menus.splice(2,0,devMenu)
     }
 
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menus))
 }
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -42,8 +42,8 @@ let win
 async function createWindow() {
     let mainWindowState = windowStateKeeper({
         defaultWidth  : 1400,
-        defaultHeight : 768
-    });
+        defaultHeight : 768,
+    })
 
   // Create the browser window.
   win = new BrowserWindow({
@@ -63,13 +63,13 @@ async function createWindow() {
         nodeIntegrationInWorker : process.env.ELECTRON_NODE_INTEGRATION,
         nodeIntegration         : true,
         contextIsolation        : false,
-    }
+    },
 })
 
   // Let us register listeners on the window, so we can update the state
   // automatically (the listeners will be removed when the window is closed)
   // and restore the maximized or full screen state
-  mainWindowState.manage(win);
+  mainWindowState.manage(win)
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -137,14 +137,10 @@ if (isDevelopment) {
 }
 
 app.whenReady().then(() => {
-    ipcMain.on('app_version', (event) => {
-        event.sender.send('app_version', { version: app.getVersion() })
-    })
-
-    ipcMain.on ("window-focus", (event, boolFocus) => {
+    ipcMain.on ('window-focus', (event, boolFocus) => {
         const webContents = event.sender
         if (webContents.backgroundThrottling && !isDevelopment)
-            webContents.send ("window-focus-throttling", boolFocus)
+            webContents.send ('window-focus-throttling', boolFocus)
     })
 })
 
@@ -161,7 +157,7 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
       dialog.showMessageBox(dialogOpts).then((returnValue) => {
         if (returnValue.response === 0) autoUpdater.quitAndInstall()
       })
-});
+})
 
 autoUpdater.on('error', (error) => {
     console.error('There was a problem updating the application')

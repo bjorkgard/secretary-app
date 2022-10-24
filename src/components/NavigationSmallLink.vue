@@ -16,11 +16,11 @@
 import { computed }         from 'vue'
 import { useRoute }         from 'vue-router'
 import { DisclosureButton } from '@headlessui/vue'
-import router               from '@/router';
+import router               from '@/router'
 
 defineProps ({
     name : { type: String, required: true },
-    to   : { type: String, required: true }
+    to   : { type: String, required: true },
 })
 
 const currentRoute = computed(() => {
