@@ -16,7 +16,7 @@ import { useRoute } from 'vue-router'
 
 defineProps ({
     name : { type: String, required: true },
-    to   : { type: String, required: true }
+    to   : { type: String, required: true },
 })
 
 const currentRoute = computed(() => {

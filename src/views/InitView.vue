@@ -41,6 +41,6 @@ const initializeData = async () => {
     }
 }
 
-onMounted(() => initializeData());
+onMounted(() => initializeData())
 
 </script>

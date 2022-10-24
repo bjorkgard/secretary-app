@@ -9,6 +9,14 @@ export const enableIPC = () => {
         app.quit()
     })
 
+    ipcMain.handle('locale', async() => {
+        return app.getLocale()
+    })
+
+    ipcMain.handle('version', async() => {
+        return app.getVersion()
+    })
+
     /*** Settings store ***/
     ipcMain.handle('getSettings', async () => {
         return await settingsService.find()

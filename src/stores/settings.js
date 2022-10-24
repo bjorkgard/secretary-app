@@ -11,11 +11,11 @@ export const useSettingsStore = defineStore('settings', {
             this.identifier   = settings.identifier
             this.congregation = settings.congregation
             this.user         = settings.user
-        }
+        },
     },
     persist: {
         storage: sessionStorage,
-    }
+    },
 })
 
 if (import.meta.hot) {
