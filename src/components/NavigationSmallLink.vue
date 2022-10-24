@@ -19,8 +19,8 @@ import { DisclosureButton } from '@headlessui/vue'
 import router               from '@/router';
 
 defineProps ({
-    name : {type: String, required: true},
-    to   : {type: String, required: true}
+    name : { type: String, required: true },
+    to   : { type: String, required: true }
 })
 
 const currentRoute = computed(() => {
@@ -28,6 +28,6 @@ const currentRoute = computed(() => {
 })
 
 const changeRoute = (routeName) => {
-    router.push({name: routeName})
+    router.push({ name: routeName })
 }
 </script>

@@ -23,16 +23,16 @@ import { useModelWrapper } from '@/utils/modelWrapper'
 
 export default {
     props: {
-        label       : {type: String, required: true},
-        modelValue  : {type: [String,Number], default: ''},
-        required    : {type: Boolean, default: false},
-        type        : {type: String, default: 'text'},
-        placeholder : {type: String, default: ''},
-        name        : {type: String, required: true},
-        id          : {type: String, required: true},
+        label       : { type: String, required: true },
+        modelValue  : { type: [ String,Number ], default: '' },
+        required    : { type: Boolean, default: false },
+        type        : { type: String, default: 'text' },
+        placeholder : { type: String, default: '' },
+        name        : { type: String, required: true },
+        id          : { type: String, required: true },
     },
 
-    setup(props, {emit}) {
+    setup(props, { emit }) {
         return {
             value: useModelWrapper(props, emit, 'modelValue')
         }

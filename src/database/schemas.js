@@ -1,20 +1,20 @@
 const Congregation = {
     type       : 'object',
     properties : {
-        name   : {type: 'string'},
-        number : {type: 'string'},
+        name   : { type: 'string' },
+        number : { type: 'string' },
     },
-    required: ['name', 'number'],
+    required: [ 'name', 'number' ],
 }
 
 const User = {
     type       : 'object',
     properties : {
-        firstname : {type: 'string'},
-        lastname  : {type: 'string'},
-        email     : {type: 'string'},
+        firstname : { type: 'string' },
+        lastname  : { type: 'string' },
+        email     : { type: 'string' },
     },
-    required: ['firstname', 'lastname', 'email'],
+    required: [ 'firstname', 'lastname', 'email' ],
 }
 
 export const SettingsSchema = {
