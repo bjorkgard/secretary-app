@@ -1,14 +1,20 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain, dialog } from 'electron'
-import { autoUpdater }                                   from "electron-updater"
-import windowStateKeeper                                 from 'electron-window-state'
-import { createProtocol }                                from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS }             from 'electron-devtools-installer'
-import log                                               from 'electron-log'
+import { app, protocol, BrowserWindow, ipcMain, dialog, Menu } from 'electron'
+import { autoUpdater }                                         from "electron-updater"
+import windowStateKeeper                                       from 'electron-window-state'
+import { createProtocol }                                      from 'vue-cli-plugin-electron-builder/lib'
+import installExtension, { VUEJS3_DEVTOOLS }                   from 'electron-devtools-installer'
+import log                                                     from 'electron-log'
 
-import { setupMenus } from './menus'
-import { enableIPC }  from './ipcMains'
+import { enableIPC } from './ipcMains'
+
+// menus
+import appMenu    from '@/menu/app_menu'
+import devMenu    from '@/menu/dev_menu'
+import editMenu   from '@/menu/edit_menu'
+import helpMenu   from '@/menu/help_menu'
+import windowMenu from '@/menu/window_menu'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -19,6 +25,15 @@ autoUpdater.logger.transports.file.level = "info"
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+const setApplicationMenu = () => {
+    const menus = [ appMenu, editMenu, windowMenu, helpMenu ]
+    if (isDevelopment) {
+        menus.splice(2,0,devMenu)
+    }
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -91,17 +106,19 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS3_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
+    enableIPC()
+    setApplicationMenu()
+
+    if (isDevelopment && !process.env.IS_TEST) {
+        // Install Vue Devtools
+        try {
+            await installExtension(VUEJS3_DEVTOOLS)
+        } catch (e) {
+            console.error('Vue Devtools failed to install:', e.toString())
+        }
     }
-  }
-  createWindow()
-  enableIPC()
-  setupMenus(app, win);
+
+    createWindow()
 })
 
 // Exit cleanly on request from parent process in development mode.
@@ -121,7 +138,7 @@ if (isDevelopment) {
 
 app.whenReady().then(() => {
     ipcMain.on('app_version', (event) => {
-        event.sender.send('app_version', {version: app.getVersion()})
+        event.sender.send('app_version', { version: app.getVersion() })
     })
 
     ipcMain.on ("window-focus", (event, boolFocus) => {
@@ -134,7 +151,7 @@ app.whenReady().then(() => {
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
     const dialogOpts = {
         type    : 'info',
-        buttons : ['Starta om', 'Vänta'],
+        buttons : [ 'Starta om', 'Vänta' ],
         title   : 'Programuppdatering',
         message : process.platform === 'win32' ? releaseNotes : releaseName,
         detail  :
