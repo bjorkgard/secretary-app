@@ -153,7 +153,7 @@ const validateForm = async () => {
    const settingsModel = await ipcRenderer.invoke('storeSettings', JSON.parse(JSON.stringify(settings)))
    settingsStore.set(settingsModel)
 
-    router.push({name: 'home'})
+    router.push({ name: 'home' })
 }
 
 const abortApplication = () => {

@@ -76,7 +76,7 @@ export default class SettingsService {
         const settings = await settingsStore.find().sort({ createdAt: 1 }).limit(1)
 
         if (settings.length > 0){
-            return parseSettings(settings[0])
+            return parseSettings(settings[ 0 ])
         }
 
         return null

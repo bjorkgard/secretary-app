@@ -35,7 +35,7 @@ const initializeData = async () => {
         // TODO: If congregation is online. Retrive data from server
         // TODO: ...
         settingsStore.set(settings.value)
-        router.push({name: 'home'})
+        router.push({ name: 'home' })
     } else {
         showRegistration.value = true
     }
