@@ -7,7 +7,10 @@
     <div class="mx-auto pl-16 pr-4">
       <div class="flex h-14 justify-between">
         <div class="flex dark:items-center px-2 lg:px-0">
-          <div class="hidden lg:ml-6 lg:flex lg:space-x-6">
+          <div
+            v-if="settings.identifier"
+            class="hidden lg:ml-6 lg:flex lg:space-x-6"
+          >
             <NavigationLink
               name="Startsida"
               to="home"
@@ -22,7 +25,10 @@
             />
           </div>
         </div>
-        <div class="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
+        <div
+          v-if="settings.identifier"
+          class="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end"
+        >
           <div class="w-full max-w-lg lg:max-w-xs">
             <div class="relative">
               <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -41,7 +47,10 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center lg:hidden">
+        <div
+          v-if="settings.identifier"
+          class="flex items-center lg:hidden"
+        >
           <!-- Mobile menu button -->
           <DisclosureButton class="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white dark:focus:ring-white dark:focus:ring-offset-slate-800">
             <span class="sr-only">Open main menu</span>
@@ -110,6 +119,9 @@ import { MagnifyingGlassIcon }                                       from '@hero
 import { Bars3Icon, BellIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import NavigationLink                                                from './NavigationLink.vue'
 import NavigationSmallLink                                           from './NavigationSmallLink.vue'
+import { useSettingsStore }                                          from '@/stores'
+
+const settings = useSettingsStore()
 
 const abortApplication = () => {
     ipcRenderer.invoke('quit')
