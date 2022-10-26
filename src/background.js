@@ -10,11 +10,12 @@ import log                                                     from 'electron-lo
 import { enableIPC } from './ipcMains'
 
 // menus
-import appMenu    from '@/menu/app_menu'
-import devMenu    from '@/menu/dev_menu'
-import editMenu   from '@/menu/edit_menu'
-import helpMenu   from '@/menu/help_menu'
-import windowMenu from '@/menu/window_menu'
+import appMenu         from '@/menu/app_menu'
+import devMenu         from '@/menu/dev_menu'
+import editMenu        from '@/menu/edit_menu'
+import helpMenu        from '@/menu/help_menu'
+import maintenanceMenu from '@/menu/maintenance_menu'
+import windowMenu      from '@/menu/window_menu'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -27,7 +28,7 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 const setApplicationMenu = () => {
-    const menus = [ appMenu, editMenu, windowMenu, helpMenu ]
+    const menus = [ appMenu, editMenu, windowMenu, maintenanceMenu, helpMenu ]
     if (isDevelopment) {
         menus.splice(2,0,devMenu)
     }
