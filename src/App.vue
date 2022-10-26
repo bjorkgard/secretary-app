@@ -17,7 +17,7 @@
         </div>
         <div class="sm:grow" />
         <div class="text-center text-sm text-slate-500 sm:text-right dark:text-slate-400">
-          {{ `${locale} | ${version}` }}
+          {{ `${locale} | v${version}` }}
         </div>
       </div>
     </footer>
