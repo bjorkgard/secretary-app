@@ -1,17 +1,21 @@
+import { BrowserWindow } from 'electron'
+
 export default {
     label   : 'Fönster',
+    role    : 'window',
     submenu : [
         {
-            label       : 'Toggle Full Screen',
-            accelerator : process.platform === 'darwin' ? 'Ctrl+Command+F' : 'Alt+Enter',
-            click() {
-                mainWindow.setFullScreen(!mainWindow.isFullScreen());
-            }
-        },
-        {
-            label       : 'Minimize',
+            label       : 'Minimera',
             accelerator : 'CmdOrCtrl+M',
-            selector    : 'performMiniaturize:'
+            selector    : 'performMiniaturize:',
         },
-    ]
+        { label: 'Faktisk storlek', role: 'resetZoom' },
+        { label: 'Zooma in', role: 'zoomIn' },
+        { label: 'Zooma ut', role: 'zoomOut' },
+        { type: 'separator' },
+        {
+            label : 'Växla helskärmsläge',
+            role  : 'toggleFullScreen',
+        },
+    ],
 }
