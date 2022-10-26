@@ -108,12 +108,12 @@
 </template>
 
 <script setup>
-import { ipcRenderer, Notification } from 'electron'
-import { v4 as uuidv4 }              from 'uuid'
-import { useForm }                   from 'vee-validate'
-import router                        from '@/router'
-import { useSettingsStore }          from '@/stores'
-import Input                         from '@/components/form/Input.vue'
+import { ipcRenderer }      from 'electron'
+import { v4 as uuidv4 }     from 'uuid'
+import { useForm }          from 'vee-validate'
+import router               from '@/router'
+import { useSettingsStore } from '@/stores'
+import Input                from '@/components/form/Input.vue'
 
 const initialFormValues = {
     congregationName   : '',
