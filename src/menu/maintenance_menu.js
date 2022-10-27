@@ -12,7 +12,7 @@ export default {
         {
             label: 'Återskapa från backup',
             click() {
-                console.log('import')
+                ipcMain.emit('recover-backup', { function: 'recoverDatabases' })
             },
         },
         { type: 'separator' },
