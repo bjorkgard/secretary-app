@@ -61,7 +61,7 @@ export const enableIPC = () => {
     })
 
     ipcMain.on('recover-backup', () => {
-        const userDataPath = isDevelopment ? './db': (electron.app || electron.remote.app).getPath('userData') + '/db'
+        const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
 
         let options = {
             title       : 'Återställ från backup',
@@ -116,7 +116,7 @@ export const enableIPC = () => {
 
         const date         = new Date()
         const dateString   = date.toLocaleDateString()
-        const userDataPath = isDevelopment ? './db': (electron.app || electron.remote.app).getPath('userData') + '/db'
+        const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
 
         // generate backup file
         const backup = {
