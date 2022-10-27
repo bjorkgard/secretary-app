@@ -60,6 +60,54 @@ export const enableIPC = () => {
         eval(arg.function+'()')
     })
 
+    ipcMain.on('recover-backup', () => {
+        const userDataPath = isDevelopment ? './db': (electron.app || electron.remote.app).getPath('userData') + '/db'
+
+        let options = {
+            title       : 'Återställ från backup',
+            buttonLabel : 'Återställ',
+            filters     : [
+                { name: 'json', extensions: [ 'json' ] },
+            ],
+            properties: [ 'openFile' ],
+        }
+
+        dialog.showOpenDialog(null, options).then(result => {
+            fs.readFile(result.filePaths[ 0 ], (err, data) => {
+                if (!err) {
+                    let recoveryData = JSON.parse(data.toString())
+                    let backupFiles  = recoveryData.backup
+
+                    backupFiles.forEach(file => {
+                        const [ firstKey, ...rest ] = Object.keys(file)
+
+                        fs.writeFile(`${userDataPath}/${firstKey}`, file[ firstKey ], 'utf-8', (err, data) => {
+                            if (err){
+                                log.error(err)
+                            }
+                        })
+                    })
+
+                    const responseOptions = {
+                        type      : 'info',
+                        buttons   : [ 'OK' ],
+                        defaultId : 0,
+                        title     : 'Databasen är återställd',
+                        message   : 'Din databas är återställd!',
+                        detail    : 'Applikationen kommer nu att avslutas och när du startar den nästa gång kommer den nya databasen att läsas in.',
+                    }
+
+                    dialog.showMessageBox(null, responseOptions).then(() => {
+                        app.quit()
+                    })
+                }
+            })
+        })
+
+
+
+    })
+
     /**
      * Internal main functions
      */

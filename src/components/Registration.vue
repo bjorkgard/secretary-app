@@ -7,7 +7,7 @@
       Välkommen till Secretary
     </h1>
     <p class="text-center">
-      Första gången du startar applikationen behöver du fylla i lite data om församlingen.<br>Denna information sparas enbart på din lokala dator.
+      Första gången du startar applikationen behöver du fylla i lite data om församlingen.<br>Denna information sparas enbart på din lokala dator.<br>Om du vill återställa data från en backup-fil kan du göra det i menyn Underhåll och välja Återskapa från backup.
     </p>
 
     <form
