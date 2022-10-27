@@ -1,4 +1,4 @@
-import log from 'electron-log'
+import { ipcMain } from 'electron'
 
 export default {
     label   : 'Underhåll',
@@ -15,13 +15,11 @@ export default {
                 console.log('import')
             },
         },
-        {
-            type: 'separator',
-        },
+        { type: 'separator' },
         {
             label: 'Radera databas',
             click() {
-                log.info('delete DB')
+                ipcMain.emit('show-confirmation-dialog', { function: 'destroyDatabases' })
             },
         },
     ],

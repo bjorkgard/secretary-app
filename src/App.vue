@@ -72,17 +72,18 @@ ipcRenderer.invoke('locale').then(value => {
 
     setLocale(value)
 })
+
 /*
-window.addEventListener ( "blur", ()=>{
-    ipcRenderer.send ("window-focus", 0)
+window.addEventListener ( 'blur', ()=>{
+    ipcRenderer.send('window-focus', false)
 })
 
-window.addEventListener ( "focus", ()=>{
-    ipcRenderer.send ("window-focus", 1)
+window.addEventListener ( 'focus', ()=>{
+    ipcRenderer.send('window-focus', true)
 })
 
 // main tells us our previous blur/focus event happened with bgThrottling:
-ipcRenderer.on ("window-focus-throttling", (event, boolFocus) => {
+ipcRenderer.on("window-focus-throttling", (event, boolFocus) => {
     focus.value = boolFocus ? true : false
 })
 */

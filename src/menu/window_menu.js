@@ -13,9 +13,6 @@ export default {
         { label: 'Zooma in', role: 'zoomIn' },
         { label: 'Zooma ut', role: 'zoomOut' },
         { type: 'separator' },
-        {
-            label : 'Växla helskärmsläge',
-            role  : 'toggleFullScreen',
-        },
+        { label: 'Växla helskärmsläge', role: 'toggleFullScreen' },
     ],
 }

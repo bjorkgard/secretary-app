@@ -138,7 +138,7 @@ if (isDevelopment) {
 }
 
 app.whenReady().then(() => {
-    ipcMain.on ('window-focus', (event, boolFocus) => {
+    ipcMain.on('window-focus', (event, boolFocus) => {
         const webContents = event.sender
         if (webContents.backgroundThrottling && !isDevelopment)
             webContents.send ('window-focus-throttling', boolFocus)
@@ -161,6 +161,6 @@ autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
 })
 
 autoUpdater.on('error', (error) => {
-    console.error('There was a problem updating the application')
-    console.error(error)
+    log.error('There was a problem updating the application')
+    log.error(error)
 })
