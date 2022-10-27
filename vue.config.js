@@ -4,7 +4,8 @@ module.exports = defineConfig({
   transpileDependencies : true,
   pluginOptions         : {
     electronBuilder: {
-        nodeIntegration: true,
+        nodeIntegration : true,
+        externals       : [ 'fs-extra' ],
     },
   },
 })

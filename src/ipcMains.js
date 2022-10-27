@@ -1,11 +1,14 @@
 import { app, ipcMain, dialog } from 'electron'
+import fs                       from 'fs-extra'
+import log                      from 'electron-log'
 import SettingsService          from '@/services/settingsService'
 import MaintenenceService       from '@/services/maintenenceService'
-import log                      from 'electron-log'
+
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 export const enableIPC = () => {
-    const settingsService    = new SettingsService()
     const maintenenceService = new MaintenenceService()
+    const settingsService    = new SettingsService()
 
     /** Main features ***/
     ipcMain.handle('quit', async() => {
@@ -52,6 +55,57 @@ export const enableIPC = () => {
             }
         })
     })
+
+    ipcMain.on('generate-backup', (arg) => {
+        eval(arg.function+'()')
+    })
+
+    /**
+     * Internal main functions
+     */
+    const backupDatabases = () => {
+        log.info('Backup start', new Date())
+
+        const date         = new Date()
+        const dateString   = date.toLocaleDateString()
+        const userDataPath = isDevelopment ? './db': (electron.app || electron.remote.app).getPath('userData') + '/db'
+
+        // generate backup file
+        const backup = {
+            'date'   : date,
+            'backup' : [],
+        }
+
+        fs.readdir(userDataPath, (err, files) => {
+            if(err){ log.error(err) }
+
+            files.forEach(file => {
+                if(file === '.DS_Store') {return}
+
+                fs.readFile(`${userDataPath}/${file}`, 'utf-8', (err, data) => {
+                    if(err){ log.error(err) }
+
+                    let backupFile     = {
+                        [ file ]: data,
+                    }
+                    backup[ 'backup' ] = backup[ 'backup' ].concat(backupFile)
+                })
+                log.info(file, new Date())
+            })
+        })
+
+        let options = {
+            title       : 'Spara backup',
+            defaultPath : `secretary_backup_${dateString}.json`,
+            buttonLabel : 'Spara',
+        }
+
+        dialog.showSaveDialog(null, options).then(({ filePath }) => {
+            fs.writeFileSync(filePath, JSON.stringify(backup), 'utf-8')
+        })
+
+        log.info('Backup done', new Date())
+    }
 
     const destroyDatabases = () => {
         maintenenceService.drop()
