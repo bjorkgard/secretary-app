@@ -4,9 +4,9 @@ export default {
     label   : 'Underhåll',
     submenu : [
         {
-            label: 'Backup',
+            label: 'Skapa en backup',
             click() {
-                console.log('backup')
+                ipcMain.emit('generate-backup', { function: 'backupDatabases' })
             },
         },
         {
