@@ -81,4 +81,8 @@ export default class SettingsService {
 
         return null
     }
+
+    drop() {
+        settingsStore.drop({})
+    }
 }

@@ -17,7 +17,7 @@
         </div>
         <div class="sm:grow" />
         <div class="text-center text-sm text-slate-500 sm:text-right dark:text-slate-400">
-          {{ `${locale} | ${version}` }}
+          {{ `${locale} | v${version}` }}
         </div>
       </div>
     </footer>
@@ -72,17 +72,18 @@ ipcRenderer.invoke('locale').then(value => {
 
     setLocale(value)
 })
+
 /*
-window.addEventListener ( "blur", ()=>{
-    ipcRenderer.send ("window-focus", 0)
+window.addEventListener ( 'blur', ()=>{
+    ipcRenderer.send('window-focus', false)
 })
 
-window.addEventListener ( "focus", ()=>{
-    ipcRenderer.send ("window-focus", 1)
+window.addEventListener ( 'focus', ()=>{
+    ipcRenderer.send('window-focus', true)
 })
 
 // main tells us our previous blur/focus event happened with bgThrottling:
-ipcRenderer.on ("window-focus-throttling", (event, boolFocus) => {
+ipcRenderer.on("window-focus-throttling", (event, boolFocus) => {
     focus.value = boolFocus ? true : false
 })
 */

@@ -37,8 +37,6 @@ export default class BaseStore {
         return schemaValidator(data)
     }
 
-
-
     create(data) {
         const isValid = this.validate(data)
 
@@ -56,6 +54,10 @@ export default class BaseStore {
 
     findOneById(_id) {
         return this.databaseInstance.findOne({ _id })
+    }
+
+    drop() {
+        this.databaseInstance.dropDatabaseAsync()
     }
 
 }

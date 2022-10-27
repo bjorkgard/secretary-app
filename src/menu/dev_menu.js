@@ -1,28 +1,21 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow } from 'electron'
 
 export default {
-  label   : "Utvecklare",
+  label   : 'Utvecklare',
   submenu : [
     {
-      label       : "Ladda om",
-      accelerator : "CmdOrCtrl+R",
+      label       : 'Ladda om',
+      accelerator : 'CmdOrCtrl+R',
       click       : () => {
-        BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache();
-      }
+        BrowserWindow.getFocusedWindow().webContents.reloadIgnoringCache()
+      },
     },
     {
-        label       : 'Clear database',
-        accelerator : 'Ctrl+Command+D',
-        click() {
-            console.log('delete db')
-        }
-    },
-    {
-      label       : "Växla DevTools",
-      accelerator : "Alt+CmdOrCtrl+I",
+      label       : 'Växla DevTools',
+      accelerator : 'Alt+CmdOrCtrl+I',
       click       : () => {
-        BrowserWindow.getFocusedWindow().toggleDevTools();
-      }
-    }
-  ]
+        BrowserWindow.getFocusedWindow().toggleDevTools()
+      },
+    },
+  ],
 }
