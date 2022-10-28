@@ -7,9 +7,14 @@ import InitView from '../views/InitView.vue'
 
 const routes = [
     {
-      path      : '/',
-      name      : 'init',
-      component : InitView,
+        path      : '/about',
+        name      : 'about',
+        component : () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    },
+    {
+        path      : '/',
+        name      : 'init',
+        component : InitView,
     },
     {
         path      : '/home',
@@ -19,12 +24,7 @@ const routes = [
     {
         path      : '/settings',
         name      : 'settings',
-        component : () => import(/* webpackChunkName: "about" */ '../views/SettingsView.vue'),
-    },
-    {
-        path      : '/about',
-        name      : 'about',
-        component : () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+        component : () => import(/* webpackChunkName: "settings" */ '../views/SettingsView.vue'),
     },
 ]
 

@@ -85,4 +85,8 @@ export default class SettingsService {
     drop() {
         settingsStore.drop({})
     }
+
+    async stats() {
+        return await settingsStore.stats()
+    }
 }

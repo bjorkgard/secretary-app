@@ -24,6 +24,10 @@ export const enableIPC = () => {
     })
 
     /*** Settings store ***/
+    ipcMain.handle('statsSettings', async () => {
+        return await settingsService.stats()
+    })
+
     ipcMain.handle('getSettings', async () => {
         return await settingsService.find()
     })
