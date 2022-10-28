@@ -143,6 +143,29 @@ app.whenReady().then(() => {
         if (webContents.backgroundThrottling && !isDevelopment)
             webContents.send ('window-focus-throttling', boolFocus)
     })
+
+    ipcMain.on('about-window', (event, data) => {
+        const modalPath = isDevelopment ? `${process.env.WEBPACK_DEV_SERVER_URL}#/about` : 'app://./index.html#about'
+        let aboutWindow = new BrowserWindow({
+            height         : 620,
+            resizable      : false,
+            width          : 750,
+            title          : 'Om Secretary',
+            minimizable    : false,
+            fullscreenable : false,
+            alwaysOnTop    : true,
+            center         : true,
+            webPreferences : { webSecurity: false, nodeIntegration: true, contextIsolation: false },
+
+        })
+
+        aboutWindow.loadURL(modalPath)
+        if (isDevelopment) aboutWindow.webContents.openDevTools()
+
+        aboutWindow.on('closed', function() {
+            aboutWindow = null
+        })
+    })
 })
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
