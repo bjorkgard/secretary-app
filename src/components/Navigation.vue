@@ -19,10 +19,6 @@
               name="Inställningar"
               to="settings"
             />
-            <NavigationLink
-              name="Om Secretary"
-              to="about"
-            />
           </div>
         </div>
         <div
@@ -102,10 +98,6 @@
         <NavigationSmallLink
           name="Inställningar"
           to="settings"
-        />
-        <NavigationSmallLink
-          name="Om Secretary"
-          to="about"
         />
       </div>
     </DisclosurePanel>
