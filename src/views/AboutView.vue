@@ -1,13 +1,16 @@
 <template>
   <div>
     <div class="fixed inset-0 flex w-40 flex-col">
-      <div class="flex min-h-0 flex-1 flex-col border-r border-slate-200 bg-white">
+      <div class="flex min-h-0 flex-1 flex-col border-r border-slate-200 bg-slate-100 dark:bg-slate-800 dark:border-transparent">
         <div class="flex flex-1 flex-col overflow-y-auto pb-4">
-          <nav class="mt-5 flex-1 space-y-1 bg-white px-2">
+          <nav class="mt-5 flex-1 space-y-1 bg-slate-100 dark:bg-slate-800 px-2">
             <span
               v-for="item in navigation"
               :key="item.name"
-              :class="[item.target === selectedTarget.target ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']"
+              :class="[
+                item.target === selectedTarget.target ? 'bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-white' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white',
+                'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
+              ]"
               @click="selectTarget(item)"
             >
               <component
@@ -25,7 +28,7 @@
       <main class="flex-1">
         <div>
           <div class="mx-auto max-w-7xl px-2">
-            <h1 class="text-2xl font-semibold text-slate-900">
+            <h1 class="text-2xl font-semibold text-slate-500 dark:text-slate-400">
               {{ selectedTarget.name }}
             </h1>
           </div>
