@@ -15,10 +15,6 @@
               name="Startsida"
               to="home"
             />
-            <NavigationLink
-              name="Inställningar"
-              to="settings"
-            />
           </div>
         </div>
         <div
@@ -66,6 +62,18 @@
           <button
             type="button"
             class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+            title="Inställningar"
+          >
+            <span class="sr-only">View settings</span>
+            <CogIcon
+              class="h-6 w-6"
+              aria-hidden="true"
+            />
+          </button>
+          <button
+            type="button"
+            class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+            title="Notiser"
           >
             <span class="sr-only">View notifications</span>
             <BellIcon
@@ -77,6 +85,7 @@
           <button
             type="button"
             class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+            title="Avsluta"
             @click="abortApplication"
           >
             <span class="sr-only">Avsluta</span>
@@ -95,23 +104,19 @@
           name="Startsida"
           to="home"
         />
-        <NavigationSmallLink
-          name="Inställningar"
-          to="settings"
-        />
       </div>
     </DisclosurePanel>
   </Disclosure>
 </template>
 
 <script setup>
-import { ipcRenderer }                                               from 'electron'
-import { Disclosure, DisclosureButton, DisclosurePanel }             from '@headlessui/vue'
-import { MagnifyingGlassIcon }                                       from '@heroicons/vue/20/solid'
-import { Bars3Icon, BellIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
-import NavigationLink                                                from './NavigationLink.vue'
-import NavigationSmallLink                                           from './NavigationSmallLink.vue'
-import { useSettingsStore }                                          from '@/stores'
+import { ipcRenderer }                                                        from 'electron'
+import { Disclosure, DisclosureButton, DisclosurePanel }                      from '@headlessui/vue'
+import { MagnifyingGlassIcon }                                                from '@heroicons/vue/20/solid'
+import { Bars3Icon, BellIcon, CogIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
+import NavigationLink                                                         from './NavigationLink.vue'
+import NavigationSmallLink                                                    from './NavigationSmallLink.vue'
+import { useSettingsStore }                                                   from '@/stores'
 
 const settings = useSettingsStore()
 
