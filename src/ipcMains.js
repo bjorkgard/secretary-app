@@ -1,6 +1,7 @@
 import { app, ipcMain, dialog } from 'electron'
 import fs                       from 'fs-extra'
 import log                      from 'electron-log'
+import DatesService             from '@/services/datesService'
 import SettingsService          from '@/services/settingsService'
 import MaintenenceService       from '@/services/maintenenceService'
 
@@ -8,6 +9,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 
 export const enableIPC = () => {
     const maintenenceService = new MaintenenceService()
+    const datesService       = new DatesService()
     const settingsService    = new SettingsService()
 
     /** Main features ***/
@@ -21,6 +23,11 @@ export const enableIPC = () => {
 
     ipcMain.handle('version', async() => {
         return app.getVersion()
+    })
+
+    /*** Dates store */
+    ipcMain.handle('statsDates', async () => {
+        return await datesService.stats()
     })
 
     /*** Settings store ***/
@@ -121,6 +128,8 @@ export const enableIPC = () => {
         const date         = new Date()
         const dateString   = date.toLocaleDateString()
         const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
+
+        datesService.upsert('backup', date)
 
         // generate backup file
         const backup = {
