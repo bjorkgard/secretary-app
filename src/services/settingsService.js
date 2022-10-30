@@ -15,6 +15,9 @@ const parseSettingsModel = (data) => {
             lastname  : '',
             email     : '',
         },
+        settings: {
+            online: false,
+        },
     }
 
     settings.identifier          = data.identifier
@@ -23,6 +26,7 @@ const parseSettingsModel = (data) => {
     settings.user.firstname      = data.user.firstname
     settings.user.lastname       = data.user.lastname
     settings.user.email          = data.user.email
+    settings.settings.online     = data.settings ? data.settings.online : false
 
     return settings
 }
@@ -40,6 +44,9 @@ const parseSettings = (data) => {
             lastname  : '',
             email     : '',
         },
+        settings: {
+            online: false,
+        },
         createdAt : '',
         updatedAt : '',
     }
@@ -51,6 +58,7 @@ const parseSettings = (data) => {
     settingsModel.user.firstname      = data.user.firstname
     settingsModel.user.lastname       = data.user.lastname
     settingsModel.user.email          = data.user.email
+    settingsModel.settings.online     = data.settings.online ? data.settings.online : false
     settingsModel.createdAt           = data.createdAt.toISOString()
     settingsModel.updatedAt           = data.updatedAt.toISOString()
 
@@ -59,8 +67,7 @@ const parseSettings = (data) => {
 
 export default class SettingsService {
     async create(data) {
-        const settings = parseSettingsModel(data)
-
+        const settings    = parseSettingsModel(data)
         const newSettings = await settingsStore.create(settings)
 
         return parseSettings(newSettings)
