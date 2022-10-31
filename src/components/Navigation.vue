@@ -15,6 +15,10 @@
               name="Startsida"
               to="home"
             />
+            <NavigationLink
+              name="Förkunnare"
+              to="publishers"
+            />
           </div>
         </div>
         <div
@@ -103,6 +107,10 @@
         <NavigationSmallLink
           name="Startsida"
           to="home"
+        />
+        <NavigationSmallLink
+          name="Förkunnare"
+          to="publishers"
         />
       </div>
     </DisclosurePanel>
