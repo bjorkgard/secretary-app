@@ -15,6 +15,7 @@ import devMenu         from '@/menu/dev_menu'
 import editMenu        from '@/menu/edit_menu'
 import helpMenu        from '@/menu/help_menu'
 import maintenanceMenu from '@/menu/maintenance_menu'
+import publisherMenu   from '@/menu/publisher_menu'
 import windowMenu      from '@/menu/window_menu'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -28,9 +29,9 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 const setApplicationMenu = () => {
-    const menus = [ appMenu, editMenu, windowMenu, maintenanceMenu, helpMenu ]
+    const menus = [ appMenu, editMenu, publisherMenu, windowMenu, maintenanceMenu, helpMenu ]
     if (isDevelopment) {
-        menus.splice(2,0,devMenu)
+        menus.splice(3, 0, devMenu)
     }
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(menus))
