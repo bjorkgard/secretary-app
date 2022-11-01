@@ -27,6 +27,11 @@ const routes = [
         component : () => import(/* webpackChunkName: "home" */ '../views/PublisherView.vue'),
     },
     {
+        path      : '/publishers/add',
+        name      : 'publishers.add',
+        component : () => import(/* webpackChunkName: "home" */ '../views/PublisherFormView.vue'),
+    },
+    {
         path      : '/settings',
         name      : 'settings',
         component : () => import(/* webpackChunkName: "settings" */ '../views/SettingsView.vue'),
