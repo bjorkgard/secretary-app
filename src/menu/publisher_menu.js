@@ -11,7 +11,8 @@ export default {
             },
         },
         {
-            label: 'Lägg till',
+            label       : 'Lägg till',
+            accelerator : 'CmdOrCtrl+Alt+F',
             click() {
                 ipcMain.emit('add-publisher')
             },
