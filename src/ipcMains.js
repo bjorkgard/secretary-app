@@ -1,16 +1,22 @@
 import { app, ipcMain, dialog } from 'electron'
 import fs                       from 'fs-extra'
 import log                      from 'electron-log'
+import AddressService           from '@/services/addressService'
 import DatesService             from '@/services/datesService'
 import SettingsService          from '@/services/settingsService'
 import MaintenenceService       from '@/services/maintenenceService'
+import PublisherService         from '@/services/publisherService'
+import ServiceGroupService      from '@/services/serviceGroupService'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 export const enableIPC = () => {
-    const maintenenceService = new MaintenenceService()
-    const datesService       = new DatesService()
-    const settingsService    = new SettingsService()
+    const maintenenceService  = new MaintenenceService()
+    const addressService      = new AddressService()
+    const datesService        = new DatesService()
+    const settingsService     = new SettingsService()
+    const publisherService    = new PublisherService()
+    const serviceGroupService = new ServiceGroupService()
 
     /** Main features ***/
     ipcMain.handle('quit', async() => {
@@ -23,6 +29,33 @@ export const enableIPC = () => {
 
     ipcMain.handle('version', async() => {
         return app.getVersion()
+    })
+
+    /*** Address store */
+    ipcMain.handle('statsAddresses', async () => {
+        return await addressService.stats()
+    })
+
+    /*** ServiceGroup store */
+    ipcMain.handle('statsServiceGroups', async () => {
+        return await serviceGroupService.stats()
+    })
+
+    ipcMain.handle('getServiceGroups', async () => {
+        return await serviceGroupService.findAll()
+    })
+
+    /*** Publishers store */
+    ipcMain.handle('storePublisher', async (event, data) => {
+        return await publisherService.create(data)
+    })
+
+    ipcMain.handle('statsPublishers', async () => {
+        return await publisherService.stats()
+    })
+
+    ipcMain.handle('getContacts', async () => {
+        return await publisherService.contacts()
     })
 
     /*** Dates store */

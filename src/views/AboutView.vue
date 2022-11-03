@@ -26,18 +26,9 @@
     </div>
     <div class="flex flex-1 flex-col pl-40">
       <main class="flex-1">
-        <div>
-          <div class="mx-auto max-w-7xl px-2">
-            <h1 class="text-2xl font-semibold text-slate-500 dark:text-slate-400">
-              {{ selectedTarget.name }}
-            </h1>
-          </div>
-          <div class="mx-auto max-w-7xl px-2">
-            <div class="py-4">
-              <Secretary v-if="selectedTarget.target === 'about'" />
-              <Database v-if="selectedTarget.target === 'db'" />
-            </div>
-          </div>
+        <div class="mx-auto max-w-7xl">
+          <Secretary v-if="selectedTarget.target === 'about'" />
+          <Database v-if="selectedTarget.target === 'db'" />
         </div>
       </main>
     </div>
