@@ -145,7 +145,7 @@ app.whenReady().then(() => {
             webContents.send ('window-focus-throttling', boolFocus)
     })
 
-    ipcMain.on('about-window', (event, data) => {
+    ipcMain.on('about-window', () => {
         const modalPath = isDevelopment ? `${process.env.WEBPACK_DEV_SERVER_URL}#/about` : 'app://./index.html#about'
         let aboutWindow = new BrowserWindow({
             height         : 620,
@@ -166,6 +166,14 @@ app.whenReady().then(() => {
         aboutWindow.on('closed', function() {
             aboutWindow = null
         })
+    })
+
+    ipcMain.on('show-publisher', () => {
+        win.webContents.send('changeRouteTo', '/publishers')
+    })
+
+    ipcMain.on('add-publisher', () => {
+        win.webContents.send('changeRouteTo', '/publishers/add')
     })
 })
 

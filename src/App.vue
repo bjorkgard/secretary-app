@@ -35,6 +35,7 @@ import { required, email }                        from '@vee-validate/rules'
 import { localize, loadLocaleFromURL, setLocale } from '@vee-validate/i18n'
 import { useRoute }                               from 'vue-router'
 import Navigation                                 from '@/components/Navigation.vue'
+import router                                     from '@/router'
 
 const currentRoute = computed(() => {
     return useRoute().name
@@ -79,6 +80,9 @@ ipcRenderer.invoke('locale').then(value => {
     loadLocaleFromURL(`https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/${value}.json`)
 
     setLocale(value)
+})
+ipcRenderer.on('changeRouteTo', (event, path) => {
+    router.push(path)
 })
 
 /*

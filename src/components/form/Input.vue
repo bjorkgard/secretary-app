@@ -2,12 +2,13 @@
   <div>
     <label
       :for="id"
-      class="block text-sm font-medium text-slate-700 dark:text-slate-400"
+      :class="[errorMessage ? 'text-rose-500' : 'text-slate-700 dark:text-slate-400', 'block text-sm font-medium']"
     >
-      {{ label }}
+      {{ label }}<span v-if="required">*</span>
     </label>
     <input
       :id="id"
+      ref="input"
       v-model="value"
       :name="name"
       :class="[
@@ -29,16 +30,27 @@
 </template>
 
 <script setup>
-import { useField } from 'vee-validate'
+import { onMounted, ref } from 'vue'
+import { useField }       from 'vee-validate'
+
+const input = ref()
 
 const props = defineProps({
     label       : { type: String, required: true },
     modelValue  : { type: [ String, Number ], default: '' },
-    required    : { type: Boolean, default: false },
     type        : { type: String, default: 'text' },
     placeholder : { type: String, default: '' },
     name        : { type: String, required: true },
     id          : { type: String, required: true },
+    autofocus   : { type: Boolean, default: false },
+    required    : { type: Boolean, default: false },
+    readonly    : { type: Boolean, default: false },
+})
+
+onMounted(() => {
+  if (props.autofocus) {
+    input.value.focus()
+  }
 })
 
 const { value, errorMessage, meta } = useField(props.name, props.rules, {

@@ -62,8 +62,8 @@ export default class BaseStore {
         }
     }
 
-    findOneById(_id) {
-        return this.databaseInstance.findOne({ _id })
+    async findOneById(_id) {
+        return await this.databaseInstance.findOne({ _id })
     }
 
     drop() {

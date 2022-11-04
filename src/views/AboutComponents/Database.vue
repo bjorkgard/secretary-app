@@ -1,10 +1,10 @@
 <template>
   <div>
-    <p class="mt-1 max-w-2xl text-sm text-slate-500 dark:text-slate-400">
-      Storlek på databasen
-    </p>
+    <h2 class="font-medium text-lg text-slate-500 dark:text-slate-400">
+      Databasstatistik
+    </h2>
   </div>
-  <div class="mt-5 border-t border-slate-300 dark:border-slate-500">
+  <div class="mt-2 border-t border-slate-300 dark:border-slate-500">
     <dl class="divide-y divide-slate-300 dark:divide-slate-500">
       <div
         v-for="database in databases"
@@ -32,15 +32,38 @@ import { ipcRenderer }    from 'electron'
 const databases = ref([])
 
 onMounted(async () => {
-    const datesStat    = await ipcRenderer.invoke('statsDates')
-    const settingsStat = await ipcRenderer.invoke('statsSettings')
+    const addressStat      = await ipcRenderer.invoke('statsAddresses')
+    const datesStat        = await ipcRenderer.invoke('statsDates')
+    const settingsStat     = await ipcRenderer.invoke('statsSettings')
+    const publisherStat    = await ipcRenderer.invoke('statsPublishers')
+    const serviceGroupStat = await ipcRenderer.invoke('statsServiceGroups')
 
     let database = {
+        name  : 'Addresses',
+        count : addressStat.count,
+        size  : addressStat.size,
+    }
+    databases.value.push(database)
+
+    database = {
         name  : 'Dates',
         count : datesStat.count,
         size  : datesStat.size,
     }
+    databases.value.push(database)
 
+    database = {
+        name  : 'Publishers',
+        count : publisherStat.count,
+        size  : publisherStat.size,
+    }
+    databases.value.push(database)
+
+    database = {
+        name  : 'Service groups',
+        count : serviceGroupStat.count,
+        size  : serviceGroupStat.size,
+    }
     databases.value.push(database)
 
     database = {
@@ -48,7 +71,6 @@ onMounted(async () => {
         count : settingsStat.count,
         size  : settingsStat.size,
     }
-
     databases.value.push(database)
 })
 

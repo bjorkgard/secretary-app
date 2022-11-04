@@ -1,4 +1,5 @@
-import log from 'electron-log'
+import { ipcMain } from 'electron'
+import log         from 'electron-log'
 
 export default {
     label   : 'Förkunnare',
@@ -6,19 +7,20 @@ export default {
         {
             label: 'Visa alla',
             click() {
-                log.info('Visa alla förkunnare')
+                ipcMain.emit('show-publisher')
             },
         },
         {
-            label: 'Lägg till',
+            label       : 'Lägg till',
+            accelerator : 'CmdOrCtrl+Alt+F',
             click() {
-                log.info('Lägg till förkunnare')
+                ipcMain.emit('add-publisher')
             },
         },
         {
-            label: 'Se borttagna',
+            label: 'Importera',
             click() {
-                log.info('Visa borttagna förkunnare')
+                log.info('Importera förkunnare')
             },
         },
     ],

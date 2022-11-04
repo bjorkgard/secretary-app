@@ -14,10 +14,12 @@
             <NavigationLink
               name="Startsida"
               to="home"
+              tabindex="-1"
             />
             <NavigationLink
               name="Förkunnare"
               to="publishers"
+              tabindex="-1"
             />
           </div>
         </div>
@@ -39,6 +41,7 @@
                 class="block w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-3 leading-5 placeholder-slate-500 focus:border-sky-500 focus:placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-sky-500 sm:text-sm dark:border-transparent dark:bg-slate-700 dark:text-slate-300 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white no-drag"
                 placeholder="Sök"
                 type="search"
+                tabindex="-1"
               >
             </div>
           </div>
@@ -48,7 +51,10 @@
           class="flex items-center lg:hidden"
         >
           <!-- Mobile menu button -->
-          <DisclosureButton class="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white dark:focus:ring-white dark:focus:ring-offset-slate-800">
+          <DisclosureButton
+            tabindex="-1"
+            class="inline-flex items-center justify-center rounded-md p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-white dark:focus:ring-white dark:focus:ring-offset-slate-800"
+          >
             <span class="sr-only">Open main menu</span>
             <Bars3Icon
               v-if="!open"
@@ -67,6 +73,7 @@
             type="button"
             class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
             title="Inställningar"
+            tabindex="-1"
           >
             <span class="sr-only">View settings</span>
             <CogIcon
@@ -78,6 +85,7 @@
             type="button"
             class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
             title="Notiser"
+            tabindex="-1"
           >
             <span class="sr-only">View notifications</span>
             <BellIcon
@@ -90,6 +98,7 @@
             type="button"
             class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
             title="Avsluta"
+            tabindex="-1"
             @click="abortApplication"
           >
             <span class="sr-only">Avsluta</span>
