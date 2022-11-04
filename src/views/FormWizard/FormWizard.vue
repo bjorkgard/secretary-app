@@ -11,7 +11,10 @@
         label="Föregående"
         @click="goToPrev"
       />
-      <Button :label="isLastStep ? 'Spara' : 'Nästa'" />
+      <Button
+        :is-submitting="isSubmitting"
+        :label="isLastStep ? 'Spara' : 'Nästa'"
+      />
     </div>
 
     <pre>{{ values }}</pre>
@@ -38,6 +41,7 @@ const props = defineProps({
 
 const emit           = defineEmits([ 'submit' ])
 const currentStepIdx = ref(0)
+const isSubmitting   = ref(false)
 
 // Injects the starting step, child <form-steps> will use this to generate their ids
 const stepCounter = ref(0)
@@ -79,8 +83,10 @@ const onSubmit = handleSubmit((values) => {
         return
     }
 
+    isSubmitting.value = true
+
     // Let the parent know the form was filled across all steps
-    emit('submit', values)
+   emit('submit', values)
 })
 
 const goToPrev = () => {
