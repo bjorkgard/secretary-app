@@ -1,9 +1,9 @@
 <template>
-  <div class="w-screen h-screen flex flex-col drag">
+  <div class="w-screen h-screen flex flex-col drag overflow-hidden">
     <header v-if="currentRoute !== 'about'">
       <Navigation />
     </header>
-    <main class="p-8 grow no-drag">
+    <main class="p-8 grow no-drag overflow-y-scroll">
       <router-view v-slot="{Component}">
         <transition name="fade">
           <component :is="Component" />
