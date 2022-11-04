@@ -5,7 +5,8 @@ export default {
     label   : 'Förkunnare',
     submenu : [
         {
-            label: 'Visa alla',
+            label       : 'Visa alla',
+            accelerator : 'CmdOrCtrl+F',
             click() {
                 ipcMain.emit('show-publisher')
             },
