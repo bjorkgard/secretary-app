@@ -16,8 +16,6 @@
         :label="isLastStep ? 'Spara' : 'Nästa'"
       />
     </div>
-
-    <pre>{{ values }}</pre>
   </form>
 </template>
 
