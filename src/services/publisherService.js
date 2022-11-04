@@ -31,6 +31,7 @@ const parsePublisherModel = (data, addressId) => {
             phone : '',
             email : '',
         },
+        children: [],
     }
 
     publisher.s290            = data.s290
@@ -54,6 +55,7 @@ const parsePublisherModel = (data, addressId) => {
     publisher.emergency.name  = data.emergencyName !== '' ? data.emergencyName : null
     publisher.emergency.phone = data.emergencyPhone !== '' ? data.emergencyPhone : null
     publisher.emergency.email = data.emergencyEmail !== '' ? data.emergencyEmail : null
+    publisher.children        = data.children
 
     return publisher
 }
@@ -72,6 +74,7 @@ const parsePublisher = (data, address) => {
         hope            : '',
         contactPerson   : false,
         contactId       : '',
+        addressId       : '',
         address         : {
             address1 : '',
             address2 : '',
@@ -89,6 +92,7 @@ const parsePublisher = (data, address) => {
             phone : '',
             email : '',
         },
+        children  : [],
         createdAt : '',
         updatedAt : '',
     }
@@ -113,9 +117,8 @@ const parsePublisher = (data, address) => {
     publisherModel.serviceGroupId  = data.serviceGroupId
     publisherModel.status          = data.status
     publisherModel.information     = data.information
-    publisherModel.emergency.name  = data.emergency.name
-    publisherModel.emergency.phone = data.emergency.phone
-    publisherModel.emergency.email = data.emergency.email
+    publisherModel.emergency       = data.emergency
+    publisherModel.children        = data.children
     publisherModel.createdAt       = data.createdAt.toISOString()
     publisherModel.updatedAt       = data.updatedAt.toISOString()
 

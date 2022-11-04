@@ -37,7 +37,7 @@
         />
         <Input
           id="birthday"
-          label="Födelsedag"
+          label="Födelsedatum"
           name="birthday"
           type="date"
           class="col-span-6 md:col-span-3"
@@ -201,6 +201,55 @@
           type="email"
         />
       </FormStep>
+      <FormStep
+        v-if="contactPerson"
+        title="Barn"
+        subtitle="Om förkunnaren har barn som inte är förkunnare kan du lägga till dem här."
+      >
+        <FieldArray
+          v-slot="{ fields, push, remove }"
+          name="children"
+        >
+          <fieldset
+            v-for="(field, idx) in fields"
+            :key="field.key"
+            class="col-span-6 border border-solid border-slate-400 p-4 grid grid-cols-6 gap-6"
+          >
+            <legend class="text-sm text-slate-400">
+              Barn #{{ idx+1 }}
+            </legend>
+            <Input
+              :id="`firstName_${idx}`"
+              label="Förnamn"
+              :name="`children[${idx}].firstName`"
+              class="col-span-6 md:col-span-3"
+            />
+            <Input
+              :id="`birthday_${idx}`"
+              label="Födelsedatum"
+              :name="`children[${idx}].birthday`"
+              type="date"
+              class="col-span-4 md:col-span-2"
+            />
+            <button
+              type="button"
+              class="col-span-1 place-self-end flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+              title="Ta bort"
+              @click="remove(idx)"
+            >
+              <XMarkIcon
+                class="h-6 w-6"
+                aria-hidden="true"
+              />
+            </button>
+          </fieldset>
+          <SecondaryButton
+            label="Lägg till ett barn"
+            class="col-span-2 place-self-center"
+            @click="push({ firstName: '', birthday: '' })"
+          />
+        </FieldArray>
+      </FormStep>
     </FormWizard>
   </div>
 </template>
@@ -208,8 +257,10 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import { ipcRenderer }              from 'electron'
+import { FieldArray }               from 'vee-validate'
 import * as yup                     from 'yup'
 import log                          from 'electron-log'
+import { XMarkIcon }                from '@heroicons/vue/24/outline'
 import FormStep                     from './PublisherComponent/FormStep.vue'
 import FormWizard                   from './PublisherComponent/FormWizard.vue'
 import Checkbox                     from '@/components/form/Checkbox.vue'
@@ -218,6 +269,7 @@ import Radio                        from '@/components/form/Radio.vue'
 import Select                       from '@/components/form/Select.vue'
 import Textarea                     from '@/components/form/Textarea.vue'
 import Toggle                       from '@/components/form/Toggle.vue'
+import SecondaryButton              from '@/components/form/SecondaryButton.vue'
 import router                       from '@/router'
 
 const contactPerson = ref(false)

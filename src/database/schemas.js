@@ -122,6 +122,7 @@ export const PublisherSchema = {
         status          : { type: 'string' },
         information     : { type: 'string', nullable: true },
         emergency       : Emergency,
+        children        : { type: 'array', items: Child },
         createdAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
         updatedAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
     },
