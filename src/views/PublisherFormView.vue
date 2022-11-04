@@ -203,6 +203,13 @@
       </FormStep>
       <FormStep
         v-if="contactPerson"
+        title="Förordnanden"
+        subtitle="Om förkunnaren är förordnad kan du ange detta här."
+      >
+      <!-- FÖRORDNANDEN -->
+      </FormStep>
+      <FormStep
+        v-if="contactPerson"
         title="Barn"
         subtitle="Om förkunnaren har barn som inte är förkunnare kan du lägga till dem här."
       >
@@ -261,8 +268,8 @@ import { FieldArray }               from 'vee-validate'
 import * as yup                     from 'yup'
 import log                          from 'electron-log'
 import { XMarkIcon }                from '@heroicons/vue/24/outline'
-import FormStep                     from './PublisherComponent/FormStep.vue'
-import FormWizard                   from './PublisherComponent/FormWizard.vue'
+import FormStep                     from './FormWizard/FormStep.vue'
+import FormWizard                   from './FormWizard/FormWizard.vue'
 import Checkbox                     from '@/components/form/Checkbox.vue'
 import Input                        from '@/components/form/Input.vue'
 import Radio                        from '@/components/form/Radio.vue'
