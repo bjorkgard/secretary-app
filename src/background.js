@@ -53,6 +53,9 @@ async function createWindow() {
     height               : mainWindowState.height,
     x                    : mainWindowState.x,
     y                    : mainWindowState.y,
+    minWidth             : 520,
+    minHeight            : 520,
+    frame                : false,
     titleBarStyle        : 'hidden',
     titleBarOverlay      : true,
     trafficLightPosition : {
