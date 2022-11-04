@@ -139,7 +139,7 @@ export default class PublisherService {
 
             addressId = addressModel.id
         } else {
-            let publisher = await publisherStore.findOneById(data.contactId)
+            let publisher = await publisherStore.findOneById(data.contactId.value)
 
             addressId = publisher.addressId
         }
