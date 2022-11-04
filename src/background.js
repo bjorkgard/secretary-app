@@ -161,7 +161,7 @@ app.whenReady().then(() => {
         })
 
         aboutWindow.loadURL(modalPath)
-        if (isDevelopment) aboutWindow.webContents.openDevTools()
+        //if (isDevelopment) aboutWindow.webContents.openDevTools()
 
         aboutWindow.on('closed', function() {
             aboutWindow = null
