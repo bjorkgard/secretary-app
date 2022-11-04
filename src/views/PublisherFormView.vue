@@ -203,13 +203,6 @@
       </FormStep>
       <FormStep
         v-if="contactPerson"
-        title="Förordnanden"
-        subtitle="Om förkunnaren är förordnad kan du ange detta här."
-      >
-      <!-- FÖRORDNANDEN -->
-      </FormStep>
-      <FormStep
-        v-if="contactPerson"
         title="Barn"
         subtitle="Om förkunnaren har barn som inte är förkunnare kan du lägga till dem här."
       >
@@ -294,7 +287,7 @@ const compContacts = computed(() =>
     }),
 )
 
-const compServiceGroups = computed(() =>{
+const compServiceGroups = computed(() => {
     let data = []
     serviceGroups.value.map((sg) => {
         data.push( { name: sg.name, value: sg.id })
