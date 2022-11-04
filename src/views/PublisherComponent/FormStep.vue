@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, onBeforeUnmount } from 'vue'
 
 defineProps({
     title    : { type: String, required: true },
@@ -42,4 +42,7 @@ const formStepIdx = inject('CURRENT_STEP_INDEX')
 const shouldShow = computed(() => {
   return currentIdx === formStepIdx.value
 })
+
+// If a step is removed we need to decrement STEP_COUNTER by 1
+onBeforeUnmount(() => inject('STEP_COUNTER').value--)
 </script>
