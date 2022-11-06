@@ -32,20 +32,12 @@ import { ipcRenderer }    from 'electron'
 const databases = ref([])
 
 onMounted(async () => {
-    const addressStat      = await ipcRenderer.invoke('statsAddresses')
     const datesStat        = await ipcRenderer.invoke('statsDates')
     const settingsStat     = await ipcRenderer.invoke('statsSettings')
     const publisherStat    = await ipcRenderer.invoke('statsPublishers')
     const serviceGroupStat = await ipcRenderer.invoke('statsServiceGroups')
 
     let database = {
-        name  : 'Addresses',
-        count : addressStat.count,
-        size  : addressStat.size,
-    }
-    databases.value.push(database)
-
-    database = {
         name  : 'Dates',
         count : datesStat.count,
         size  : datesStat.size,
