@@ -5,16 +5,25 @@
       :current="currentStepIdx"
     />
     <slot />
-    <div class="mt-4 flex justify-end">
-      <SecondaryButton
-        v-if="hasPrevious"
-        label="Föregående"
-        @click="goToPrev"
-      />
-      <Button
-        :is-submitting="isSubmitting"
-        :label="isLastStep ? 'Spara' : 'Nästa'"
-      />
+    <div class="mt-4 flex">
+      <div>
+        <SecondaryButton
+          label="Avbryt"
+          @click="onAbort"
+        />
+      </div>
+      <div class="grow" />
+      <div>
+        <SecondaryButton
+          v-if="hasPrevious"
+          label="Föregående"
+          @click="goToPrev"
+        />
+        <Button
+          :is-submitting="isSubmitting"
+          :label="isLastStep ? 'Spara' : 'Nästa'"
+        />
+      </div>
     </div>
   </form>
 </template>
@@ -37,7 +46,7 @@ const props = defineProps({
     },
 })
 
-const emit           = defineEmits([ 'submit' ])
+const emit           = defineEmits([ 'submit', 'abort' ])
 const currentStepIdx = ref(0)
 const isSubmitting   = ref(false)
 
@@ -93,5 +102,9 @@ const goToPrev = () => {
     }
 
     currentStepIdx.value--
+}
+
+const onAbort = () => {
+    emit('abort')
 }
 </script>
