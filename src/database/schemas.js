@@ -65,19 +65,15 @@ export const SettingsSchema = {
     additionalProperties : false,
 }
 
-export const AddressSchema = {
+const Address = {
     type       : 'object',
     properties : {
-        _id       : { type: 'string', nullable: true },
-        address1  : { type: 'string' },
-        address2  : { type: 'string', nullable: true },
-        zip       : { type: 'string' },
-        city      : { type: 'string' },
-        createdAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
-        updatedAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        address1 : { type: 'string' },
+        address2 : { type: 'string', nullable: true },
+        zip      : { type: 'string' },
+        city     : { type: 'string' },
     },
-    required             : [ 'address1', 'zip', 'city' ],
-    additionalProperties : false,
+    required: [ 'address1', 'zip', 'city' ],
 }
 
 const Emergency = {
@@ -114,7 +110,7 @@ export const PublisherSchema = {
         hope            : { type: 'string' },
         contactPerson   : { type: 'boolean' },
         contactId       : { type: 'string', nullable: true },
-        addressId       : { type: 'string' },
+        address         : Address,
         phone           : { type: 'string', nullable: true },
         cell            : { type: 'string', nullable: true },
         email           : { type: 'string', nullable: true },
@@ -137,7 +133,6 @@ export const PublisherSchema = {
         'contactPerson',
         'serviceGroupId',
         'status',
-        'addressId',
     ],
     additionalProperties: false,
 }
