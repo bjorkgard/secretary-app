@@ -5,6 +5,7 @@
       :form-values="formValues"
       class="w-full md:max-w-4xl"
       @submit="onSubmit"
+      @abort="onAbort"
     >
       <FormStep
         title="Personlig information"
@@ -381,6 +382,8 @@ const toggleContactPerson = () => {
     router.push({ name: 'publishers' })
 }
 
-
+const onAbort = () => {
+    router.push({ name: 'publishers' })
+}
 
 </script>
