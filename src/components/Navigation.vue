@@ -9,7 +9,7 @@
         <div class="flex dark:items-center px-2 lg:px-0">
           <div
             v-if="settings.identifier"
-            class="hidden lg:ml-6 lg:flex lg:space-x-6"
+            class="hidden md:ml-6 md:flex md:space-x-6"
           >
             <NavigationLink
               name="Startsida"
@@ -26,7 +26,7 @@
 
         <div
           v-if="settings.identifier"
-          class="flex items-center lg:hidden"
+          class="flex items-center md:hidden"
         >
           <!-- Mobile menu button -->
           <DisclosureButton
@@ -46,7 +46,7 @@
             />
           </DisclosureButton>
         </div>
-        <div class="hidden lg:ml-4 lg:flex lg:items-center">
+        <div class="hidden md:ml-4 md:flex md:items-center">
           <button
             type="button"
             class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
@@ -107,7 +107,6 @@
 <script setup>
 import { ipcRenderer }                                                        from 'electron'
 import { Disclosure, DisclosureButton, DisclosurePanel }                      from '@headlessui/vue'
-import { MagnifyingGlassIcon }                                                from '@heroicons/vue/20/solid'
 import { Bars3Icon, BellIcon, CogIcon, XMarkIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import NavigationLink                                                         from './NavigationLink.vue'
 import NavigationSmallLink                                                    from './NavigationSmallLink.vue'
