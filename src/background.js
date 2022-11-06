@@ -171,12 +171,33 @@ app.whenReady().then(() => {
         })
     })
 
+
     ipcMain.on('show-publisher', () => {
         win.webContents.send('changeRouteTo', '/publishers')
     })
 
     ipcMain.on('add-publisher', () => {
         win.webContents.send('changeRouteTo', '/publishers/add')
+    })
+})
+
+ipcMain.on('openConfirmation', (event, args) => {
+    const webContents = event.sender
+    dialog.showMessageBox(win, {
+        'type'    : 'question',
+        'title'   : 'Bekräfta',
+        'message' : args.message,
+        'buttons' : [
+            'OK',
+            'Avbryt',
+        ],
+    }).then((result) => {
+        if (result.response !== 0) { return }
+
+        // Reply to the render process
+        webContents.send(args.responseListener, { response: result.response, ...args })
+    }).catch( e => {
+        log.error(e)
     })
 })
 
