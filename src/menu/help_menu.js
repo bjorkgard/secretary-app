@@ -1,5 +1,3 @@
-import { shell } from 'electron'
-
 export default {
     label   : 'Hjälp',
     role    : 'help',

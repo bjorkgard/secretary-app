@@ -1,12 +1,10 @@
 import { PublisherSchema } from '@/database/schemas'
 import PublisherStore      from '@/database/publisherStore'
 import log                 from 'electron-log'
-import AddressService      from './addressService'
 
 const publisherStore = new PublisherStore('publishers.db', PublisherSchema)
-const addressService = new AddressService()
 
-const parsePublisherModel = (data, addressId) => {
+const parsePublisherModel = (data, address) => {
     const publisher = {
         s290            : false,
         registerCard    : false,
@@ -19,7 +17,7 @@ const parsePublisherModel = (data, addressId) => {
         hope            : '',
         contactPerson   : false,
         contactId       : '',
-        addressId       : '',
+        address         : null,
         phone           : '',
         cell            : '',
         email           : '',
@@ -45,7 +43,7 @@ const parsePublisherModel = (data, addressId) => {
     publisher.hope            = data.hope
     publisher.contactPerson   = data.contactPerson
     publisher.contactId       = data.contactId ? data.contactId.value : null
-    publisher.addressId       = addressId
+    publisher.address         = address
     publisher.phone           = data.phone !== '' ? data.phone : null
     publisher.cell            = data.cell !== '' ? data.cell : null
     publisher.email           = data.email !== '' ? data.email : null
@@ -60,95 +58,26 @@ const parsePublisherModel = (data, addressId) => {
     return publisher
 }
 
-const parsePublisher = (data, address) => {
-    const publisherModel = {
-        id              : '',
-        s290            : false,
-        registerCard    : false,
-        firstName       : '',
-        lastName        : '',
-        birthday        : '',
-        gender          : '',
-        baptised        : '',
-        baptisedUnknown : false,
-        hope            : '',
-        contactPerson   : false,
-        contactId       : '',
-        addressId       : '',
-        address         : {
-            address1 : '',
-            address2 : '',
-            zip      : '',
-            city     : '',
-        },
-        phone          : '',
-        cell           : '',
-        email          : '',
-        serviceGroupId : '',
-        status         : '',
-        information    : '',
-        emergency      : {
-            name  : '',
-            phone : '',
-            email : '',
-        },
-        children  : [],
-        createdAt : '',
-        updatedAt : '',
-    }
-
-    publisherModel.id              = data._id
-    publisherModel.s290            = data.s290
-    publisherModel.registerCard    = data.registerCard
-    publisherModel.firstName       = data.firstName
-    publisherModel.lastName        = data.lastName
-    publisherModel.birthday        = data.birthday
-    publisherModel.gender          = data.gender
-    publisherModel.baptised        = data.baptised
-    publisherModel.baptisedUnknown = data.baptisedUnknown
-    publisherModel.hope            = data.hope
-    publisherModel.contactPerson   = data.contactPerson
-    publisherModel.contactId       = data.contactId
-    publisherModel.addressId       = data.addressId
-    publisherModel.address         = address
-    publisherModel.phone           = data.phone
-    publisherModel.cell            = data.cell
-    publisherModel.email           = data.email
-    publisherModel.serviceGroupId  = data.serviceGroupId
-    publisherModel.status          = data.status
-    publisherModel.information     = data.information
-    publisherModel.emergency       = data.emergency
-    publisherModel.children        = data.children
-    publisherModel.createdAt       = data.createdAt.toISOString()
-    publisherModel.updatedAt       = data.updatedAt.toISOString()
-
-    return publisherModel
-}
-
 export default class PublisherService {
     async create(data) {
-        let addressId    = null
-        let addressModel = null
+        let address = null
+
         if(data.contactPerson){
-            addressModel = await addressService.create({
+            address = {
                 address1 : data.address1,
                 address2 : data.address2,
                 zip      : data.zip,
                 city     : data.city,
-            })
-
-            addressId = addressModel.id
+            }
         } else {
             let publisher = await publisherStore.findOneById(data.contactId.value)
-
-            addressId = publisher.addressId
+            address       = publisher.address
         }
 
-        const publisher    = parsePublisherModel(data, addressId)
+        const publisher    = parsePublisherModel(data, address)
         const newPublisher = await publisherStore.create(publisher)
-        const address      = await addressService.findOneById(addressId)
 
-        return parsePublisher(newPublisher, address)
+        return newPublisher
     }
 
     async update(publisherId, data) {
@@ -157,10 +86,20 @@ export default class PublisherService {
         return await publisherStore.update(publisherId, publisher)
     }
 
+    async delete(data) {
+        return await publisherStore.delete(data.id)
+    }
+
     async contacts() {
         const contacts = await publisherStore.contacts()
 
         return contacts
+    }
+
+    async find(data) {
+        const publishers = await publisherStore.find(data)
+
+        return publishers
     }
 
     drop() {

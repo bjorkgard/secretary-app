@@ -53,6 +53,9 @@ async function createWindow() {
     height               : mainWindowState.height,
     x                    : mainWindowState.x,
     y                    : mainWindowState.y,
+    minWidth             : 520,
+    minHeight            : 520,
+    frame                : false,
     titleBarStyle        : 'hidden',
     titleBarOverlay      : true,
     trafficLightPosition : {
@@ -161,12 +164,13 @@ app.whenReady().then(() => {
         })
 
         aboutWindow.loadURL(modalPath)
-        if (isDevelopment) aboutWindow.webContents.openDevTools()
+        //if (isDevelopment) aboutWindow.webContents.openDevTools()
 
         aboutWindow.on('closed', function() {
             aboutWindow = null
         })
     })
+
 
     ipcMain.on('show-publisher', () => {
         win.webContents.send('changeRouteTo', '/publishers')
@@ -174,6 +178,26 @@ app.whenReady().then(() => {
 
     ipcMain.on('add-publisher', () => {
         win.webContents.send('changeRouteTo', '/publishers/add')
+    })
+})
+
+ipcMain.on('openConfirmation', (event, args) => {
+    const webContents = event.sender
+    dialog.showMessageBox(win, {
+        'type'    : 'question',
+        'title'   : 'Bekräfta',
+        'message' : args.message,
+        'buttons' : [
+            'OK',
+            'Avbryt',
+        ],
+    }).then((result) => {
+        if (result.response !== 0) { return }
+
+        // Reply to the render process
+        webContents.send(args.responseListener, { response: result.response, ...args })
+    }).catch( e => {
+        log.error(e)
     })
 })
 
