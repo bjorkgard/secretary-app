@@ -106,7 +106,8 @@ export const enableIPC = () => {
     })
 
     ipcMain.on('recover-backup', () => {
-        const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
+        const userDataPath  = isDevelopment ? './db': app.getPath('userData') + '/db'
+        let confirmedBackup = true
 
         let options = {
             title       : 'Återställ från backup',
@@ -123,28 +124,44 @@ export const enableIPC = () => {
                     let recoveryData = JSON.parse(data.toString())
                     let backupFiles  = recoveryData.backup
 
-                    backupFiles.forEach(file => {
-                        const [ firstKey, ...rest ] = Object.keys(file)
-
-                        fs.writeFile(`${userDataPath}/${firstKey}`, file[ firstKey ], 'utf-8', (err, data) => {
-                            if (err){
-                                log.error(err)
-                            }
-                        })
-                    })
-
-                    const responseOptions = {
-                        type      : 'info',
-                        buttons   : [ 'OK' ],
-                        defaultId : 0,
-                        title     : 'Databasen är återställd',
-                        message   : 'Din databas är återställd!',
-                        detail    : 'Applikationen kommer nu att avslutas och när du startar den nästa gång kommer den nya databasen att läsas in.',
+                    if(recoveryData !== 'backup'){
+                        confirmedBackup     = false
+                        const dialogOptions = {
+                            type      : 'info',
+                            buttons   : [ 'OK' ],
+                            defaultId : 0,
+                            title     : 'Felaktig backup-fil',
+                            message   : 'Filen du laddade upp är inte en korrekt backup-fil från Secretary.',
+                            detail    : 'Din databas har inte blvit ändrad. Om du vill återföra en backup måste du välja en korrekt backup-fil.',
+                        }
+                        dialog.showMessageBox(null, dialogOptions)
                     }
 
-                    dialog.showMessageBox(null, responseOptions).then(() => {
-                        app.quit()
-                    })
+                    if(confirmedBackup){
+                        backupFiles.forEach(file => {
+                            const [ firstKey, ...rest ] = Object.keys(file)
+
+                            fs.writeFile(`${userDataPath}/${firstKey}`, file[ firstKey ], 'utf-8', (err, data) => {
+                                if (err){
+                                    log.error(err)
+                                }
+                            })
+                        })
+
+                        const responseOptions = {
+                            type      : 'info',
+                            buttons   : [ 'OK' ],
+                            defaultId : 0,
+                            title     : 'Databasen är återställd',
+                            message   : 'Din databas är återställd!',
+                            detail    : 'Applikationen kommer nu att avslutas och när du startar den nästa gång kommer den nya databasen att läsas in.',
+                        }
+
+                        dialog.showMessageBox(null, responseOptions).then(() => {
+                            app.quit()
+                        })
+                    }
+
                 }
             })
         })
@@ -165,6 +182,7 @@ export const enableIPC = () => {
         // generate backup file
         const backup = {
             'date'   : date,
+            'type'   : 'backup',
             'backup' : [],
         }
 
