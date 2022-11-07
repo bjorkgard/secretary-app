@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
-    <div class="border-b border-slate-200 pb-5 sm:flex sm:items-center sm:justify-between">
-      <h3 class="text-lg font-medium leading-6 text-slate-900">
+    <div class="border-b border-slate-200 pb-5 sm:flex sm:items-center sm:justify-between dark:border-slate-500">
+      <h3 class="text-lg font-medium leading-6 text-slate-900 dark:text-slate-400">
         Förkunnare
       </h3>
       <div class="mt-3 sm:mt-0 sm:ml-4">
@@ -27,17 +27,21 @@
             </div>
             <input
               id="mobile-search-candidate"
+              v-model="searchQuery"
               type="text"
               name="mobile-search-candidate"
-              class="block w-full rounded-none rounded-l-md border-slate-300 pl-10 focus:border-sky-500 focus:ring-sky-500 sm:hidden"
+              class="block w-full rounded-none rounded-l-md border-slate-300 pl-10 focus:border-sky-500 focus:ring-sky-500 sm:hidden placeholder-slate-500 text-slate-800 dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white"
               placeholder="Filtrera"
+              @keyup="filterPublishers()"
             >
             <input
               id="desktop-search-candidate"
+              v-model="searchQuery"
               type="text"
               name="desktop-search-candidate"
-              class="hidden w-full rounded-none rounded-l-md border-slate-300 pl-10 focus:border-sky-500 focus:ring-sky-500 sm:block sm:text-sm"
+              class="hidden w-full rounded-none rounded-l-md border-slate-300 pl-10 focus:border-sky-500 focus:ring-sky-500 sm:block sm:text-sm placeholder-slate-500 text-slate-800 dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white"
               placeholder="Filtrera"
+              @keyup="filterPublishers()"
             >
           </div>
           <button
@@ -142,7 +146,10 @@
                         <PencilIcon class="h-5 w-5" />
                       </router-link>
                       <ArrowDownOnSquareIcon class="h-5 w-5" />
-                      <button @click="deletePublisher(publisher._id)">
+                      <button
+                        class="hover:text-sky-700"
+                        @click="deletePublisher(publisher._id)"
+                      >
                         <TrashIcon class="h-5 w-5" />
                       </button>
                     </div>
@@ -171,9 +178,13 @@ import {
     ArrowDownOnSquareIcon,
     TrashIcon,
 } from '@heroicons/vue/20/solid'
-import { PublisherSchema } from '@/database/schemas'
+import { lowerFirst } from 'lodash'
 
-const publishers = ref([])
+const publishers     = ref([])
+const sort           = ref('standard')
+const searchQuery    = ref('')
+const typingInterval = ref(500)
+const typingTimer    = ref('')
 
 const initializeData = async () => {
     getPublishers()
@@ -186,12 +197,17 @@ const initializeData = async () => {
 
 onMounted(() => initializeData())
 
+const filterPublishers = () => {
+    clearTimeout(typingTimer.value)
+    typingTimer.value = setTimeout( getPublishers, typingInterval.value)
+}
+
 const addPublisher = () => {
     router.push({ name: 'publishers.add' })
 }
 
-const getPublishers = async (sort = 'standard', filter = null) => {
-    publishers.value = await ipcRenderer.invoke('getPublishers', { sort: sort, filter: filter })
+const getPublishers = async () => {
+    publishers.value = await ipcRenderer.invoke('getPublishers', { sort: sort.value, searchQuery: searchQuery.value })
 }
 
 const sendEmail = (email) => {
