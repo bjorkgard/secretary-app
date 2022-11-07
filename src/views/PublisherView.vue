@@ -44,20 +44,83 @@
               @keyup="filterPublishers()"
             >
           </div>
-          <button
-            type="button"
-            class="relative -ml-px inline-flex items-center border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:z-10"
+          <Menu
+            as="div"
+            class="relative"
           >
-            <BarsArrowUpIcon
-              class="h-5 w-5 text-slate-400"
-              aria-hidden="true"
-            />
-            <span class="ml-2">Sortera</span>
-            <ChevronDownIcon
-              class="ml-2.5 -mr-1.5 h-5 w-5 text-slate-400"
-              aria-hidden="true"
-            />
-          </button>
+            <div>
+              <MenuButton class="relative -ml-px inline-flex items-center border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:z-10">
+                <BarsArrowUpIcon
+                  class="h-5 w-5 text-slate-400"
+                  aria-hidden="true"
+                />
+                <span class="ml-2">Sortera</span>
+                <ChevronDownIcon
+                  class="ml-2.5 -mr-1.5 h-5 w-5 text-slate-400"
+                  aria-hidden="true"
+                />
+              </MenuButton>
+            </div>
+            <transition
+              enter-active-class="transition ease-out duration-200"
+              enter-from-class="transform opacity-0 scale-95"
+              enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75"
+              leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95"
+            >
+              <MenuItems class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <MenuItem v-slot="{ active }">
+                  <button
+                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    @click="changeSort('NAME')"
+                  >
+                    Namn
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <button
+                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    @click="changeSort('NAME_REV')"
+                  >
+                    Namn (omvänd)
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <button
+                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    @click="changeSort('EMAIL')"
+                  >
+                    E-postadress
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <button
+                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    @click="changeSort('EMAIL_REV')"
+                  >
+                    E-postadress (omvänd)
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <button
+                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    @click="changeSort('ADDRESS')"
+                  >
+                    Adress
+                  </button>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                  <button
+                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    @click="changeSort('ADDRESS_REV')"
+                  >
+                    Adress (omvänd)
+                  </button>
+                </MenuItem>
+              </MenuItems>
+            </transition>
+          </Menu>
           <button
             type="button"
             class="relative -ml-px inline-flex items-center rounded-r-md border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
@@ -80,9 +143,19 @@
                 <tr class="divide-x divide-slate-200">
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 border-b border-slate-300 bg-slate-50 bg-opacity-75 py-2 pl-3 pr-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter"
+                    class="sticky -top-8 z-10 flex border-b border-slate-300 bg-slate-50 bg-opacity-75 py-2 pl-3 pr-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter"
                   >
                     Namn
+                    <BarsArrowDownIcon
+                      v-if="sort === 'NAME'"
+                      class="w-4 h-4 text-slate-400 self-end ml-2"
+                      @click="changeSort('NAME_REV')"
+                    />
+                    <BarsArrowUpIcon
+                      v-if="sort === 'NAME_REV'"
+                      class="w-4 h-4 text-slate-400 self-end ml-2"
+                      @click="changeSort('NAME')"
+                    />
                   </th>
                   <th
                     scope="col"
@@ -100,13 +173,37 @@
                     scope="col"
                     class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-2 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter lg:table-cell"
                   >
-                    E-post
+                    <div class="w-full flex">
+                      E-post
+                      <BarsArrowDownIcon
+                        v-if="sort === 'EMAIL'"
+                        class="w-4 h-4 text-slate-400 self-end ml-2"
+                        @click="changeSort('EMAIL_REV')"
+                      />
+                      <BarsArrowUpIcon
+                        v-if="sort === 'EMAIL_REV'"
+                        class="w-4 h-4 text-slate-400 self-end ml-2"
+                        @click="changeSort('EMAIL')"
+                      />
+                    </div>
                   </th>
                   <th
                     scope="col"
                     class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-2 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter lg:table-cell"
                   >
-                    Adress
+                    <div class="w-full flex">
+                      Adress
+                      <BarsArrowDownIcon
+                        v-if="sort === 'ADDRESS'"
+                        class="w-4 h-4 text-slate-400 self-end ml-2"
+                        @click="changeSort('ADDRESS_REV')"
+                      />
+                      <BarsArrowUpIcon
+                        v-if="sort === 'ADDRESS_REV'"
+                        class="w-4 h-4 text-slate-400 self-end ml-2"
+                        @click="changeSort('ADDRESS')"
+                      />
+                    </div>
                   </th>
                   <th
                     scope="col"
@@ -138,7 +235,7 @@
                     <Address :address="publisher.address" />
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium']">
-                    <div class="w-full h-full flex justify-end text-slate-500">
+                    <div class="w-full h-full flex justify-end text-slate-500 space-x-2">
                       <router-link
                         :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
                         :title="`Ändra ${publisher.firstName} ${publisher.lastName}`"
@@ -148,6 +245,7 @@
                       <ArrowDownOnSquareIcon class="h-5 w-5" />
                       <button
                         class="hover:text-sky-700"
+                        :title="`Radera ${publisher.firstName} ${publisher.lastName}`"
                         @click="deletePublisher(publisher._id)"
                       >
                         <TrashIcon class="h-5 w-5" />
@@ -165,23 +263,23 @@
 </template>
 
 <script setup>
-import { onMounted, ref }     from 'vue'
-import { ipcRenderer, shell } from 'electron'
-import log                    from 'electron-log'
-import router                 from '@/router'
-import Address                from '@/components/Address.vue'
+import { onMounted, ref }                        from 'vue'
+import { ipcRenderer, shell }                    from 'electron'
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import router                                    from '@/router'
+import Address                                   from '@/components/Address.vue'
 import {
     BarsArrowUpIcon,
+    BarsArrowDownIcon,
     ChevronDownIcon,
     MagnifyingGlassIcon,
     PencilIcon,
     ArrowDownOnSquareIcon,
     TrashIcon,
 } from '@heroicons/vue/20/solid'
-import { lowerFirst } from 'lodash'
 
 const publishers     = ref([])
-const sort           = ref('standard')
+const sort           = ref('NAME')
 const searchQuery    = ref('')
 const typingInterval = ref(500)
 const typingTimer    = ref('')
@@ -196,6 +294,11 @@ const initializeData = async () => {
 }
 
 onMounted(() => initializeData())
+
+const changeSort = (sortValue) => {
+    sort.value = sortValue
+    getPublishers()
+}
 
 const filterPublishers = () => {
     clearTimeout(typingTimer.value)

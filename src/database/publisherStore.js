@@ -7,21 +7,28 @@ export default class PublisherStore extends BaseStore {
     }
 
     find(data) {
-        log.info(data)
         let searchQuery = data.searchQuery
         let sort        = {}
         let query       = {}
 
-        //return this.databaseInstance.find().sort({ lastName: 1, contactPerson: -1, firstName: 1 })
         switch (data.sort) {
-            case 'standard':
+            case 'NAME':
                 sort = { lastName: 1, firstName: 1 }
                 break
-            case 'standard_rev':
+            case 'NAME_REV':
                 sort = { lastName: -1, firstName: -1 }
                 break
-            case 'email':
-                sort = { lastName: 1, firstName: 1 }
+            case 'EMAIL':
+                sort = { email: 1 }
+                break
+            case 'EMAIL_REV':
+                sort = { email: -1 }
+                break
+            case 'ADDRESS':
+                sort = { 'address.address1': 1 }
+                break
+            case 'ADDRESS_REV':
+                sort = { 'address.address1': -1 }
                 break
             default:
                 sort = { lastName: 1, firstName: 1 }
@@ -31,6 +38,7 @@ export default class PublisherStore extends BaseStore {
             query = { $or: [
                 { lastName: new RegExp(searchQuery, 'i') },
                 { firstName: new RegExp(searchQuery, 'i') },
+                { email: new RegExp(searchQuery, 'i') },
             ] }
         }
 
