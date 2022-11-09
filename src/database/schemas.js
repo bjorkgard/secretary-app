@@ -95,6 +95,21 @@ const Child = {
     required: [ 'firstName' ],
 }
 
+const Phone = {
+    type       : 'object',
+    properties : {
+        country            : { type: 'string', nullable: true },
+        countryCallingCode : { type: 'string', nullable: true },
+        countryCode        : { type: 'string', nullable: true },
+        formatted          : { type: 'string', nullable: true },
+        nationalNumber     : { type: 'string', nullable: true },
+        number             : { type: 'string', nullable: true },
+        type               : { type: 'string', nullable: true },
+        valid              : { type: 'boolean', nullable: true },
+    },
+    required: [],
+}
+
 export const PublisherSchema = {
     type       : 'object',
     properties : {
@@ -111,8 +126,8 @@ export const PublisherSchema = {
         contactPerson   : { type: 'boolean' },
         contactId       : { type: 'string', nullable: true },
         address         : Address,
-        phone           : { type: 'string', nullable: true },
-        cell            : { type: 'string', nullable: true },
+        phone           : { type: 'object', properties: { Phone }, nullable: true },
+        cell            : { type: 'object', properties: { Phone }, nullable: true },
         email           : { type: 'string', nullable: true },
         serviceGroupId  : { type: 'string' },
         status          : { type: 'string' },

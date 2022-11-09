@@ -30,6 +30,7 @@
     "electron-updater": "^5.3.0",
     "electron-window-state": "^5.0.3",
     "fs-extra": "^10.1.0",
+    "libphonenumber-js": "^1.10.14",
     "nedb-promises": "^6.2.1",
     "pinia": "^2.0.23",
     "pinia-plugin-persistedstate": "^2.3.0",

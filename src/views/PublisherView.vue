@@ -223,10 +223,10 @@
                     {{ publisher.lastName }}, {{ publisher.firstName }}
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden sm:table-cell']">
-                    {{ publisher.phone }}
+                    {{ publisher.phone ? publisher.phone.formatted : null }}
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden sm:table-cell']">
-                    {{ publisher.cell }}
+                    {{ publisher.cell ? publisher.cell.formatted : null }}
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden lg:table-cell']">
                     <span @click="sendEmail(publisher.email)">{{ publisher.email }}</span>
@@ -235,14 +235,20 @@
                     <Address :address="publisher.address" />
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium']">
-                    <div class="w-full h-full flex justify-end text-slate-500 space-x-2">
+                    <div class="w-full h-full flex justify-end text-slate-400 space-x-2">
                       <router-link
+                        class="hover:text-sky-700"
                         :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
                         :title="`Ändra ${publisher.firstName} ${publisher.lastName}`"
                       >
                         <PencilIcon class="h-5 w-5" />
                       </router-link>
-                      <ArrowDownOnSquareIcon class="h-5 w-5" />
+                      <button
+                        class="hover:text-sky-700"
+                        :title="`Ladda ner filer för ${publisher.firstName} ${publisher.lastName}`"
+                      >
+                        <DocumentArrowDownIcon class="h-5 w-5" />
+                      </button>
                       <button
                         class="hover:text-sky-700"
                         :title="`Radera ${publisher.firstName} ${publisher.lastName}`"
@@ -274,7 +280,7 @@ import {
     ChevronDownIcon,
     MagnifyingGlassIcon,
     PencilIcon,
-    ArrowDownOnSquareIcon,
+    DocumentArrowDownIcon,
     TrashIcon,
 } from '@heroicons/vue/20/solid'
 
@@ -290,6 +296,8 @@ const initializeData = async () => {
         ipcRenderer.invoke('deletePublisher', { id: args.id }).then(() => {
             publishers.value = publishers.value.filter(item => item._id !== args.id)
         })
+
+        ipcRenderer.send('show-notification', { title: 'Förkunnaren är raderad', body: null })
     })
 }
 
