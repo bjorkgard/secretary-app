@@ -43,6 +43,10 @@ export const enableIPC = () => {
         return await publisherService.create(data)
     })
 
+    ipcMain.handle('getPublisher', async (event, data) => {
+        return await publisherService.findOneById(data.id)
+    })
+
     ipcMain.handle('getPublishers', async (event, data) => {
         return await publisherService.find(data)
     })
@@ -79,6 +83,24 @@ export const enableIPC = () => {
 
     ipcMain.handle('updateSettings', async (event, settingsId, data) => {
         return await settingsService.update(settingsId, data)
+    })
+
+    ipcMain.handle('exportData', async (event, args) => {
+        const exportData = {
+            'date' : new Date(),
+            'type' : args.type,
+            'data' : args.data,
+        }
+
+        let options = {
+            title       : 'Spara export',
+            defaultPath : args.name,
+            buttonLabel : 'Spara',
+        }
+
+        dialog.showSaveDialog(null, options).then(({ filePath }) => {
+            fs.writeFileSync(filePath, JSON.stringify(exportData), 'utf-8')
+        })
     })
 
     ipcMain.on('show-confirmation-dialog', (arg) => {

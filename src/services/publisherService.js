@@ -102,6 +102,12 @@ export default class PublisherService {
         return publishers
     }
 
+    async findOneById(id) {
+        const publisher = await publisherStore.findOneById(id)
+
+        return publisher
+    }
+
     drop() {
         publisherStore.drop({})
     }
