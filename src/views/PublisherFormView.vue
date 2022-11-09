@@ -1,6 +1,7 @@
 <template>
   <div class="flex justify-center ">
     <FormWizard
+      ref="publisherForm"
       :validation-schema="validationSchema"
       :form-values="formValues"
       class="w-full md:max-w-4xl"
@@ -130,19 +131,23 @@
             class="col-span-6 md:col-span-3"
           />
         </div>
-        <Input
+        <Telephone
           id="phone"
           label="Telefon"
           name="phone"
           class="col-span-6 md:col-span-3"
-          type="tel"
+          :preferred-countries="['SE']"
+          :valid-characters-only="true"
+          @input-data="setPhoneObject"
         />
-        <Input
+        <Telephone
           id="cell"
           label="Mobiltelefon"
           name="cell"
           class="col-span-6 md:col-span-3"
-          type="tel"
+          :preferred-countries="['SE']"
+          :valid-characters-only="true"
+          @input-data="setPhoneObject"
         />
         <Input
           id="email"
@@ -271,16 +276,20 @@ import Select                       from '@/components/form/Select.vue'
 import Textarea                     from '@/components/form/Textarea.vue'
 import Toggle                       from '@/components/form/Toggle.vue'
 import SecondaryButton              from '@/components/form/SecondaryButton.vue'
+import Telephone                    from '@/components/form/Telephone.vue'
 import router                       from '@/router'
 
 const contactPerson = ref(false)
 const contacts      = ref([])
+const publisherForm = ref(null)
 const serviceGroups = ref([])
 const status        = ref([
     { value: 'active', name: 'Regelbunden' },
     { value: 'irregular', name: 'Oregelbunden' },
     { value: 'inactive', name: 'Overksam' },
 ])
+const phoneObject   = ref(null)
+const cellObject    = ref(null)
 
 const compContacts = computed(() =>
     contacts.value.map((c) => {
@@ -320,25 +329,25 @@ const validationSchema = [
     }),
     yup.object({
         contactPerson : yup.boolean(),
-        contactId     : yup.mixed().when('contact', {
+        contactId     : yup.mixed().when('contactPerson', {
             is   : false,
             then : yup.mixed().required('Du behöver välja en kontaktperson eller göra den här förkunnaren till kontaktperson'),
         }),
-        address1: yup.string().when('contact', {
+        address1: yup.string().when('contactPerson', {
             is   : true,
             then : yup.string().required('Obligatorisk'),
         }),
         address2 : yup.string(),
-        zip      : yup.string().when('contact', {
+        zip      : yup.string().when('contactPerson', {
             is   : true,
             then : yup.string().required('Obligatorisk'),
         }),
-        city: yup.string().when('contact', {
+        city: yup.string().when('contactPerson', {
             is   : true,
             then : yup.string().required('Obligatorisk'),
         }),
-        phone : yup.string(),
-        cell  : yup.string(),
+        phone : yup.string().nullable(),
+        cell  : yup.string().nullable(),
         email : yup.string().email(),
     }),
     yup.object({
@@ -369,15 +378,33 @@ const toggleContactPerson = () => {
     contactPerson.value = !contactPerson.value
 }
 
+const setPhoneObject = (object) => {
+    if(object.valid){
+        if(object.type === 'phone'){
+            phoneObject.value = object
+        }
+        if(object.type === 'cell'){
+            cellObject.value = object
+        }
+    }
+}
+
 /**
  * Only Called when the last step is submitted
  */
  const onSubmit = async (formData) => {
+    formData.phone = null
+    formData.cell  = null
+    if(phoneObject.value){
+        formData.phone = phoneObject.value
+    }
+    if(cellObject.value){
+        formData.cell = cellObject.value
+    }
+
     const publisherModel = await ipcRenderer.invoke('storePublisher', JSON.parse(JSON.stringify(formData)))
 
-    // TODO: Show spinner and disable submit button
-    // TODO: Add Notification for publisherModel
-    log.info('publisherModel', publisherModel)
+    ipcRenderer.send('show-notification', { title: 'Förkunnaren är sparad', body: `Du har sparat ${publisherModel.firstName} ${publisherModel.lastName}` })
 
     router.push({ name: 'publishers' })
 }
