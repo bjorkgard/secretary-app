@@ -1,11 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain, dialog, Menu } from 'electron'
-import { autoUpdater }                                         from 'electron-updater'
-import windowStateKeeper                                       from 'electron-window-state'
-import { createProtocol }                                      from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS }                   from 'electron-devtools-installer'
-import log                                                     from 'electron-log'
+import { app, protocol, BrowserWindow, ipcMain, dialog, Menu, Notification } from 'electron'
+import { autoUpdater }                                                       from 'electron-updater'
+import windowStateKeeper                                                     from 'electron-window-state'
+import { createProtocol }                                                    from 'vue-cli-plugin-electron-builder/lib'
+import installExtension, { VUEJS3_DEVTOOLS }                                 from 'electron-devtools-installer'
+import log                                                                   from 'electron-log'
 
 import { enableIPC } from './ipcMains'
 
@@ -178,6 +178,13 @@ app.whenReady().then(() => {
 
     ipcMain.on('add-publisher', () => {
         win.webContents.send('changeRouteTo', '/publishers/add')
+    })
+})
+
+ipcMain.on('show-notification', (args) => {
+    new Notification({
+        title : args.title,
+        body  : args.body,
     })
 })
 

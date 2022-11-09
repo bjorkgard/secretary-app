@@ -7,7 +7,6 @@ import router                    from './router'
 const pinia = createPinia(piniaPluginPersistedstate)
 
 import './registerServiceWorker'
-
 import './assets/tailwind.css'
 
 createApp(App)
