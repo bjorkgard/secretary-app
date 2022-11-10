@@ -34,8 +34,12 @@ export const enableIPC = () => {
         return await serviceGroupService.stats()
     })
 
-    ipcMain.handle('getServiceGroups', async () => {
-        return await serviceGroupService.findAll()
+    ipcMain.handle('getServiceGroups', async (event, args) => {
+        return await serviceGroupService.findAll(args)
+    })
+
+    ipcMain.handle('deleteServiceGroup', async (event, args) => {
+        return await serviceGroupService.delete(args)
     })
 
     /*** Publishers store */

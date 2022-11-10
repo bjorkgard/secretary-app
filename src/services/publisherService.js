@@ -1,6 +1,5 @@
 import { PublisherSchema } from '@/database/schemas'
 import PublisherStore      from '@/database/publisherStore'
-import log                 from 'electron-log'
 
 const publisherStore = new PublisherStore('publishers.db', PublisherSchema)
 
@@ -102,6 +101,12 @@ export default class PublisherService {
 
     async find(data) {
         const publishers = await publisherStore.find(data)
+
+        return publishers
+    }
+
+    async findBy(property, value) {
+        const publishers = await publisherStore.findBy(property, value)
 
         return publishers
     }

@@ -6,6 +6,13 @@ export default class PublisherStore extends BaseStore {
         super(fileName, schema)
     }
 
+    findBy(property, value) {
+        let searchQuery         = {}
+        searchQuery[ property ] = value
+
+        return this.databaseInstance.find(searchQuery)
+    }
+
     find(data) {
         let searchQuery = data.searchQuery
         let sort        = {}
