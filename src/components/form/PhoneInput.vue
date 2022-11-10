@@ -533,16 +533,16 @@ watch(
     () => phoneObject.value.formatted,
     (value) => {
         if (!props.autoFormat || props.customValidate) {
-        return
-    }
-    emitInput(value)
-
-    nextTick(() => {
-        // In case `v-model` is not set, we need to update the `phone` to be new formatted value
-        if (value && !props.value) {
-            phone.value = value
+            return
         }
-    })
+        emitInput(value)
+
+        nextTick(() => {
+            // In case `v-model` is not set, we need to update the `phone` to be new formatted value
+            if (value && !props.value) {
+                phone.value = value
+            }
+        })
     },
 )
 
