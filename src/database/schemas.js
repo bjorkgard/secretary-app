@@ -110,6 +110,15 @@ const Phone = {
     required: [],
 }
 
+const SelectOption = {
+    type       : 'object',
+    properties : {
+        value : { type: 'string' },
+        name  : { type: 'string' },
+    },
+    required: [ 'value', 'name' ],
+}
+
 export const PublisherSchema = {
     type       : 'object',
     properties : {
@@ -129,8 +138,8 @@ export const PublisherSchema = {
         phone           : { type: 'object', properties: { Phone }, nullable: true },
         cell            : { type: 'object', properties: { Phone }, nullable: true },
         email           : { type: 'string', nullable: true },
-        serviceGroupId  : { type: 'string' },
-        status          : { type: 'string' },
+        serviceGroup    : { type: 'object', properties: { SelectOption }, nullable: true },
+        status          : { type: 'object', properties: { SelectOption }, nullable: false },
         information     : { type: 'string', nullable: true },
         emergency       : Emergency,
         children        : { type: 'array', items: Child },
@@ -146,7 +155,6 @@ export const PublisherSchema = {
         'baptisedUnknown',
         'hope',
         'contactPerson',
-        'serviceGroupId',
         'status',
     ],
     additionalProperties: false,

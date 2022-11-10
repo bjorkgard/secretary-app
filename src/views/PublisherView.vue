@@ -72,7 +72,7 @@
               <MenuItems class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
                     @click="changeSort('NAME')"
                   >
                     Namn
@@ -80,7 +80,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
                     @click="changeSort('NAME_REV')"
                   >
                     Namn (omvänd)
@@ -88,7 +88,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
                     @click="changeSort('EMAIL')"
                   >
                     E-postadress
@@ -96,7 +96,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
                     @click="changeSort('EMAIL_REV')"
                   >
                     E-postadress (omvänd)
@@ -104,7 +104,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
                     @click="changeSort('ADDRESS')"
                   >
                     Adress
@@ -112,7 +112,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
                     @click="changeSort('ADDRESS_REV')"
                   >
                     Adress (omvänd)
@@ -237,20 +237,66 @@
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium']">
                     <div class="w-full h-full flex justify-end text-slate-400 space-x-2">
                       <router-link
-                        class="hover:text-sky-700"
+                        class="hover:text-sky-700 focus:outline-none"
                         :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
                         :title="`Ändra ${publisher.firstName} ${publisher.lastName}`"
                       >
                         <PencilIcon class="h-5 w-5" />
                       </router-link>
-                      <button
-                        class="hover:text-sky-700"
-                        :title="`Ladda ner filer för ${publisher.firstName} ${publisher.lastName}`"
+                      <Menu
+                        as="div"
+                        class="relative inline-block text-left"
                       >
-                        <DocumentArrowDownIcon class="h-5 w-5" />
-                      </button>
+                        <div>
+                          <MenuButton
+                            class="flex items-center bg-white text-slate-400 hover:text-sky-700 focus:outline-none"
+                            :title="`Ladda ner filer för ${publisher.firstName} ${publisher.lastName}`"
+                          >
+                            <span class="sr-only">Open exports</span>
+                            <DocumentArrowDownIcon
+                              class="h-5 w-5"
+                              aria-hidden="true"
+                            />
+                          </MenuButton>
+                        </div>
+                        <transition
+                          enter-active-class="transition ease-out duration-100"
+                          enter-from-class="transform opacity-0 scale-95"
+                          enter-to-class="transform opacity-100 scale-100"
+                          leave-active-class="transition ease-in duration-75"
+                          leave-from-class="transform opacity-100 scale-100"
+                          leave-to-class="transform opacity-0 scale-95"
+                        >
+                          <MenuItems class="absolute right-0 z-10 -mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <div class="pb-1">
+                              <MenuItem>
+                                <span
+                                  class="text-slate-700 block px-4 py-2 text-sm font-bold border-b border-slate-300 bg-slate-100"
+                                >
+                                  {{ publisher.firstName }} {{ publisher.lastName }}
+                                </span>
+                              </MenuItem>
+                              <MenuItem v-slot="{ active }">
+                                <span
+                                  :class="[active ? 'bg-slate-50 text-slate-900' : 'text-slate-700', 'block px-4 py-2 text-sm']"
+                                >
+                                  Exportera registerkort
+                                </span>
+                              </MenuItem>
+                              <MenuItem v-slot="{ active }">
+                                <span
+                                  :class="[active ? 'bg-slate-50 text-slate-900' : 'text-slate-700', 'block px-4 py-2 text-sm']"
+                                  @click="exportPublisherData(publisher._id)"
+                                >
+                                  Exportera data
+                                </span>
+                              </MenuItem>
+                            </div>
+                          </MenuItems>
+                        </transition>
+                      </Menu>
                       <button
-                        class="hover:text-sky-700"
+                        class="hover:text-sky-700 focus:outline-none"
                         :title="`Radera ${publisher.firstName} ${publisher.lastName}`"
                         @click="deletePublisher(publisher._id)"
                       >
@@ -323,6 +369,22 @@ const getPublishers = async () => {
 
 const sendEmail = (email) => {
     shell.openExternal(`mailto:${email}?subject=`)
+}
+
+const exportPublisherData = async (id) => {
+    let publisher = await ipcRenderer.invoke('getPublisher', { id: id })
+    // rewrite data for export
+    delete publisher._id // remove internal id
+    delete publisher.serviceGroup // remove internal serviceGroup
+    publisher.contactPerson = true // set as contactPerson.
+    publisher.contactId     = null // We do not know the new contactPerson´s id
+    publisher.updatedAt     = new Date() // set updated at to now()
+
+    ipcRenderer.invoke('exportData', {
+        type : 'publisher',
+        name : `${publisher.lastName}_${publisher.firstName}_${id}.json`,
+        data : publisher,
+    })
 }
 
 const deletePublisher = (id) => {

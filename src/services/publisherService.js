@@ -21,8 +21,8 @@ const parsePublisherModel = (data, address) => {
         phone           : '',
         cell            : '',
         email           : '',
-        serviceGroupId  : '',
-        status          : '',
+        serviceGroup    : null,
+        status          : null,
         information     : '',
         emergency       : {
             name  : '',
@@ -47,13 +47,13 @@ const parsePublisherModel = (data, address) => {
     publisher.phone           = data.phone !== '' ? data.phone : null
     publisher.cell            = data.cell !== '' ? data.cell : null
     publisher.email           = data.email !== '' ? data.email : null
-    publisher.serviceGroupId  = data.serviceGroup.value
-    publisher.status          = data.status.value
+    publisher.serviceGroup    = data.serviceGroup ? data.serviceGroup : null
+    publisher.status          = data.status
     publisher.information     = data.information !== '' ? data.information : null
     publisher.emergency.name  = data.emergencyName !== '' ? data.emergencyName : null
     publisher.emergency.phone = data.emergencyPhone !== '' ? data.emergencyPhone : null
     publisher.emergency.email = data.emergencyEmail !== '' ? data.emergencyEmail : null
-    publisher.children        = data.children
+    publisher.children        = data.children ? data.children : []
 
     return publisher
 }
@@ -63,11 +63,15 @@ export default class PublisherService {
         let address = null
 
         if(data.contactPerson){
-            address = {
-                address1 : data.address1,
-                address2 : data.address2,
-                zip      : data.zip,
-                city     : data.city,
+            if(data.address){
+                address = data.address
+            } else{
+                address = {
+                    address1 : data.address1,
+                    address2 : data.address2,
+                    zip      : data.zip,
+                    city     : data.city,
+                }
             }
         } else {
             let publisher = await publisherStore.findOneById(data.contactId.value)
@@ -100,6 +104,12 @@ export default class PublisherService {
         const publishers = await publisherStore.find(data)
 
         return publishers
+    }
+
+    async findOneById(id) {
+        const publisher = await publisherStore.findOneById(id)
+
+        return publisher
     }
 
     drop() {
