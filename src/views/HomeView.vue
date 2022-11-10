@@ -1,20 +1,16 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold leading-tight text-center">
-      Secretary - Startsida
-    </h1>
-    <pre>
-        {{ congegation }}
-    </pre>
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <ServiceGroup />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed }         from 'vue'
-import { useSettingsStore } from '@/stores'
+import ServiceGroup from '@/components/widgets/ServiceGroup.vue'
 
-const settings = useSettingsStore()
 
-const congegation = computed(() => settings.congregation)
 
 </script>
