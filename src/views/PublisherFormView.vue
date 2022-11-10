@@ -402,9 +402,16 @@ const setPhoneObject = (object) => {
         formData.cell = cellObject.value
     }
 
-    const publisherModel = await ipcRenderer.invoke('storePublisher', JSON.parse(JSON.stringify(formData)))
-
-    ipcRenderer.send('show-notification', { title: 'Förkunnaren är sparad', body: `Du har sparat ${publisherModel.firstName} ${publisherModel.lastName}` })
+    try{
+        const publisherModel = await ipcRenderer.invoke('storePublisher', JSON.parse(JSON.stringify(formData)))
+        if(publisherModel){
+            ipcRenderer.send('show-notification', { title: 'Förkunnaren är sparad', body: `Du har sparat ${publisherModel.firstName} ${publisherModel.lastName}` })
+        }else{
+            ipcRenderer.send('show-notification', { title: 'Okänt fel', body: 'Det gick inte att spara förkunnaren.' })
+        }
+    }catch(e){
+        log.error(e)
+    }
 
     router.push({ name: 'publishers' })
 }
