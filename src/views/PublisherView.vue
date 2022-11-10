@@ -237,7 +237,7 @@
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium']">
                     <div class="w-full h-full flex justify-end text-slate-400 space-x-2">
                       <router-link
-                        class="hover:text-sky-700"
+                        class="hover:text-sky-700 focus:outline-none"
                         :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
                         :title="`Ändra ${publisher.firstName} ${publisher.lastName}`"
                       >
@@ -296,7 +296,7 @@
                         </transition>
                       </Menu>
                       <button
-                        class="hover:text-sky-700"
+                        class="hover:text-sky-700 focus:outline-none"
                         :title="`Radera ${publisher.firstName} ${publisher.lastName}`"
                         @click="deletePublisher(publisher._id)"
                       >
@@ -373,9 +373,12 @@ const sendEmail = (email) => {
 
 const exportPublisherData = async (id) => {
     let publisher = await ipcRenderer.invoke('getPublisher', { id: id })
-    delete publisher._id
-
-    publisher.updatedAt = new Date()
+    // rewrite data for export
+    delete publisher._id // remove internal id
+    delete publisher.serviceGroup // remove internal serviceGroup
+    publisher.contactPerson = true // set as contactPerson.
+    publisher.contactId     = null // We do not know the new contactPerson´s id
+    publisher.updatedAt     = new Date() // set updated at to now()
 
     ipcRenderer.invoke('exportData', {
         type : 'publisher',

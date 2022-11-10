@@ -127,6 +127,60 @@ export const enableIPC = () => {
         eval(arg.function+'()')
     })
 
+    ipcMain.on('import-publisher', () => {
+        let confirmedImport = true
+        let options         = {
+            title       : 'Importera en förkunnare',
+            buttonLabel : 'Importera',
+            filters     : [
+                { name: 'json', extensions: [ 'json' ] },
+            ],
+            properties: [ 'openFile' ],
+        }
+
+        dialog.showOpenDialog(null, options).then(result => {
+            fs.readFile(result.filePaths[ 0 ], async (err, data) => {
+                if (!err) {
+                    let importData = JSON.parse(data.toString())
+
+                    if(importData.type !== 'publisher'){
+                        confirmedImport     = false
+                        const dialogOptions = {
+                            type      : 'info',
+                            buttons   : [ 'OK' ],
+                            defaultId : 0,
+                            title     : 'Felaktig import-fil',
+                            message   : 'Filen du laddade upp är inte en korrekt import-fil för en förkunnare.',
+                        }
+                        dialog.showMessageBox(null, dialogOptions)
+                    }
+
+                    if(confirmedImport){
+                        const responseOptions = {
+                            type      : 'info',
+                            buttons   : [ 'OK' ],
+                            defaultId : 0,
+                            title     : 'Förkunnaren är importerad',
+                            message   : 'Förkunnaren är importerad!',
+                        }
+
+                        try{
+                            await publisherService.create(importData.data)
+                            dialog.showMessageBox(null, responseOptions)
+                        }catch(err){
+                            log.error(err)
+                            responseOptions.title   = 'Okänt fel'
+                            responseOptions.message = 'Okänt fel'
+                            responseOptions.detail  = 'Det gick inte att importera förkunnaren'
+
+                            dialog.showMessageBox(null, responseOptions)
+                        }
+                    }
+                }
+            })
+        })
+    })
+
     ipcMain.on('recover-backup', () => {
         const userDataPath  = isDevelopment ? './db': app.getPath('userData') + '/db'
         let confirmedBackup = true
@@ -146,7 +200,7 @@ export const enableIPC = () => {
                     let recoveryData = JSON.parse(data.toString())
                     let backupFiles  = recoveryData.backup
 
-                    if(recoveryData !== 'backup'){
+                    if(recoveryData.type !== 'backup'){
                         confirmedBackup     = false
                         const dialogOptions = {
                             type      : 'info',

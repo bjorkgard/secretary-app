@@ -1,5 +1,4 @@
 import { ipcMain } from 'electron'
-import log         from 'electron-log'
 
 export default {
     label   : 'Förkunnare',
@@ -21,7 +20,7 @@ export default {
         {
             label: 'Importera',
             click() {
-                log.info('Importera förkunnare')
+                ipcMain.emit('import-publisher')
             },
         },
     ],
