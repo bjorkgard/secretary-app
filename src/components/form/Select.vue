@@ -95,8 +95,7 @@ const props = defineProps({
 })
 
 const clearSelectedValue = () => {
-  value = null
-  //emits('update:modelValue', null)
+  value.value = null
 }
 
 //const value = ref(props.modelValue ? props.options.find((o) => o.value === props.modelValue.value) : null)

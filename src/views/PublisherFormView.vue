@@ -100,6 +100,8 @@
           id="contactId"
           label="Välj kontaktperson"
           name="contactId"
+          :clearable="true"
+          :disabled="contactPerson"
           :options="compContacts"
           class="col-span-6 sm:col-span-3"
         />
@@ -301,7 +303,7 @@ const compContacts = computed(() =>
 const compServiceGroups = computed(() => {
     let data = []
     serviceGroups.value.map((sg) => {
-        data.push( { name: sg.name, value: sg.id })
+        data.push( { name: sg.name, value: sg._id })
     })
     return data
 })

@@ -53,6 +53,7 @@ const parsePublisherModel = (data, address) => {
     publisher.emergency.phone = data.emergencyPhone !== '' ? data.emergencyPhone : null
     publisher.emergency.email = data.emergencyEmail !== '' ? data.emergencyEmail : null
     publisher.children        = data.children ? data.children : []
+    publisher.appointments    = data.appointments ? data.appointments : []
 
     return publisher
 }

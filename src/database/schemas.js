@@ -119,6 +119,16 @@ const SelectOption = {
     required: [ 'value', 'name' ],
 }
 
+export const Appointment = {
+    type       : 'object',
+    properties : {
+        type    : { type: 'object', properties: { SelectOption } },
+        date    : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        unknown : { type: 'boolean' },
+    },
+    required: [ 'type' ],
+}
+
 export const PublisherSchema = {
     type       : 'object',
     properties : {
@@ -143,6 +153,7 @@ export const PublisherSchema = {
         information     : { type: 'string', nullable: true },
         emergency       : Emergency,
         children        : { type: 'array', items: Child },
+        appointments    : { type: 'array', items: Appointment },
         createdAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
         updatedAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
     },
