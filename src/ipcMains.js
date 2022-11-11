@@ -42,6 +42,10 @@ export const enableIPC = () => {
         return await serviceGroupService.delete(args)
     })
 
+    ipcMain.handle('storeServiceGroup', async (event, args) => {
+        return await serviceGroupService.create(args)
+    })
+
     /*** Publishers store */
     ipcMain.handle('storePublisher', async (event, data) => {
         return await publisherService.create(data)
