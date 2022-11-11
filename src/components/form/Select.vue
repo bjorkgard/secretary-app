@@ -98,9 +98,6 @@ const clearSelectedValue = () => {
   value.value = null
 }
 
-//const value = ref(props.modelValue ? props.options.find((o) => o.value === props.modelValue.value) : null)
-//const emits = defineEmits([ 'update:modelValue' ])
-
 const { value, errorMessage, meta } = useField(props.name, props.rules, {
   initialValue: props.modelValue,
 })
