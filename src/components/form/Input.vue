@@ -18,6 +18,7 @@
       :placeholder="placeholder"
       :type="type"
       :required="required"
+      :readonly="readonly"
     >
     <p
       v-if="errorMessage && meta.touched"
