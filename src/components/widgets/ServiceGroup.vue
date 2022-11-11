@@ -115,7 +115,6 @@ import { BriefcaseIcon, PlusIcon } from '@heroicons/vue/24/solid'
 import { PencilIcon, TrashIcon }   from '@heroicons/vue/20/solid'
 import { useForm }                 from 'vee-validate'
 import { object, string }          from 'yup'
-import log                         from 'electron-log'
 import Widget                      from './Widget.vue'
 import Dialog                      from '@/components/Dialog.vue'
 import SecondaryButton             from '@/components/form/SecondaryButton.vue'
@@ -169,7 +168,6 @@ const editServiceGroup = async (id) => {
         })
     })
 
-    log.info(`Ändra tjänstegrupp ${id}`)
     showForm.value = true
 }
 
@@ -190,7 +188,6 @@ const fetchServiceGroups = () => {
 onMounted(() => {
     ipcRenderer.on('confirmedDeletionServiceGroup', (event, args) => {
         ipcRenderer.invoke('deleteServiceGroup', { id: args.id }).then(() => {
-            //publishers.value = publishers.value.filter(item => item._id !== args.id)
             fetchServiceGroups()
         })
 

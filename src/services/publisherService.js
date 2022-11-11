@@ -105,6 +105,12 @@ export default class PublisherService {
         return publishers
     }
 
+    async findNew() {
+        const publishers = await publisherStore.findNew()
+
+        return publishers
+    }
+
     async findBy(property, value) {
         const publishers = await publisherStore.findBy(property, value)
 
