@@ -68,6 +68,7 @@
       <template #body>
         <form
           id="serviceGroupForm"
+          ref="serviceGroupForm"
           class="w-full"
           @submit="onSubmit"
         >
@@ -80,6 +81,12 @@
                 Fyll i uppgifterna och tryck på Spara.
               </p>
               <div class="mt-2">
+                <Input
+                  id="sg_id"
+                  label=""
+                  name="id"
+                  type="hidden"
+                />
                 <Input
                   id="sg_name"
                   label="Namn"
@@ -115,24 +122,34 @@ import SecondaryButton             from '@/components/form/SecondaryButton.vue'
 import Button                      from '@/components/form/Button.vue'
 import Input                       from '@/components/form/Input.vue'
 
-const showForm      = ref(false)
-const serviceGroups = ref([])
+const showForm         = ref(false)
+const serviceGroups    = ref([])
+const formData         = ref(null)
+const serviceGroupForm = ref(null)
 
 const validationSchema = object({
-    name: string().required('Obligatoriskt'),
+    id   : string().nullable(),
+    name : string().required('Obligatoriskt'),
 })
 
-const { handleSubmit, isSubmitting } = useForm({
-    initialValues    : null,
+const { handleSubmit, isSubmitting, setValues } = useForm({
+    initialValues    : formData.value,
     validationSchema : validationSchema,
 })
 
 const onSubmit = handleSubmit(async (values, { resetForm }) => {
-    await ipcRenderer.invoke('storeServiceGroup', values ).then((response) => {
-        ipcRenderer.send('show-notification', { title: `Tjänstegrupp ${response.name} är tillagd`, body: null })
-        hideForm()
-        fetchServiceGroups()
-    })
+    if(values.id) {
+        await ipcRenderer.invoke('updateServiceGroup', values.id, values ).then((response) => {
+            ipcRenderer.send('show-notification', { title: `Tjänstegrupp ${response.name} är uppdaterad`, body: null })
+        })
+    } else {
+        await ipcRenderer.invoke('storeServiceGroup', values ).then((response) => {
+            ipcRenderer.send('show-notification', { title: `Tjänstegrupp ${response.name} är tillagd`, body: null })
+        })
+    }
+
+    fetchServiceGroups()
+    hideForm()
     resetForm()
 })
 
@@ -144,8 +161,16 @@ const addServiceGroup = () => {
     showForm.value = true
 }
 
-const editServiceGroup = (id) => {
+const editServiceGroup = async (id) => {
+    await ipcRenderer.invoke('getServiceGroup', { id: id }).then((response) => {
+        setValues({
+            name : response.name,
+            id   : response.id,
+        })
+    })
+
     log.info(`Ändra tjänstegrupp ${id}`)
+    showForm.value = true
 }
 
 const deleteServiceGroup = (id) => {

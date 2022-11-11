@@ -34,6 +34,10 @@ export const enableIPC = () => {
         return await serviceGroupService.stats()
     })
 
+    ipcMain.handle('getServiceGroup', async (event, data) => {
+        return await serviceGroupService.findOneById(data.id)
+    })
+
     ipcMain.handle('getServiceGroups', async (event, args) => {
         return await serviceGroupService.findAll(args)
     })
@@ -44,6 +48,10 @@ export const enableIPC = () => {
 
     ipcMain.handle('storeServiceGroup', async (event, args) => {
         return await serviceGroupService.create(args)
+    })
+
+    ipcMain.handle('updateServiceGroup', async (event, id, data) => {
+        return await serviceGroupService.update(id, data)
     })
 
     /*** Publishers store */

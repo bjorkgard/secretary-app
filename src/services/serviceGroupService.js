@@ -18,12 +18,16 @@ const parseServiceGroupModel = (data) => {
 
 const parseServiceGroup = (data) => {
     const serviceGroupModel = {
-        id   : '',
-        name : '',
+        id        : '',
+        name      : '',
+        createdAt : '',
+        updatedAt : '',
     }
 
-    serviceGroupModel.id   = data._id
-    serviceGroupModel.name = data.name
+    serviceGroupModel.id        = data._id
+    serviceGroupModel.name      = data.name
+    serviceGroupModel.createdAt = data.createdAt.toISOString()
+    serviceGroupModel.updatedAt = data.updatedAt.toISOString()
 
     return serviceGroupModel
 }
@@ -44,6 +48,12 @@ export default class ServiceGroupService {
         const serviceGroup = parseServiceGroupModel(data)
 
         return await serviceGroupStore.update(serviceGroupId, serviceGroup)
+    }
+
+    async findOneById(id) {
+        const serviceGroup = await serviceGroupStore.findOneById(id)
+
+        return parseServiceGroup(serviceGroup)
     }
 
     async findAll(args) {
