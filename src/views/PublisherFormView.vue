@@ -94,6 +94,7 @@
           name="contactPerson"
           class="col-span-6 sm:col-span-3"
           @click="toggleContactPerson"
+          @keydown.space.prevent="toggleContactPerson"
         />
         <Select
           id="contactId"
