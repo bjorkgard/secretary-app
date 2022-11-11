@@ -67,6 +67,10 @@ export const enableIPC = () => {
         return await publisherService.find(data)
     })
 
+    ipcMain.handle('getNewPublishers', async (event) => {
+        return await publisherService.findNew()
+    })
+
     ipcMain.handle('deletePublisher', async (event, id) => {
         return await publisherService.delete(id)
     })

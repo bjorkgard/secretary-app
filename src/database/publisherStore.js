@@ -13,6 +13,10 @@ export default class PublisherStore extends BaseStore {
         return this.databaseInstance.find(searchQuery)
     }
 
+    findNew() {
+        return this.databaseInstance.find({ serviceGroup: null }).sort({ lastName: 1, firstName: 1 })
+    }
+
     find(data) {
         let searchQuery = data.searchQuery
         let sort        = {}
