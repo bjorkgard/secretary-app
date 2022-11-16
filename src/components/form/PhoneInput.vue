@@ -111,7 +111,7 @@ const emit = defineEmits([
  */
 const props = defineProps({
     value: {
-        type    : String,
+        type    : [ String, Object ],
         default : '',
     },
     allCountries: {
@@ -148,6 +148,11 @@ const props = defineProps({
         type        : Boolean,
         default     : true,
         description : 'Show dial code in the dropdown list',
+    },
+    showDialCode: {
+        type        : Boolean,
+        default     : false,
+        description : 'Show dial code in the input field',
     },
     showFlags: {
         type        : Boolean,
@@ -302,7 +307,6 @@ const phoneObject = computed(() => {
     } else {
         result = parsePhoneNumberFromString(phone.value, activeCountryCode.value) || {}
     }
-
     const {
         metadata,
         ...phoneObject
@@ -573,14 +577,22 @@ watch(
  */
 onMounted(() => {
     if(props.value){
-        phone.value = props.value.trim()
+        if(typeof props.value === 'string'){
+            phone.value = props.value.trim()
+        }else{
+            activeCountryCode.value = props.value.countryCode
+            phone.value             = parsePhoneNumberFromString( props.value.number, props.value.countryCode).formatNational()
+        }
     }
 
     cleanInvalidCharacters()
 
     initializeCountry()
         .then(() => {
-            emit('validate', phoneObject)
+            if(!props.value && props.showDialCode && activeCountryCode.value){
+                phone.value = `+${activeCountryCode.value}`
+            }
+            emit('validate', phoneObject.value)
         })
         .catch((error) => {
             log.error(error)

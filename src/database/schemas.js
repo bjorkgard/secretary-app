@@ -76,25 +76,6 @@ const Address = {
     required: [ 'address1', 'zip', 'city' ],
 }
 
-const Emergency = {
-    type       : 'object',
-    properties : {
-        name  : { type: 'string', nullable: true },
-        phone : { type: 'string', nullable: true },
-        email : { type: 'string', nullable: true },
-    },
-    required: [],
-}
-
-const Child = {
-    type       : 'object',
-    properties : {
-        firstName : { type: 'string' },
-        birthday  : { type: 'string', nullable: true },
-    },
-    required: [ 'firstName' ],
-}
-
 const Phone = {
     type       : 'object',
     properties : {
@@ -110,6 +91,25 @@ const Phone = {
     required: [],
 }
 
+const Emergency = {
+    type       : 'object',
+    properties : {
+        name  : { type: 'string', nullable: true },
+        phone : { type: 'object', properties: { Phone }, nullable: true },
+        email : { type: 'string', nullable: true },
+    },
+    required: [],
+}
+
+const Child = {
+    type       : 'object',
+    properties : {
+        firstName : { type: 'string' },
+        birthday  : { type: 'string', nullable: true },
+    },
+    required: [ 'firstName' ],
+}
+
 const SelectOption = {
     type       : 'object',
     properties : {
@@ -117,6 +117,16 @@ const SelectOption = {
         name  : { type: 'string' },
     },
     required: [ 'value', 'name' ],
+}
+
+export const Appointment = {
+    type       : 'object',
+    properties : {
+        type    : { type: 'object', properties: { SelectOption } },
+        date    : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        unknown : { type: 'boolean' },
+    },
+    required: [ 'type' ],
 }
 
 export const PublisherSchema = {
@@ -133,7 +143,7 @@ export const PublisherSchema = {
         baptisedUnknown : { type: 'boolean' },
         hope            : { type: 'string' },
         contactPerson   : { type: 'boolean' },
-        contactId       : { type: 'string', nullable: true },
+        contact         : { type: 'object', properties: { SelectOption }, nullable: true },
         address         : Address,
         phone           : { type: 'object', properties: { Phone }, nullable: true },
         cell            : { type: 'object', properties: { Phone }, nullable: true },
@@ -143,6 +153,7 @@ export const PublisherSchema = {
         information     : { type: 'string', nullable: true },
         emergency       : Emergency,
         children        : { type: 'array', items: Child },
+        appointments    : { type: 'array', items: Appointment },
         createdAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
         updatedAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
     },

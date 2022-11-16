@@ -2,6 +2,7 @@ import electron   from 'electron'
 import Ajv        from 'ajv'
 import addFormats from 'ajv-formats'
 import Datastore  from 'nedb-promises'
+import log        from 'electron-log'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -57,6 +58,7 @@ export default class BaseStore {
 
     update(_id, data) {
         const isValid = this.validate(data)
+
         if (isValid) {
             return this.databaseInstance.update({ _id }, data)
         }

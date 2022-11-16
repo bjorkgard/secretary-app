@@ -315,9 +315,10 @@
 </template>
 
 <script setup>
-import { onMounted, ref }                        from 'vue'
+import { onBeforeUnmount, onMounted, ref }       from 'vue'
 import { ipcRenderer, shell }                    from 'electron'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import log                                       from 'electron-log'
 import router                                    from '@/router'
 import Address                                   from '@/components/Address.vue'
 import {
@@ -339,8 +340,10 @@ const typingTimer    = ref('')
 const initializeData = async () => {
     getPublishers()
     ipcRenderer.on('confirmedDeletion', (event, args) => {
-        ipcRenderer.invoke('deletePublisher', { id: args.id }).then(() => {
-            publishers.value = publishers.value.filter(item => item._id !== args.id)
+        ipcRenderer.invoke('deletePublisher', { id: args.id }).then((resp) => {
+            if(resp){
+                publishers.value = publishers.value.filter(item => item._id !== args.id)
+            }
         })
 
         ipcRenderer.send('show-notification', { title: 'Förkunnaren är raderad', body: null })
@@ -348,6 +351,10 @@ const initializeData = async () => {
 }
 
 onMounted(() => initializeData())
+
+onBeforeUnmount(() => {
+    ipcRenderer.removeAllListeners('confirmedDeletion')
+})
 
 const changeSort = (sortValue) => {
     sort.value = sortValue
@@ -374,11 +381,22 @@ const sendEmail = (email) => {
 const exportPublisherData = async (id) => {
     let publisher = await ipcRenderer.invoke('getPublisher', { id: id })
     // rewrite data for export
-    delete publisher._id // remove internal id
-    delete publisher.serviceGroup // remove internal serviceGroup
     publisher.contactPerson = true // set as contactPerson.
-    publisher.contactId     = null // We do not know the new contactPerson´s id
-    publisher.updatedAt     = new Date() // set updated at to now()
+    publisher.contact       = null // We do not know the new contactPerson's id
+    publisher.address       = {
+        address1 : publisher.address1,
+        address2 : publisher.address2,
+        zip      : publisher.zip,
+        city     : publisher.city,
+    }
+    publisher.updatedAt     = new Date()
+
+    delete publisher._id
+    delete publisher.serviceGroup
+    delete publisher.address1
+    delete publisher.address2
+    delete publisher.zip
+    delete publisher.city
 
     ipcRenderer.invoke('exportData', {
         type : 'publisher',

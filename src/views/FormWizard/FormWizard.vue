@@ -25,15 +25,16 @@
         />
       </div>
     </div>
+    <pre>{{ values }}</pre>
   </form>
 </template>
 
 <script setup>
-import { ref, computed, provide } from 'vue'
-import { useForm }                from 'vee-validate'
-import Button                     from '@/components/form/Button.vue'
-import SecondaryButton            from '@/components/form/SecondaryButton.vue'
-import Steps                      from '@/components/Steps.vue'
+import { ref, computed, provide, watch } from 'vue'
+import { useForm }                       from 'vee-validate'
+import Button                            from '@/components/form/Button.vue'
+import SecondaryButton                   from '@/components/form/SecondaryButton.vue'
+import Steps                             from '@/components/Steps.vue'
 
 const props = defineProps({
     validationSchema: {
@@ -43,6 +44,10 @@ const props = defineProps({
     formValues: {
         type     : Object,
         required : true,
+    },
+    formData: {
+        type    : Object,
+        default : null,
     },
 })
 
@@ -73,7 +78,7 @@ const currentSchema = computed(() => {
     return props.validationSchema[ currentStepIdx.value ]
 })
 
-const { values, handleSubmit } = useForm({
+const { values, handleSubmit, setValues } = useForm({
     initialValues       : props.formValues,
     // vee-validate will be aware of computed schema changes
     validationSchema    : currentSchema,
@@ -107,4 +112,13 @@ const goToPrev = () => {
 const onAbort = () => {
     emit('abort')
 }
+
+watch(
+    () => props.formData,
+    async (value) => {
+        if(value){
+            setValues(value)
+        }
+    },
+)
 </script>

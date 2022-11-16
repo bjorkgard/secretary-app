@@ -4,6 +4,7 @@
       ref="publisherForm"
       :validation-schema="validationSchema"
       :form-values="formValues"
+      :form-data="publisher"
       class="w-full md:max-w-4xl"
       @submit="onSubmit"
       @abort="onAbort"
@@ -21,6 +22,12 @@
           label="Personuppgiftskort"
           name="registerCard"
           class="col-span-6 sm:col-span-3"
+        />
+        <Input
+          id="ID"
+          label=""
+          name="id"
+          type="hidden"
         />
         <Input
           id="firstName"
@@ -97,9 +104,11 @@
           @keydown.space.prevent="toggleContactPerson"
         />
         <Select
-          id="contactId"
+          id="contact"
           label="Välj kontaktperson"
-          name="contactId"
+          name="contact"
+          :clearable="true"
+          :disabled="contactPerson"
           :options="compContacts"
           class="col-span-6 sm:col-span-3"
         />
@@ -137,6 +146,7 @@
           label="Telefon"
           name="phone"
           class="col-span-6 md:col-span-3"
+          :value="publisher ? publisher.phone : null"
           :preferred-countries="['SE']"
           :valid-characters-only="true"
           @input-data="setPhoneObject"
@@ -146,6 +156,7 @@
           label="Mobiltelefon"
           name="cell"
           class="col-span-6 md:col-span-3"
+          :value="publisher ? publisher.cell : null"
           :preferred-countries="['SE']"
           :valid-characters-only="true"
           @input-data="setPhoneObject"
@@ -193,12 +204,15 @@
           name="emergencyName"
           class="col-span-6"
         />
-        <Input
+        <Telephone
           id="emergencyPhone"
           label="Telefon"
           name="emergencyPhone"
           class="col-span-6 md:col-span-3"
-          type="tel"
+          :value="publisher ? publisher.emergencyPhone : null"
+          :preferred-countries="['SE']"
+          :valid-characters-only="true"
+          @input-data="setPhoneObject"
         />
         <Input
           id="emergencyEmail"
@@ -263,6 +277,7 @@
 
 <script setup>
 import { onMounted, ref, computed } from 'vue'
+import { useRoute }                 from 'vue-router'
 import { ipcRenderer }              from 'electron'
 import { FieldArray }               from 'vee-validate'
 import * as yup                     from 'yup'
@@ -270,6 +285,7 @@ import log                          from 'electron-log'
 import { XMarkIcon }                from '@heroicons/vue/24/outline'
 import FormStep                     from './FormWizard/FormStep.vue'
 import FormWizard                   from './FormWizard/FormWizard.vue'
+import router                       from '@/router'
 import Checkbox                     from '@/components/form/Checkbox.vue'
 import Input                        from '@/components/form/Input.vue'
 import Radio                        from '@/components/form/Radio.vue'
@@ -278,19 +294,23 @@ import Textarea                     from '@/components/form/Textarea.vue'
 import Toggle                       from '@/components/form/Toggle.vue'
 import SecondaryButton              from '@/components/form/SecondaryButton.vue'
 import Telephone                    from '@/components/form/Telephone.vue'
-import router                       from '@/router'
 
-const contactPerson = ref(false)
-const contacts      = ref([])
-const publisherForm = ref(null)
-const serviceGroups = ref([])
-const status        = ref([
+const route = useRoute()
+
+const contactPerson        = ref(false)
+const contacts             = ref([])
+const publisherForm        = ref(null)
+const serviceGroups        = ref([])
+const phoneObject          = ref(null)
+const cellObject           = ref(null)
+const emergencyPhoneObject = ref(null)
+const publisher            = ref(null)
+const formValues           = ref(null)
+const status               = ref([
     { value: 'active', name: 'Regelbunden' },
     { value: 'irregular', name: 'Oregelbunden' },
     { value: 'inactive', name: 'Overksam' },
 ])
-const phoneObject   = ref(null)
-const cellObject    = ref(null)
 
 const compContacts = computed(() =>
     contacts.value.map((c) => {
@@ -301,7 +321,7 @@ const compContacts = computed(() =>
 const compServiceGroups = computed(() => {
     let data = []
     serviceGroups.value.map((sg) => {
-        data.push( { name: sg.name, value: sg.id })
+        data.push( { name: sg.name, value: sg._id })
     })
     return data
 })
@@ -309,6 +329,11 @@ const compServiceGroups = computed(() => {
 const initializeData = async () => {
     contacts.value      = await ipcRenderer.invoke('getContacts')
     serviceGroups.value = await ipcRenderer.invoke('getServiceGroups')
+
+    if(route.params.id){
+        publisher.value     = await ipcRenderer.invoke('getPublisher', { id: route.params.id })
+        contactPerson.value = publisher.value.contactPerson
+    }
 }
 
 onMounted(() => initializeData())
@@ -330,7 +355,7 @@ const validationSchema = [
     }),
     yup.object({
         contactPerson : yup.boolean(),
-        contactId     : yup.mixed().when('contactPerson', {
+        contact       : yup.mixed().when('contactPerson', {
             is   : false,
             then : yup.mixed().required('Du behöver välja en kontaktperson eller göra den här förkunnaren till kontaktperson'),
         }),
@@ -354,16 +379,16 @@ const validationSchema = [
     yup.object({
         serviceGroup : yup.mixed().required('Obligatorisk'),
         status       : yup.mixed().required('Obligatorisk'),
-        information  : yup.string(),
+        information  : yup.string().nullable(),
     }),
     yup.object({
-        emergencyName  : yup.string(),
-        emergencyPhone : yup.string(),
+        emergencyName  : yup.string().nullable(),
+        emergencyPhone : yup.string().nullable(),
         emergencyEmail : yup.string().email(),
     }),
 ]
 
-const formValues = {
+formValues.value = {
     s290            : false,
     registerCard    : false,
     gender          : 'male',
@@ -387,6 +412,9 @@ const setPhoneObject = (object) => {
         if(object.type === 'cell'){
             cellObject.value = object
         }
+        if(object.type === 'emergencyPhone'){
+            emergencyPhoneObject.value = object
+        }
     }
 }
 
@@ -394,17 +422,27 @@ const setPhoneObject = (object) => {
  * Only Called when the last step is submitted
  */
  const onSubmit = async (formData) => {
-    formData.phone = null
-    formData.cell  = null
+    formData.phone          = null
+    formData.cell           = null
+    formData.emergencyPhone = null
     if(phoneObject.value){
         formData.phone = phoneObject.value
     }
     if(cellObject.value){
         formData.cell = cellObject.value
     }
+    if(emergencyPhoneObject.value){
+        formData.emergencyPhone = emergencyPhoneObject.value
+    }
 
     try{
-        const publisherModel = await ipcRenderer.invoke('storePublisher', JSON.parse(JSON.stringify(formData)))
+        let publisherModel = null
+        if(formData.id){
+            publisherModel = await ipcRenderer.invoke('updatePublisher', formData.id, JSON.parse(JSON.stringify(formData)))
+        } else {
+            publisherModel = await ipcRenderer.invoke('storePublisher', JSON.parse(JSON.stringify(formData)))
+        }
+
         if(publisherModel){
             ipcRenderer.send('show-notification', { title: 'Förkunnaren är sparad', body: `Du har sparat ${publisherModel.firstName} ${publisherModel.lastName}` })
         }else{
@@ -420,5 +458,4 @@ const setPhoneObject = (object) => {
 const onAbort = () => {
     router.push({ name: 'publishers' })
 }
-
 </script>
