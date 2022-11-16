@@ -30,7 +30,7 @@
               v-model="searchQuery"
               type="text"
               name="mobile-search-candidate"
-              class="block w-full rounded-none rounded-l-md border-slate-300 pl-10 focus:border-sky-500 focus:ring-sky-500 sm:hidden placeholder-slate-500 text-slate-800 dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white"
+              class="block w-full rounded-none rounded-l-md border-slate-300 pl-10 sm:hidden placeholder-slate-500 text-slate-800 focus:outline-none dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:bg-slate-50 dark:focus:text-slate-900 dark:border-slate-400"
               placeholder="Filtrera"
               @keyup="filterPublishers()"
             >
@@ -39,7 +39,7 @@
               v-model="searchQuery"
               type="text"
               name="desktop-search-candidate"
-              class="hidden w-full rounded-none rounded-l-md border-slate-300 pl-10 focus:border-sky-500 focus:ring-sky-500 sm:block sm:text-sm placeholder-slate-500 text-slate-800 dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:border-white dark:focus:bg-white dark:focus:text-slate-900 dark:focus:ring-white"
+              class="hidden w-full rounded-none rounded-l-md border-slate-300 pl-10 sm:block sm:text-sm placeholder-slate-500 text-slate-800 focus:outline-none dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:bg-slate-50 dark:focus:text-slate-900 dark:border-slate-400"
               placeholder="Filtrera"
               @keyup="filterPublishers()"
             >
@@ -49,7 +49,7 @@
             class="relative"
           >
             <div>
-              <MenuButton class="relative -ml-px inline-flex items-center border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 focus:z-10">
+              <MenuButton class="relative -ml-px inline-flex items-center border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:outline-none focus:z-10 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-400">
                 <BarsArrowUpIcon
                   class="h-5 w-5 text-slate-400"
                   aria-hidden="true"
@@ -69,10 +69,10 @@
               leave-from-class="transform opacity-100 scale-100"
               leave-to-class="transform opacity-0 scale-95"
             >
-              <MenuItems class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <MenuItems class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-slate-800">
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
                     @click="changeSort('NAME')"
                   >
                     Namn
@@ -80,7 +80,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
                     @click="changeSort('NAME_REV')"
                   >
                     Namn (omvänd)
@@ -88,7 +88,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
                     @click="changeSort('EMAIL')"
                   >
                     E-postadress
@@ -96,7 +96,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
                     @click="changeSort('EMAIL_REV')"
                   >
                     E-postadress (omvänd)
@@ -104,7 +104,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
                     @click="changeSort('ADDRESS')"
                   >
                     Adress
@@ -112,7 +112,7 @@
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                   <button
-                    :class="[active ? 'bg-slate-100' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left']"
+                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
                     @click="changeSort('ADDRESS_REV')"
                   >
                     Adress (omvänd)
@@ -123,7 +123,7 @@
           </Menu>
           <button
             type="button"
-            class="relative -ml-px inline-flex items-center rounded-r-md border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+            class="relative -ml-px inline-flex items-center rounded-r-md border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:outline-none dark:bg-slate-700 dark:text-slate-400 dark:border-slate-400"
             @click="addPublisher"
           >
             <span>Lägg till</span>
@@ -131,7 +131,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-8 flex flex-col">
+    <div class="mt-8 flex flex-col dark:border dark:border-slate-400">
       <div class="-my-2 ">
         <div class="inline-block min-w-full py-2 align-middle">
           <div class="shadow-sm ring-1 ring-black ring-opacity-5">
@@ -139,11 +139,11 @@
               class="min-w-full border-separate"
               style="border-spacing: 0"
             >
-              <thead class="bg-slate-50">
-                <tr class="divide-x divide-slate-200">
+              <thead class="bg-slate-50 dark:bg-slate-800">
+                <tr class="divide-x divide-slate-200 dark:divide-none">
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 flex border-b border-slate-300 bg-slate-50 bg-opacity-75 py-2 pl-3 pr-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter"
+                    class="sticky -top-8 z-10 flex border-b border-slate-300 bg-slate-50 bg-opacity-75 py-3 px-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
                     Namn
                     <BarsArrowDownIcon
@@ -159,19 +159,19 @@
                   </th>
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-2 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter sm:table-cell"
+                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter sm:table-cell dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
                     Telefon
                   </th>
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-2 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter sm:table-cell"
+                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter sm:table-cell dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
                     Mobil
                   </th>
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-2 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter lg:table-cell"
+                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter lg:table-cell dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
                     <div class="w-full flex">
                       E-post
@@ -189,7 +189,7 @@
                   </th>
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-2 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter lg:table-cell"
+                    class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter lg:table-cell dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
                     <div class="w-full flex">
                       Adress
@@ -207,37 +207,37 @@
                   </th>
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 border-b border-slate-300 bg-slate-50 bg-opacity-75 py-2 pr-2 pl-3 backdrop-blur backdrop-filter"
+                    class="sticky -top-8 z-10 border-b border-slate-300 bg-slate-50 bg-opacity-75 py-3 pr-2 pl-3 backdrop-blur backdrop-filter dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
                     <span class="sr-only">Edit</span>
                   </th>
                 </tr>
               </thead>
-              <tbody class="bg-white">
+              <tbody class="bg-white dark:bg-slate-600">
                 <tr
                   v-for="(publisher, publisherIdx) in publishers"
                   :key="publisher._id"
-                  :class="[publisherIdx % 2 === 0 ? 'undefined' : 'bg-slate-50', 'divide-x divide-slate-200']"
+                  :class="[publisherIdx % 2 === 0 ? '' : 'bg-slate-50 dark:bg-slate-700', 'divide-x divide-slate-200 dark:divide-none']"
                 >
-                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap py-2 pl-3 pr-3 text-sm font-medium text-slate-900']">
+                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap py-2 pl-3 pr-3 text-sm font-medium text-slate-900 dark:text-slate-300 dark:border-transparent']">
                     {{ publisher.lastName }}, {{ publisher.firstName }}
                   </td>
-                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden sm:table-cell']">
+                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden sm:table-cell dark:text-slate-300 dark:border-transparent']">
                     {{ publisher.phone ? publisher.phone.formatted : null }}
                   </td>
-                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden sm:table-cell']">
+                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden sm:table-cell dark:text-slate-300 dark:border-transparent']">
                     {{ publisher.cell ? publisher.cell.formatted : null }}
                   </td>
-                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden lg:table-cell']">
+                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden lg:table-cell dark:text-slate-300 dark:border-transparent']">
                     <span @click="sendEmail(publisher.email)">{{ publisher.email }}</span>
                   </td>
-                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden lg:table-cell']">
+                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden lg:table-cell dark:text-slate-300 dark:border-transparent']">
                     <Address :address="publisher.address" />
                   </td>
-                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium']">
-                    <div class="w-full h-full flex justify-end text-slate-400 space-x-2">
+                  <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium dark:border-transparent']">
+                    <div class="w-full h-full flex justify-end text-slate-400 space-x-2 dark:text-slate-300">
                       <router-link
-                        class="hover:text-sky-700 focus:outline-none"
+                        class="hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
                         :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
                         :title="`Ändra ${publisher.firstName} ${publisher.lastName}`"
                       >
@@ -249,7 +249,7 @@
                       >
                         <div>
                           <MenuButton
-                            class="flex items-center bg-white text-slate-400 hover:text-sky-700 focus:outline-none"
+                            class="flex items-center hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
                             :title="`Ladda ner filer för ${publisher.firstName} ${publisher.lastName}`"
                           >
                             <span class="sr-only">Open exports</span>
@@ -267,25 +267,25 @@
                           leave-from-class="transform opacity-100 scale-100"
                           leave-to-class="transform opacity-0 scale-95"
                         >
-                          <MenuItems class="absolute right-0 z-10 -mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <MenuItems class="absolute right-0 z-10 -mt-2 w-fit origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-slate-800">
                             <div class="pb-1">
                               <MenuItem>
                                 <span
-                                  class="text-slate-700 block px-4 py-2 text-sm font-bold border-b border-slate-300 bg-slate-100"
+                                  class="text-slate-700 block px-4 py-2 text-sm font-bold border-b border-slate-300 bg-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-400"
                                 >
                                   {{ publisher.firstName }} {{ publisher.lastName }}
                                 </span>
                               </MenuItem>
                               <MenuItem v-slot="{ active }">
                                 <span
-                                  :class="[active ? 'bg-slate-50 text-slate-900' : 'text-slate-700', 'block px-4 py-2 text-sm']"
+                                  :class="[active ? 'bg-slate-50 text-slate-900 dark:bg-slate-500 dark:text-slate-800' : 'text-slate-700', 'block px-4 py-2 text-sm dark:text-slate-400']"
                                 >
                                   Exportera registerkort
                                 </span>
                               </MenuItem>
                               <MenuItem v-slot="{ active }">
                                 <span
-                                  :class="[active ? 'bg-slate-50 text-slate-900' : 'text-slate-700', 'block px-4 py-2 text-sm']"
+                                  :class="[active ? 'bg-slate-50 text-slate-900 dark:bg-slate-500 dark:text-slate-800' : 'text-slate-700', 'block px-4 py-2 text-sm dark:text-slate-400']"
                                   @click="exportPublisherData(publisher._id)"
                                 >
                                   Exportera data
@@ -296,7 +296,7 @@
                         </transition>
                       </Menu>
                       <button
-                        class="hover:text-sky-700 focus:outline-none"
+                        class="hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
                         :title="`Radera ${publisher.firstName} ${publisher.lastName}`"
                         @click="deletePublisher(publisher._id)"
                       >
@@ -318,7 +318,6 @@
 import { onBeforeUnmount, onMounted, ref }       from 'vue'
 import { ipcRenderer, shell }                    from 'electron'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
-import log                                       from 'electron-log'
 import router                                    from '@/router'
 import Address                                   from '@/components/Address.vue'
 import {

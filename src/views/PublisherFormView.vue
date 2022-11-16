@@ -114,7 +114,7 @@
         />
         <div
           v-if="contactPerson"
-          class="col-span-6 mt-2 grid grid-cols-6 gap-6 p-4 border border-slate-300 rounded-md"
+          class="col-span-6 mt-2 grid grid-cols-6 gap-6 p-4 border border-slate-300 rounded-md dark:border-slate-500"
         >
           <Input
             id="address1"

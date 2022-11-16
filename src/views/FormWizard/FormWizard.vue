@@ -25,7 +25,6 @@
         />
       </div>
     </div>
-    <pre>{{ values }}</pre>
   </form>
 </template>
 
