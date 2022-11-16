@@ -1,15 +1,16 @@
 <template>
   <PhoneInput
     ref="phoneInput"
+    v-bind="attrs"
     :error-message="errorMessage"
     @input="validatePhone"
   />
 </template>
 
 <script>
-import { onMounted, getCurrentInstance } from 'vue'
-import { useField }                      from 'vee-validate'
-import PhoneInput                        from '@/components/form/PhoneInput.vue'
+import { onMounted, getCurrentInstance, ref, computed } from 'vue'
+import { useField }                                     from 'vee-validate'
+import PhoneInput                                       from '@/components/form/PhoneInput.vue'
 
 export default {
     components: {
@@ -17,7 +18,12 @@ export default {
     },
     emits: [ 'inputData' ],
     setup(props, context) {
-        const that = getCurrentInstance()
+        const that       = getCurrentInstance()
+        const phoneInput = ref(null)
+
+        const attrs = computed(() => {
+            return context.attrs
+        })
 
         const {
             value,
@@ -41,6 +47,9 @@ export default {
         }
 
         onMounted(() => {
+            if (context.attrs.value) {
+                handleChange(context.attrs.value)
+            }
             if (that.refs.phoneInput.phone) {
                 handleChange(that.refs.phoneInput.phone)
             }
@@ -50,6 +59,8 @@ export default {
             errorMessage,
             validatePhone,
             meta,
+            phoneInput,
+            attrs,
         }
     },
 }

@@ -76,25 +76,6 @@ const Address = {
     required: [ 'address1', 'zip', 'city' ],
 }
 
-const Emergency = {
-    type       : 'object',
-    properties : {
-        name  : { type: 'string', nullable: true },
-        phone : { type: 'string', nullable: true },
-        email : { type: 'string', nullable: true },
-    },
-    required: [],
-}
-
-const Child = {
-    type       : 'object',
-    properties : {
-        firstName : { type: 'string' },
-        birthday  : { type: 'string', nullable: true },
-    },
-    required: [ 'firstName' ],
-}
-
 const Phone = {
     type       : 'object',
     properties : {
@@ -108,6 +89,25 @@ const Phone = {
         valid              : { type: 'boolean', nullable: true },
     },
     required: [],
+}
+
+const Emergency = {
+    type       : 'object',
+    properties : {
+        name  : { type: 'string', nullable: true },
+        phone : { type: 'object', properties: { Phone }, nullable: true },
+        email : { type: 'string', nullable: true },
+    },
+    required: [],
+}
+
+const Child = {
+    type       : 'object',
+    properties : {
+        firstName : { type: 'string' },
+        birthday  : { type: 'string', nullable: true },
+    },
+    required: [ 'firstName' ],
 }
 
 const SelectOption = {
@@ -143,7 +143,7 @@ export const PublisherSchema = {
         baptisedUnknown : { type: 'boolean' },
         hope            : { type: 'string' },
         contactPerson   : { type: 'boolean' },
-        contactId       : { type: 'string', nullable: true },
+        contact         : { type: 'object', properties: { SelectOption }, nullable: true },
         address         : Address,
         phone           : { type: 'object', properties: { Phone }, nullable: true },
         cell            : { type: 'object', properties: { Phone }, nullable: true },

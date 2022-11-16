@@ -58,6 +58,9 @@ export const enableIPC = () => {
     ipcMain.handle('storePublisher', async (event, data) => {
         return await publisherService.create(data)
     })
+    ipcMain.handle('updatePublisher', async (event, id, data) => {
+        return await publisherService.update(id, data)
+    })
 
     ipcMain.handle('getPublisher', async (event, data) => {
         return await publisherService.findOneById(data.id)
@@ -83,12 +86,16 @@ export const enableIPC = () => {
         return await publisherService.contacts()
     })
 
-    /*** Dates store */
+    /**
+     * Dates store
+     **/
     ipcMain.handle('statsDates', async () => {
         return await datesService.stats()
     })
 
-    /*** Settings store ***/
+    /**
+     * Settings store
+     **/
     ipcMain.handle('statsSettings', async () => {
         return await settingsService.stats()
     })
