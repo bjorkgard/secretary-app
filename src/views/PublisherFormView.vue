@@ -1,7 +1,6 @@
 <template>
   <div class="flex justify-center ">
     <FormWizard
-      ref="publisherForm"
       :validation-schema="validationSchema"
       :form-values="formValues"
       :form-data="publisher"
@@ -299,7 +298,6 @@ const route = useRoute()
 
 const contactPerson        = ref(false)
 const contacts             = ref([])
-const publisherForm        = ref(null)
 const serviceGroups        = ref([])
 const phoneObject          = ref(null)
 const cellObject           = ref(null)

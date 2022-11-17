@@ -131,8 +131,8 @@
         </div>
       </div>
     </div>
-    <div class="mt-8 flex flex-col dark:border dark:border-slate-400">
-      <div class="-my-2 ">
+    <div class="mt-6 flex flex-col dark:border dark:border-slate-500">
+      <div class="-my-2">
         <div class="inline-block min-w-full py-2 align-middle">
           <div class="shadow-sm ring-1 ring-black ring-opacity-5">
             <table
@@ -236,6 +236,13 @@
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium dark:border-transparent']">
                     <div class="w-full h-full flex justify-end text-slate-400 space-x-2 dark:text-slate-300">
+                      <button
+                        class="mr-2 hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
+                        :title="`Lägg till aktiviteter för ${publisher.firstName} ${publisher.lastName}`"
+                        @click="addActivities(publisher._id)"
+                      >
+                        <PlusIcon class="h-6 w-6" />
+                      </button>
                       <router-link
                         class="hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
                         :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
@@ -324,9 +331,10 @@ import {
     BarsArrowUpIcon,
     BarsArrowDownIcon,
     ChevronDownIcon,
+    DocumentArrowDownIcon,
     MagnifyingGlassIcon,
     PencilIcon,
-    DocumentArrowDownIcon,
+    PlusIcon,
     TrashIcon,
 } from '@heroicons/vue/20/solid'
 
