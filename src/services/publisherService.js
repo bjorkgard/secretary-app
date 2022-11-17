@@ -34,7 +34,8 @@ const parsePublisherModel = (data, address) => {
             phone : '',
             email : '',
         },
-        children: [],
+        children     : [],
+        appointments : [],
     }
 
     publisher.s290             = data.s290

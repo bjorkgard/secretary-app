@@ -94,6 +94,7 @@
 <script setup>
 import { computed, nextTick, onMounted, ref, watch }             from 'vue'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/vue'
+import { useField }                                              from 'vee-validate'
 import { parsePhoneNumberFromString }                            from 'libphonenumber-js'
 import { ChevronUpDownIcon }                                     from '@heroicons/vue/20/solid'
 import log                                                       from 'electron-log'
@@ -574,6 +575,10 @@ watch(
         }
     },
 )
+
+const { value, errorMessage, meta } = useField(props.name, props.rules, {
+  initialValue: props.modelValue,
+})
 
 
 /**
