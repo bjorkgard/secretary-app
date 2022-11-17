@@ -1,4 +1,4 @@
-import { app, shell } from 'electron'
+import { app, ipcMain } from 'electron'
 
 export default {
     label   : 'Secretary',
@@ -6,8 +6,7 @@ export default {
         {
             label: 'Om Secretary',
             click() {
-                //todo: show page in application
-                shell.openExternal('https://github.com/bjorkgard/secretary-app')
+                openAboutWindow()
             },
         },
         { type: 'separator' },
@@ -25,4 +24,15 @@ export default {
             },
         },
     ],
+}
+
+let aboutWindow = null
+
+const openAboutWindow = () => {
+    if (aboutWindow) {
+        aboutWindow.focus()
+        return
+    }
+
+    ipcMain.emit('about-window')
 }

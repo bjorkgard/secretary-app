@@ -1,11 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain, dialog, Menu } from 'electron'
-import { autoUpdater }                                         from 'electron-updater'
-import windowStateKeeper                                       from 'electron-window-state'
-import { createProtocol }                                      from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS }                   from 'electron-devtools-installer'
-import log                                                     from 'electron-log'
+import { app, protocol, BrowserWindow, ipcMain, dialog, Menu, Notification } from 'electron'
+import { autoUpdater }                                                       from 'electron-updater'
+import windowStateKeeper                                                     from 'electron-window-state'
+import { createProtocol }                                                    from 'vue-cli-plugin-electron-builder/lib'
+import installExtension, { VUEJS3_DEVTOOLS }                                 from 'electron-devtools-installer'
+import log                                                                   from 'electron-log'
 
 import { enableIPC } from './ipcMains'
 
@@ -15,6 +15,7 @@ import devMenu         from '@/menu/dev_menu'
 import editMenu        from '@/menu/edit_menu'
 import helpMenu        from '@/menu/help_menu'
 import maintenanceMenu from '@/menu/maintenance_menu'
+import publisherMenu   from '@/menu/publisher_menu'
 import windowMenu      from '@/menu/window_menu'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -28,9 +29,9 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 const setApplicationMenu = () => {
-    const menus = [ appMenu, editMenu, windowMenu, maintenanceMenu, helpMenu ]
+    const menus = [ appMenu, editMenu, publisherMenu, windowMenu, maintenanceMenu, helpMenu ]
     if (isDevelopment) {
-        menus.splice(2,0,devMenu)
+        menus.splice(3, 0, devMenu)
     }
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(menus))
@@ -52,6 +53,9 @@ async function createWindow() {
     height               : mainWindowState.height,
     x                    : mainWindowState.x,
     y                    : mainWindowState.y,
+    minWidth             : 520,
+    minHeight            : 520,
+    frame                : false,
     titleBarStyle        : 'hidden',
     titleBarOverlay      : true,
     trafficLightPosition : {
@@ -142,6 +146,65 @@ app.whenReady().then(() => {
         const webContents = event.sender
         if (webContents.backgroundThrottling && !isDevelopment)
             webContents.send ('window-focus-throttling', boolFocus)
+    })
+
+    ipcMain.on('about-window', () => {
+        const modalPath = isDevelopment ? `${process.env.WEBPACK_DEV_SERVER_URL}#/about` : 'app://./index.html#about'
+        let aboutWindow = new BrowserWindow({
+            height         : 620,
+            resizable      : false,
+            width          : 750,
+            title          : 'Om Secretary',
+            minimizable    : false,
+            fullscreenable : false,
+            alwaysOnTop    : true,
+            center         : true,
+            webPreferences : { webSecurity: false, nodeIntegration: true, contextIsolation: false },
+
+        })
+
+        aboutWindow.loadURL(modalPath)
+        //if (isDevelopment) aboutWindow.webContents.openDevTools()
+
+        aboutWindow.on('closed', function() {
+            aboutWindow = null
+        })
+    })
+
+
+    ipcMain.on('show-publisher', () => {
+        win.webContents.send('changeRouteTo', '/publishers')
+    })
+
+    ipcMain.on('add-publisher', () => {
+        win.webContents.send('changeRouteTo', '/publishers/add')
+    })
+})
+
+ipcMain.on('show-notification', (args) => {
+    new Notification({
+        title : args.title,
+        body  : args.body,
+    })
+})
+
+ipcMain.on('openConfirmation', (event, args) => {
+    const webContents = event.sender
+    dialog.showMessageBox(win, {
+        'type'    : 'question',
+        'title'   : 'Bekräfta',
+        'message' : args.message,
+        'buttons' : [
+            'OK',
+            'Avbryt',
+        ],
+    }).then((result) => {
+        if (result.response !== 0) { return }
+
+        // Reply to the render process
+        webContents.send(args.responseListener, { response: result.response, ...args })
+    }).catch( e => {
+        log.error(e)
     })
 })
 

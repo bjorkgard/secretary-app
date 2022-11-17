@@ -7,9 +7,14 @@ import InitView from '../views/InitView.vue'
 
 const routes = [
     {
-      path      : '/',
-      name      : 'init',
-      component : InitView,
+        path      : '/about',
+        name      : 'about',
+        component : () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    },
+    {
+        path      : '/',
+        name      : 'init',
+        component : InitView,
     },
     {
         path      : '/home',
@@ -17,14 +22,24 @@ const routes = [
         component : () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),
     },
     {
-        path      : '/settings',
-        name      : 'settings',
-        component : () => import(/* webpackChunkName: "about" */ '../views/SettingsView.vue'),
+        path      : '/publishers',
+        name      : 'publishers',
+        component : () => import(/* webpackChunkName: "home" */ '../views/PublisherView.vue'),
     },
     {
-        path      : '/about',
-        name      : 'about',
-        component : () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+        path      : '/publishers/add',
+        name      : 'publishers.add',
+        component : () => import(/* webpackChunkName: "home" */ '../views/PublisherFormView.vue'),
+    },
+    {
+        path      : '/publishers/:id',
+        name      : 'publishers.edit',
+        component : () => import(/* webpackChunkName: "home" */ '../views/PublisherFormView.vue'),
+    },
+    {
+        path      : '/settings',
+        name      : 'settings',
+        component : () => import(/* webpackChunkName: "settings" */ '../views/SettingsView.vue'),
     },
 ]
 

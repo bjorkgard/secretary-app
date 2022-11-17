@@ -1,19 +1,22 @@
 <template>
-  <div class="w-screen h-screen flex flex-col drag">
-    <header>
+  <div class="w-screen h-screen flex flex-col drag overflow-hidden">
+    <header v-if="currentRoute !== 'about'">
       <Navigation />
     </header>
-    <main class="p-8 grow no-drag">
+    <main class="p-8 grow no-drag overflow-y-auto">
       <router-view v-slot="{Component}">
         <transition name="fade">
           <component :is="Component" />
         </transition>
       </router-view>
     </main>
-    <footer class="min-w-full no-drag">
+    <footer
+      v-if="currentRoute !== 'about'"
+      class="min-w-full no-drag"
+    >
       <div class="mx-auto px-2 pt-1 pb-2 flex flex-col sm:flex-row border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-700">
         <div class="text-center text-sm text-slate-500 sm:text-left dark:text-slate-400">
-          ©{{ new Date().getFullYear() }} Secretary - All rights reserved.
+          {{ new Date().getFullYear() }} Secretary
         </div>
         <div class="sm:grow" />
         <div class="text-center text-sm text-slate-500 sm:text-right dark:text-slate-400">
@@ -25,12 +28,18 @@
 </template>
 
 <script setup>
-import { ref }                                    from 'vue'
+import { computed, ref }                          from 'vue'
 import { ipcRenderer }                            from 'electron'
 import { defineRule, configure }                  from 'vee-validate'
 import { required, email }                        from '@vee-validate/rules'
 import { localize, loadLocaleFromURL, setLocale } from '@vee-validate/i18n'
+import { useRoute }                               from 'vue-router'
 import Navigation                                 from '@/components/Navigation.vue'
+import router                                     from '@/router'
+
+const currentRoute = computed(() => {
+    return useRoute().name
+})
 
 // define vee rules
 defineRule('required', required)
@@ -71,6 +80,9 @@ ipcRenderer.invoke('locale').then(value => {
     loadLocaleFromURL(`https://unpkg.com/@vee-validate/i18n@4.1.0/dist/locale/${value}.json`)
 
     setLocale(value)
+})
+ipcRenderer.on('changeRouteTo', (event, path) => {
+    router.push(path)
 })
 
 /*

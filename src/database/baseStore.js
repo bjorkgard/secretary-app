@@ -2,8 +2,19 @@ import electron   from 'electron'
 import Ajv        from 'ajv'
 import addFormats from 'ajv-formats'
 import Datastore  from 'nedb-promises'
+import log        from 'electron-log'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+const formatBytes = (bytes, decimals) => {
+    if(bytes == 0) return '0 Bytes'
+    var k = 1024,
+        dm = decimals || 2,
+        sizes = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB' ],
+        i = Math.floor(Math.log(bytes) / Math.log(k))
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[ i ]
+ }
 
 export default class BaseStore {
     constructor(fileName, schema) {
@@ -47,17 +58,35 @@ export default class BaseStore {
 
     update(_id, data) {
         const isValid = this.validate(data)
+
         if (isValid) {
             return this.databaseInstance.update({ _id }, data)
         }
     }
 
-    findOneById(_id) {
-        return this.databaseInstance.findOne({ _id })
+    delete(_id) {
+        return this.databaseInstance.remove({ _id })
+    }
+
+    async findOneById(_id) {
+        return await this.databaseInstance.findOne({ _id })
     }
 
     drop() {
         this.databaseInstance.dropDatabaseAsync()
+    }
+
+    async stats() {
+        const data  = await this.databaseInstance.find({})
+        const bytes = Buffer.byteLength(JSON.stringify(data))
+        const count = await this.databaseInstance.count({})
+
+        const stats = {
+            count : count,
+            size  : formatBytes(bytes),
+        }
+
+        return stats
     }
 
 }

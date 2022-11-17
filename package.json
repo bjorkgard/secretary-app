@@ -1,6 +1,6 @@
 {
   "name": "secretary",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "An application for the secretary of the congregation",
   "author": {
@@ -30,6 +30,7 @@
     "electron-updater": "^5.3.0",
     "electron-window-state": "^5.0.3",
     "fs-extra": "^10.1.0",
+    "libphonenumber-js": "^1.10.14",
     "nedb-promises": "^6.2.1",
     "pinia": "^2.0.23",
     "pinia-plugin-persistedstate": "^2.3.0",
@@ -39,7 +40,8 @@
     "uuid": "^9.0.0",
     "vee-validate": "^4.7.1",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",
