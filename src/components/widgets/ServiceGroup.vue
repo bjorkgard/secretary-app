@@ -153,10 +153,18 @@ const onSubmit = handleSubmit(async (values, { resetForm }) => {
 })
 
 const hideForm = () => {
+    setValues({
+        name : '',
+        id   : null,
+    })
     showForm.value = false
 }
 
 const addServiceGroup = () => {
+    setValues({
+        name : '',
+        id   : null,
+    })
     showForm.value = true
 }
 
