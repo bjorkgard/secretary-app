@@ -236,13 +236,6 @@
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium dark:border-transparent']">
                     <div class="w-full h-full flex justify-end text-slate-400 space-x-2 dark:text-slate-300">
-                      <button
-                        class="mr-2 hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
-                        :title="`Lägg till aktiviteter för ${publisher.firstName} ${publisher.lastName}`"
-                        @click="addActivities(publisher._id)"
-                      >
-                        <PlusIcon class="h-6 w-6" />
-                      </button>
                       <router-link
                         class="hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
                         :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
@@ -334,7 +327,6 @@ import {
     DocumentArrowDownIcon,
     MagnifyingGlassIcon,
     PencilIcon,
-    PlusIcon,
     TrashIcon,
 } from '@heroicons/vue/20/solid'
 
