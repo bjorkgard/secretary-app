@@ -50,7 +50,7 @@ const props = defineProps({
     },
 })
 
-const emit           = defineEmits([ 'submit', 'abort' ])
+const emit           = defineEmits([ 'submit', 'abort', 'next' ])
 const currentStepIdx = ref(0)
 const isSubmitting   = ref(false)
 
@@ -90,6 +90,7 @@ const { values, handleSubmit, setValues } = useForm({
 const onSubmit = handleSubmit((values) => {
     if (!isLastStep.value) {
         currentStepIdx.value++
+        emit('next', values)
 
         return
     }

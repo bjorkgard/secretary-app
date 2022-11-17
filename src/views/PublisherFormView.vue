@@ -7,6 +7,7 @@
       class="w-full md:max-w-4xl"
       @submit="onSubmit"
       @abort="onAbort"
+      @next="onNext"
     >
       <FormStep
         title="Personlig information"
@@ -194,6 +195,56 @@
         />
       </FormStep>
       <FormStep
+        v-if="(temporaryFormData.baptised || temporaryFormData.baptisedUnknown) && temporaryFormData.status.value === 'ACTIVE'"
+        title="Förordnanden"
+        subtitle="Välj de förordnanden som är aktuella för förkunnaren. Om du inte vet datumet kan du lämna det tomt."
+      >
+        <FieldArray
+          v-slot="{ fields, push, remove }"
+          name="appointments"
+        >
+          <fieldset
+            v-for="(field, idx) in fields"
+            :key="field.key"
+            class="col-span-6 border border-solid border-slate-400 p-4 grid grid-cols-6 gap-6"
+          >
+            <legend class="text-sm text-slate-400">
+              Förordnande #{{ idx+1 }}
+            </legend>
+            <Select
+              :id="`type_${idx}`"
+              label="Förordnanden"
+              :name="`appointments[${idx}].type`"
+              :options="compAppointments"
+              class="col-span-6 sm:col-span-3"
+            />
+            <Input
+              :id="`date_${idx}`"
+              label="Datum"
+              :name="`appointments[${idx}].date`"
+              type="date"
+              class="col-span-4 md:col-span-2"
+            />
+            <button
+              type="button"
+              class="col-span-1 place-self-end flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+              title="Ta bort"
+              @click="remove(idx)"
+            >
+              <XMarkIcon
+                class="h-6 w-6"
+                aria-hidden="true"
+              />
+            </button>
+          </fieldset>
+          <SecondaryButton
+            label="Lägg till ett förordnande"
+            class="col-span-2 place-self-center"
+            @click="push({ type: null, date: '' })"
+          />
+        </FieldArray>
+      </FormStep>
+      <FormStep
         title="Kontaktperson vid nödsituation"
         subtitle="Någon man kan kontakta vid en eventuell nödsituation."
       >
@@ -304,15 +355,30 @@ const cellObject           = ref(null)
 const emergencyPhoneObject = ref(null)
 const publisher            = ref(null)
 const formValues           = ref(null)
+const temporaryFormData    = ref({ baptised: null, baptisedUnknown: false })
 const status               = ref([
-    { value: 'active', name: 'Regelbunden' },
-    { value: 'irregular', name: 'Oregelbunden' },
-    { value: 'inactive', name: 'Overksam' },
+    { value: 'ACTIVE', name: 'Regelbunden' },
+    { value: 'IRREGULAR', name: 'Oregelbunden' },
+    { value: 'INACTIVE', name: 'Overksam' },
+])
+const appointments         = ref([
+    { value: 'ELDER', name: 'Äldste' },
+    { value: 'MINISTERIAL_SERVANT', name: 'Församlingstjänare' },
+    { value: 'PIONEER', name: 'Pionjär' },
+    { value: 'AUX_PIONEER', name: 'Kontinuerlig hjälppionjär' },
+    { value: 'SPECIALPIONEER', name: 'Specialpionjär' },
+    { value: 'CIRCUIT_WORK', name: 'Kretstjänst' },
 ])
 
 const compContacts = computed(() =>
     contacts.value.map((c) => {
         return { name: `${c.lastName}, ${c.firstName}`, value: c._id }
+    }),
+)
+
+const compAppointments = computed(() =>
+    appointments.value.map((a) => {
+        return { name: a.name, value: a.value, disabled: (a.value === 'ELDER' || a.value === 'MINISTERIAL_SERVANT') && temporaryFormData.value.gender === 'female' }
     }),
 )
 
@@ -390,6 +456,7 @@ formValues.value = {
     s290            : false,
     registerCard    : false,
     gender          : 'male',
+    baptised        : null,
     baptisedUnknown : false,
     hope            : 'other_sheep',
     contactPerson   : false,
@@ -455,5 +522,9 @@ const setPhoneObject = (object) => {
 
 const onAbort = () => {
     router.push({ name: 'publishers' })
+}
+
+const onNext = (formData) => {
+    temporaryFormData.value = formData
 }
 </script>

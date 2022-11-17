@@ -122,9 +122,8 @@ const SelectOption = {
 export const Appointment = {
     type       : 'object',
     properties : {
-        type    : { type: 'object', properties: { SelectOption } },
-        date    : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
-        unknown : { type: 'boolean' },
+        type : { type: 'object', properties: { SelectOption } },
+        date : { type: 'string', nullable: true },
     },
     required: [ 'type' ],
 }
