@@ -73,11 +73,11 @@
           @submit="onSubmit"
         >
           <div class="mt-3 w-full text-center sm:mt-0 sm:text-left">
-            <h3 class="text-lg font-medium leading-6 text-slate-900">
+            <h3 class="text-lg font-medium leading-6 text-slate-900 dark:text-slate-400">
               Tjänstegrupp
             </h3>
             <div class="mt-2">
-              <p class="text-sm text-gray-500">
+              <p class="text-sm text-slate-500">
                 Fyll i uppgifterna och tryck på Spara.
               </p>
               <div class="mt-2">
