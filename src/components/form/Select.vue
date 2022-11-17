@@ -41,11 +41,13 @@
             v-slot="{ active, selected }"
             as="template"
             :value="option"
+            :disabled="option.disabled"
           >
             <li
               :class="[
                 active ? 'text-white bg-sky-600 dark:bg-sky-800 dark:text-sky-400' : 'text-slate-900',
-                'cursor-default select-none relative py-2 pl-3 pr-9',
+                option.disabled ? 'cursor-not-allowed opacity-50 bg-slate-200' : 'cursor-default',
+                'select-none relative py-2 pl-3 pr-9',
               ]"
             >
               <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">
