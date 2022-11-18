@@ -29,6 +29,7 @@
         <div class="mx-auto max-w-7xl">
           <Secretary v-if="selectedTarget.target === 'about'" />
           <Database v-if="selectedTarget.target === 'db'" />
+          <Applications v-if="selectedTarget.target === 'applications'" />
         </div>
       </main>
     </div>
@@ -38,15 +39,18 @@
 <script setup>
 import { ref }               from 'vue'
 import {
+    ArchiveBoxIcon,
     CircleStackIcon,
     InformationCircleIcon,
 } from '@heroicons/vue/24/outline'
-import Secretary from './AboutComponents/Secretary.vue'
-import Database  from './AboutComponents/Database.vue'
+import Secretary    from './AboutComponents/Secretary.vue'
+import Database     from './AboutComponents/Database.vue'
+import Applications from './AboutComponents/Applications.vue'
 
 const navigation = [
   { name: 'Secretary', target: 'about', icon: InformationCircleIcon },
   { name: 'Databas', target: 'db', icon: CircleStackIcon },
+  { name: 'Applikationer', target: 'applications', icon: ArchiveBoxIcon },
 ]
 
 const selectedTarget = ref(navigation[ 0 ])

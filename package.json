@@ -41,6 +41,7 @@
     "vee-validate": "^4.7.3",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz",
     "yup": "^0.32.11"
   },
   "devDependencies": {

@@ -14,7 +14,7 @@
         <dt class="text-sm font-medium text-slate-500 dark:text-slate-400">
           {{ database.name }}
         </dt>
-        <dd class="flex text-sm text-slate-900 col-span-2 mt-0 dark:text-slate-500">
+        <dd class="flex text-sm text-slate-500 col-span-2 mt-0 dark:text-slate-400">
           <span class="flex-grow">{{ database.count }} poster</span>
           <span class="ml-4 flex-shrink-0">
             {{ database.size }}
