@@ -1,6 +1,6 @@
 {
   "name": "secretary",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "private": true,
   "description": "An application for the secretary of the congregation",
   "author": {
