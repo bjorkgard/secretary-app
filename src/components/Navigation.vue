@@ -21,6 +21,11 @@
               to="publishers"
               tabindex="-1"
             />
+            <NavigationLink
+              name="Exportera"
+              to="exports"
+              tabindex="-1"
+            />
           </div>
         </div>
 

@@ -59,8 +59,8 @@ const parseSettings = (data) => {
     settingsModel.user.lastname       = data.user.lastname
     settingsModel.user.email          = data.user.email
     settingsModel.settings.online     = data.settings.online ? data.settings.online : false
-    settingsModel.createdAt           = data.createdAt.toISOString()
-    settingsModel.updatedAt           = data.updatedAt.toISOString()
+    settingsModel.createdAt           = data.createdAt.toLocaleString('sv-SE', { hour12: false })
+    settingsModel.updatedAt           = data.updatedAt.toLocaleString('sv-SE', { hour12: false })
 
     return settingsModel
 }

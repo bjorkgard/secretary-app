@@ -38,6 +38,20 @@ export const DatesSchema = {
     additionalProperties : false,
 }
 
+export const ExportsSchema = {
+    type       : 'object',
+    properties : {
+        _id       : { type: 'string', nullable: true },
+        type      : { type: 'string', nullable: false },
+        count     : { type: 'number', nullable: false },
+        date      : { type: 'object', format: 'custom-date-time', false: true, required: [] },
+        createdAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        updatedAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+    },
+    required             : [ 'type', 'date' ],
+    additionalProperties : false,
+}
+
 export const ServiceGroupSchema = {
     type       : 'object',
     properties : {

@@ -27,14 +27,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ipcRenderer }    from 'electron'
-var XLSX = require('xlsx')
 
 const applications = ref([])
 
 onMounted(() => {
     applications.value.push(
-        { name: 'sheetjs-electron', version: 'XLSX ' + XLSX.version, copyright: '(C) 2017-present SheetJS LLC' },
+        { },
     )
 })
 

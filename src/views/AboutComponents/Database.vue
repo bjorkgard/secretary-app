@@ -33,6 +33,7 @@ const databases = ref([])
 
 onMounted(async () => {
     const datesStat        = await ipcRenderer.invoke('statsDates')
+    const exportsStat      = await ipcRenderer.invoke('statsExports')
     const settingsStat     = await ipcRenderer.invoke('statsSettings')
     const publisherStat    = await ipcRenderer.invoke('statsPublishers')
     const serviceGroupStat = await ipcRenderer.invoke('statsServiceGroups')
@@ -41,6 +42,13 @@ onMounted(async () => {
         name  : 'Dates',
         count : datesStat.count,
         size  : datesStat.size,
+    }
+    databases.value.push(database)
+
+    database = {
+        name  : 'Exports',
+        count : exportsStat.count,
+        size  : exportsStat.size,
     }
     databases.value.push(database)
 

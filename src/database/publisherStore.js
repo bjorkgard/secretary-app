@@ -1,4 +1,3 @@
-import log       from 'electron-log'
 import BaseStore from './baseStore'
 
 export default class PublisherStore extends BaseStore {
@@ -41,6 +40,9 @@ export default class PublisherStore extends BaseStore {
             case 'ADDRESS_REV':
                 sort = { 'address.address1': -1 }
                 break
+            case 'GROUP':
+                sort = { 'serviceGroup.name': 1, lastName: 1, firstName: 1 }
+                break
             default:
                 sort = { lastName: 1, firstName: 1 }
         }
@@ -52,6 +54,7 @@ export default class PublisherStore extends BaseStore {
                 { email: new RegExp(searchQuery, 'i') },
             ] }
         }
+
 
         return this.databaseInstance.find(query).sort(sort)
     }

@@ -18,7 +18,9 @@
         <div class="text-center text-sm text-slate-500 sm:text-left dark:text-slate-400">
           {{ new Date().getFullYear() }} Secretary
         </div>
-        <div class="sm:grow" />
+        <div class="sm:grow text-center text-sm text-slate-500 dark:text-slate-400">
+          {{ settings.congregation.name }}
+        </div>
         <div class="text-center text-sm text-slate-500 sm:text-right dark:text-slate-400">
           {{ `${locale} | v${version}` }}
         </div>
@@ -36,6 +38,9 @@ import { localize, loadLocaleFromURL, setLocale } from '@vee-validate/i18n'
 import { useRoute }                               from 'vue-router'
 import Navigation                                 from '@/components/Navigation.vue'
 import router                                     from '@/router'
+import { useSettingsStore }                       from '@/stores'
+
+const settings = useSettingsStore()
 
 const currentRoute = computed(() => {
     return useRoute().name

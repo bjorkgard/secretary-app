@@ -40,7 +40,7 @@
                 />
               </button>
             </div>
-            <span class="text-sm leading-5 text-slate-500 text-right">
+            <span class="text-sm leading-5 text-slate-500 text-right whitespace-nowrap">
               {{ `${serviceGroup.publishers_count || 0} förkunnare` }}
             </span>
           </li>
