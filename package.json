@@ -29,6 +29,7 @@
     "electron-log": "^4.4.8",
     "electron-updater": "^5.3.0",
     "electron-window-state": "^5.0.3",
+    "exceljs": "^4.3.0",
     "fs-extra": "^10.1.0",
     "libphonenumber-js": "^1.10.14",
     "nedb-promises": "^6.2.1",
@@ -41,7 +42,6 @@
     "vee-validate": "^4.7.3",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-latest/xlsx-latest.tgz",
     "yup": "^0.32.11"
   },
   "devDependencies": {
