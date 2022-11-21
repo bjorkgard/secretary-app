@@ -13,6 +13,7 @@ import { enableIPC } from './ipcMains'
 import appMenu         from '@/menu/app_menu'
 import devMenu         from '@/menu/dev_menu'
 import editMenu        from '@/menu/edit_menu'
+import exportMenu      from '@/menu/export_menu'
 import helpMenu        from '@/menu/help_menu'
 import maintenanceMenu from '@/menu/maintenance_menu'
 import publisherMenu   from '@/menu/publisher_menu'
@@ -29,7 +30,7 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 const setApplicationMenu = () => {
-    const menus = [ appMenu, editMenu, publisherMenu, windowMenu, maintenanceMenu, helpMenu ]
+    const menus = [ appMenu, editMenu, publisherMenu, exportMenu, windowMenu, maintenanceMenu, helpMenu ]
     if (isDevelopment) {
         menus.splice(3, 0, devMenu)
     }
@@ -162,7 +163,13 @@ app.whenReady().then(() => {
             fullscreenable : false,
             alwaysOnTop    : true,
             center         : true,
-            webPreferences : { webSecurity: false, nodeIntegration: true, contextIsolation: false },
+            webPreferences : {
+                webSecurity                : false,
+                nodeIntegration            : true,
+                contextIsolation           : false,
+                worldSafeExecuteJavaScript : true,
+                enableRemoteModule         : true,
+            },
 
         })
 

@@ -1,7 +1,6 @@
 import { ServiceGroupSchema } from '@/database/schemas'
 import ServiceGroupStore      from '@/database/serviceGroupStore'
 import PublisherService       from '@/services/publisherService'
-import log                    from 'electron-log'
 
 const serviceGroupStore = new ServiceGroupStore('service_groupes.db', ServiceGroupSchema)
 const publisherService  = new PublisherService()
@@ -26,8 +25,8 @@ const parseServiceGroup = (data) => {
 
     serviceGroupModel.id        = data._id
     serviceGroupModel.name      = data.name
-    serviceGroupModel.createdAt = data.createdAt.toISOString()
-    serviceGroupModel.updatedAt = data.updatedAt.toISOString()
+    serviceGroupModel.createdAt = data.createdAt.toLocaleString('sv-SE', { hour12: false })
+    serviceGroupModel.updatedAt = data.updatedAt.toLocaleString('sv-SE', { hour12: false })
 
     return serviceGroupModel
 }

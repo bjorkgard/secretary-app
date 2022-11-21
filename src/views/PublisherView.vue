@@ -216,7 +216,7 @@
               <tbody class="bg-white dark:bg-slate-600">
                 <tr
                   v-for="(publisher, publisherIdx) in publishers"
-                  :key="publisher._id"
+                  :key="publisher.id"
                   :class="[publisherIdx % 2 === 0 ? '' : 'bg-slate-50 dark:bg-slate-700', 'divide-x divide-slate-200 dark:divide-none']"
                 >
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap py-2 pl-3 pr-3 text-sm font-medium text-slate-900 dark:text-slate-300 dark:border-transparent']">
@@ -238,7 +238,7 @@
                     <div class="w-full h-full flex justify-end text-slate-400 space-x-2 dark:text-slate-300">
                       <router-link
                         class="hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
-                        :to="{ name: 'publishers.edit', params: {id:publisher._id}}"
+                        :to="{ name: 'publishers.edit', params: {id:publisher.id}}"
                         :title="`Ändra ${publisher.firstName} ${publisher.lastName}`"
                       >
                         <PencilIcon class="h-5 w-5" />
@@ -286,7 +286,7 @@
                               <MenuItem v-slot="{ active }">
                                 <span
                                   :class="[active ? 'bg-slate-50 text-slate-900 dark:bg-slate-500 dark:text-slate-800' : 'text-slate-700', 'block px-4 py-2 text-sm dark:text-slate-400']"
-                                  @click="exportPublisherData(publisher._id)"
+                                  @click="exportPublisherData(publisher.id)"
                                 >
                                   Exportera data
                                 </span>
@@ -298,7 +298,7 @@
                       <button
                         class="hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
                         :title="`Radera ${publisher.firstName} ${publisher.lastName}`"
-                        @click="deletePublisher(publisher._id)"
+                        @click="deletePublisher(publisher.id)"
                       >
                         <TrashIcon class="h-5 w-5" />
                       </button>
@@ -341,7 +341,7 @@ const initializeData = async () => {
     ipcRenderer.on('confirmedDeletion', (event, args) => {
         ipcRenderer.invoke('deletePublisher', { id: args.id }).then((resp) => {
             if(resp){
-                publishers.value = publishers.value.filter(item => item._id !== args.id)
+                publishers.value = publishers.value.filter(item => item.id !== args.id)
             }
         })
 
@@ -390,7 +390,7 @@ const exportPublisherData = async (id) => {
     }
     publisher.updatedAt     = new Date()
 
-    delete publisher._id
+    delete publisher.id
     delete publisher.serviceGroup
     delete publisher.address1
     delete publisher.address2
