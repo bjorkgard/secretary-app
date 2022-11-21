@@ -5,21 +5,24 @@ import log               from 'electron-log'
 const exportsStore = new ExportsStore('exports.db', ExportsSchema)
 
 const parseExportsModel = (data) => {
-    const date = {
+    const exp = {
+        name  : '',
         type  : '',
         count : 0,
     }
 
-    date.type  = data.type
-    date.count = data.count
+    exp.name  = data.name
+    exp.type  = data.type
+    exp.count = data.count
 
-    return date
+    return exp
 }
 
 const parseExports = (data) => {
     const exportsModel = {
         id        : '',
         name      : '',
+        function  : '',
         type      : '',
         count     : 0,
         createdAt : '',
@@ -27,7 +30,8 @@ const parseExports = (data) => {
     }
 
     exportsModel.id        = data._id
-    exportsModel.name      = getName(data.type)
+    exportsModel.name      = getName(data.name)
+    exportsModel.function  = data.name
     exportsModel.type      = data.type
     exportsModel.count     = data.count
     exportsModel.createdAt = data.createdAt.toLocaleString('sv-SE', { hour12: false })
@@ -48,8 +52,8 @@ const getName = (type) => {
 }
 
 export default class ExportsService {
-    upsert(type) {
-        exportsStore.upsert(type)
+    upsert(name, type) {
+        exportsStore.upsert(name, type)
     }
 
     async getPopularExports(limit) {

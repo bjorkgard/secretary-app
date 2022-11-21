@@ -9,15 +9,169 @@ import PublisherService         from '@/services/publisherService'
 import ServiceGroupService      from '@/services/serviceGroupService'
 import ExportsService           from '@/services/exportsService'
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
+const isDevelopment       = process.env.NODE_ENV !== 'production'
+const maintenenceService  = new MaintenenceService()
+const datesService        = new DatesService()
+const exportsService      = new ExportsService()
+const settingsService     = new SettingsService()
+const publisherService    = new PublisherService()
+const serviceGroupService = new ServiceGroupService()
+
+const generateAddressList = async (publishers, name) => {
+    const rows     = []
+    const settings = await settingsService.find()
+
+    publishers.map(publisher => {
+        let address = publisher.address1
+        if(publisher.address2){
+            address += `\n${publisher.address2}`
+        }
+        address += `\n${publisher.zip} ${publisher.city}`
+
+        rows.push([
+            publisher.serviceGroup.name,
+            `${publisher.lastName}, ${publisher.firstName}`,
+            address,
+            publisher.phone ? publisher.phone.formatted : '',
+            publisher.cell ? publisher.cell.formatted : '',
+            publisher.email,
+            '',
+        ])
+    })
+
+    const workbook   = new Excel.Workbook()
+    workbook.creator = 'secretary.jwapp.info'
+    workbook.created = new Date()
+
+    const worksheet = workbook.addWorksheet('Sheet1', {
+        pageSetup: {
+            fitToPage        : true,
+            paperSize        : 9,
+            verticalCentered : true,
+            showGridLines    : false,
+            margins          : {
+                left   : 0.2,
+                right  : 0.2,
+                top    : 0.75,
+                bottom : 0.75,
+                header : 0.3,
+                footer : 0.1,
+            },
+        },
+        headerFooter: {
+            differentFirst : true,
+            firstHeader    : '&C&8Tillgången är begränsad och sekretessbelagd.\nPersonuppgifter på papper förvaras i låsta arkivskåp som bara auktoriserad personal har tillgång till. (CRPA-Z; sfl 26:2)',
+            firstFooter    : `&L&8&K000000${new Date().toLocaleString('sv-SE', { hour12: false })}&R&8&K000000Sida &P av &N`,
+            oddFooter      : `&L&8&K000000${new Date().toLocaleString('sv-SE', { hour12: false })}&R&8&K000000Sida &P av &N`,
+        },
+        views: [
+            { state: 'frozen', xSplit: 0, ySplit: 2 },
+        ],
+        columns: [
+            { key: 'serviceGroup' },
+            { key: 'name' },
+            { key: 'address' },
+            { key: 'phone' },
+            { key: 'cell' },
+            { key: 'email' },
+            { key: 'other' },
+        ],
+    })
+
+    worksheet.insertRow(1, [ settings.congregation.name ])
+    worksheet.mergeCells('A1:G1')
+    worksheet.insertRow(2, [ 'Tjänstegrupp', 'Namn', 'Adress', 'Telefon', 'Mobil', 'E-post', 'Övrigt' ])
+    worksheet.getRow(1).font      = { size: 24, bold: true }
+    worksheet.getRow(1).alignment = { horizontal: 'center' }
+    worksheet.getRow(2).font      = { bold: true }
+    worksheet.getRow(2).border    = { bottom: { style: 'medium' } }
+
+    worksheet.addRows(rows)
+
+    autoWidth(worksheet)
+
+    worksheet.eachRow((row) => {
+        row.alignment = { vertical: 'middle' }
+    })
+
+    try{
+        storeExportedFile(`${name}.xlsx`, workbook)
+    }catch(err){
+        log.error(err)
+    }
+}
+
+/**
+ * Autofit columns by width
+ *
+ * @param {Excel.worksheet} worksheet
+ * @param {number} minimalWidth
+ */
+const autoWidth = (worksheet, minimalWidth = 5) => {
+    worksheet.columns.forEach((column) => {
+        let maxColumnLength = 0
+        column.eachCell({ includeEmpty: true }, (cell) => {
+
+            // do not calculate first row
+            if(cell._row._number !== 1){
+                maxColumnLength = Math.max(
+                    maxColumnLength,
+                    minimalWidth,
+                    cell.value ? Math.max(...(cell.value.split('\n').map(el => el.length))) : 0,
+                )
+            }
+
+        })
+        column.width = maxColumnLength + 2
+    })
+}
+
+const storeExportedFile = (name, workbook) => {
+    let options = {
+        title       : 'Spara fil som',
+        defaultPath : name,
+        buttonLabel : 'Spara',
+        filters     : [ {
+            name       : 'Adresslista',
+            extensions : [ 'xlsx', 'xls', 'xlsm', 'xlsb', 'xml', 'csv', 'ods', 'numbers' ],
+        } ],
+    }
+
+    dialog.showSaveDialog(null, options)
+        .then((response) => {
+            if(!response.canceled) {
+                workbook.xlsx.writeFile(response.filePath)
+            }
+        })
+        .catch(err => {
+            log.error(err)
+        })
+
+}
+
+export const exportAddressListName = async (type) => {
+    exportsService.upsert('export-address-list-name', type)
+    const publishers = await publisherService.find({ sort: 'NAME' })
+
+    let name = `AddressList_name_${new Date().toISOString().slice(0, 10)}`
+
+    if(type === 'XLSX'){
+        generateAddressList(publishers, name)
+    }
+}
+
+export const exportAddressListGroup = async (type) => {
+    exportsService.upsert('export-address-list-group', type)
+    const publishers = await publisherService.find({ sort: 'GROUP' })
+
+    let name = `AddressList_group_${new Date().toISOString().slice(0, 10)}`
+
+    if(type === 'XLSX'){
+        generateAddressList(publishers, name)
+    }
+}
 
 export const enableIPC = () => {
-    const maintenenceService  = new MaintenenceService()
-    const datesService        = new DatesService()
-    const exportsService      = new ExportsService()
-    const settingsService     = new SettingsService()
-    const publisherService    = new PublisherService()
-    const serviceGroupService = new ServiceGroupService()
 
     /** Main features ***/
     ipcMain.handle('quit', async() => {
@@ -129,106 +283,12 @@ export const enableIPC = () => {
         return await exportsService.getPopularExports(limit)
     })
 
-    const generateAddressList = async (publishers, name) => {
-        const rows     = []
-        const settings = await settingsService.find()
-
-        publishers.map(publisher => {
-            let address = publisher.address1
-            if(publisher.address2){
-                address += `\n${publisher.address2}`
-            }
-            address += `\n${publisher.zip} ${publisher.city}`
-
-            rows.push([
-                publisher.serviceGroup.name,
-                `${publisher.lastName}, ${publisher.firstName}`,
-                address,
-                publisher.phone ? publisher.phone.formatted : '',
-                publisher.cell ? publisher.cell.formatted : '',
-                publisher.email,
-                '',
-            ])
-        })
-
-        const workbook   = new Excel.Workbook()
-        workbook.creator = 'secretary.jwapp.info'
-        workbook.created = new Date()
-
-        const worksheet = workbook.addWorksheet('Sheet1', {
-            pageSetup: {
-                fitToPage        : true,
-                paperSize        : 9,
-                verticalCentered : true,
-                showGridLines    : false,
-                margins          : {
-                    left   : 0.2,
-                    right  : 0.2,
-                    top    : 0.75,
-                    bottom : 0.75,
-                    header : 0.3,
-                    footer : 0.1,
-                },
-            },
-            headerFooter: {
-                differentFirst : true,
-                firstHeader    : '&C&8Tillgången är begränsad och sekretessbelagd.\nPersonuppgifter på papper förvaras i låsta arkivskåp som bara auktoriserad personal har tillgång till. (CRPA-Z; sfl 26:2)',
-                firstFooter    : `&L&8&K000000${new Date().toLocaleString('sv-SE', { hour12: false })}&R&8&K000000Sida &P av &N`,
-                oddFooter      : `&L&8&K000000${new Date().toLocaleString('sv-SE', { hour12: false })}&R&8&K000000Sida &P av &N`,
-            },
-            views: [
-                { state: 'frozen', xSplit: 0, ySplit: 2 },
-            ],
-            columns: [
-                { key: 'serviceGroup' },
-                { key: 'name' },
-                { key: 'address' },
-                { key: 'phone' },
-                { key: 'cell' },
-                { key: 'email' },
-                { key: 'other' },
-            ],
-        })
-
-        worksheet.insertRow(1, [ settings.congregation.name ])
-        worksheet.mergeCells('A1:G1')
-        worksheet.insertRow(2, [ 'Tjänstegrupp', 'Namn', 'Adress', 'Telefon', 'Mobil', 'E-post', 'Övrigt' ])
-        worksheet.getRow(1).font      = { size: 24, bold: true }
-        worksheet.getRow(1).alignment = { horizontal: 'center' }
-        worksheet.getRow(2).font      = { bold: true }
-        worksheet.getRow(2).border    = { bottom: { style: 'medium' } }
-
-        worksheet.addRows(rows)
-
-        autoWidth(worksheet)
-
-        worksheet.eachRow((row) => {
-            row.alignment = { vertical: 'middle' }
-        })
-
-        try{
-            storeExportedFile(`${name}.xlsx`, workbook)
-        }catch(err){
-            log.error(err)
-        }
-    }
-
-    ipcMain.handle('export-address-list-name', async () => {
-        exportsService.upsert('export-address-list-name')
-        const publishers = await publisherService.find({ sort: 'NAME' })
-
-        let name = `AddressList_name_${new Date().toISOString().slice(0, 10)}`
-
-        generateAddressList(publishers, name)
+    ipcMain.handle('export-address-list-name', (event, args) => {
+        exportAddressListName(args.type)
     })
 
-    ipcMain.handle('export-address-list-group', async () => {
-        exportsService.upsert('export-address-list-group')
-        const publishers = await publisherService.find({ sort: 'GROUP' })
-
-        let name = `AddressList_group_${new Date().toISOString().slice(0, 10)}`
-
-        generateAddressList(publishers, name)
+    ipcMain.handle('export-address-list-group', (event, args) => {
+        exportAddressListGroup(args.type)
     })
 
     ipcMain.handle('exportData', async (event, args) => {
@@ -454,53 +514,5 @@ export const enableIPC = () => {
         dialog.showMessageBox(null, options)
 
         app.quit()
-    }
-
-    const storeExportedFile = (name, workbook) => {
-        let options = {
-            title       : 'Spara fil som',
-            defaultPath : name,
-            buttonLabel : 'Spara',
-            filters     : [ {
-                name       : 'Adresslista',
-                extensions : [ 'xlsx', 'xls', 'xlsm', 'xlsb', 'xml', 'csv', 'ods', 'numbers' ],
-            } ],
-        }
-
-        dialog.showSaveDialog(null, options)
-            .then((response) => {
-                if(!response.canceled) {
-                    workbook.xlsx.writeFile(response.filePath)
-                }
-            })
-            .catch(err => {
-                log.error(err)
-            })
-
-    }
-
-    /**
-     * Autofit columns by width
-     *
-     * @param {Excel.worksheet} worksheet
-     * @param {number} minimalWidth
-     */
-    const autoWidth = (worksheet, minimalWidth = 5) => {
-        worksheet.columns.forEach((column) => {
-            let maxColumnLength = 0
-            column.eachCell({ includeEmpty: true }, (cell) => {
-
-                // do not calculate first row
-                if(cell._row._number !== 1){
-                    maxColumnLength = Math.max(
-                        maxColumnLength,
-                        minimalWidth,
-                        cell.value ? Math.max(...(cell.value.split('\n').map(el => el.length))) : 0,
-                    )
-                }
-
-            })
-            column.width = maxColumnLength + 2
-        })
     }
 }

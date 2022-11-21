@@ -21,8 +21,11 @@ import { ref }         from 'vue'
 import ExportContainer from './ExportComponents/ExportContainer.vue'
 
 const publisherExports = ref([
+    { name: 'Adresslista (bokstavsordning)', type: 'PDF', function: 'export-address-list-name' },
     { name: 'Adresslista (bokstavsordning)', type: 'XLSX', function: 'export-address-list-name' },
+    { name: 'Adresslista (gruppordning)', type: 'PDF', function: 'export-address-list-group' },
     { name: 'Adresslista (gruppordning)', type: 'XLSX', function: 'export-address-list-group' },
+    { name: 'Namnlista', type: 'PDF', function: 'export-name-list' },
     { name: 'Namnlista', type: 'XLSX', function: 'export-name-list' },
 ])
 

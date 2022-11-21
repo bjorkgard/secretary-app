@@ -14,7 +14,7 @@ export default class DatesStore extends BaseStore {
         return this.databaseInstance.find({}).sort({ count: -1 }).limit(args.limit)
     }
 
-    upsert(type) {
-        return this.databaseInstance.update({ type: type }, { $inc: { count: 1 } }, { upsert: true })
+    upsert(name, type) {
+        return this.databaseInstance.update({ name: name, type: type }, { $inc: { count: 1 } }, { upsert: true })
     }
 }

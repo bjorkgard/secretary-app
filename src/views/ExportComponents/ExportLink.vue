@@ -28,7 +28,7 @@ const props = defineProps({
 })
 
 const makeExport = () => {
-    ipcRenderer.invoke(props.object.function)
+    ipcRenderer.invoke(props.object.function, { type: props.object.type })
 }
 
 </script>
