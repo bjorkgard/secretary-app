@@ -33,7 +33,6 @@
     "fs-extra": "^10.1.0",
     "libphonenumber-js": "^1.10.14",
     "nedb-promises": "^6.2.1",
-    "pdfmake": "^0.2.6",
     "pinia": "^2.0.24",
     "pinia-plugin-persistedstate": "^2.4.0",
     "postcss": "^8.4.19",
