@@ -18,7 +18,7 @@
           </button>
           <button
             type="button"
-            class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+            class="flex-shrink-0 hidden rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
             title="Notiser"
             tabindex="-1"
           >
