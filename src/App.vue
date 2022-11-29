@@ -1,15 +1,20 @@
 <template>
-  <div class="w-screen h-screen flex flex-col drag overflow-hidden">
+  <div class="w-screen h-screen flex flex-col no-drag overflow-hidden">
     <header v-if="currentRoute !== 'about'">
-      <Navigation />
+      <HeaderMenu />
     </header>
-    <main class="p-8 grow no-drag overflow-y-auto">
-      <router-view v-slot="{Component}">
-        <transition name="fade">
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </main>
+    <div class="grow flex">
+      <aside class="sm:w-min bg-white shadow dark:bg-slate-800">
+        <NavigationMenu />
+      </aside>
+      <main class="p-8 grow overflow-y-auto">
+        <router-view v-slot="{Component}">
+          <transition name="fade">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </main>
+    </div>
     <footer
       v-if="currentRoute !== 'about'"
       class="min-w-full no-drag"
@@ -36,7 +41,8 @@ import { defineRule, configure }                  from 'vee-validate'
 import { required, email }                        from '@vee-validate/rules'
 import { localize, loadLocaleFromURL, setLocale } from '@vee-validate/i18n'
 import { useRoute }                               from 'vue-router'
-import Navigation                                 from '@/components/Navigation.vue'
+import HeaderMenu                                 from '@/components/HeaderMenu.vue'
+import NavigationMenu                             from '@/components/NavigationMenu.vue'
 import router                                     from '@/router'
 import { useSettingsStore }                       from '@/stores'
 
