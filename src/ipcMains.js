@@ -17,7 +17,20 @@ const settingsService     = new SettingsService()
 const publisherService    = new PublisherService()
 const serviceGroupService = new ServiceGroupService()
 
-const generateAddressList = async (publishers, name) => {
+const generateAddressList_PDF = async (publishers, name) => {
+    const rows     = []
+    const settings = await settingsService.find()
+
+
+
+    try{
+        //TODO: Trigger save pdf-file
+    }catch(err){
+        log.error(err)
+    }
+}
+
+const generateAddressList_XLSX = async (publishers, name) => {
     const rows     = []
     const settings = await settingsService.find()
 
@@ -95,7 +108,7 @@ const generateAddressList = async (publishers, name) => {
     })
 
     try{
-        storeExportedFile(`${name}.xlsx`, workbook)
+        saveXlsxFile(`${name}.xlsx`, workbook)
     }catch(err){
         log.error(err)
     }
@@ -126,7 +139,7 @@ const autoWidth = (worksheet, minimalWidth = 5) => {
     })
 }
 
-const storeExportedFile = (name, workbook) => {
+const saveXlsxFile = (name, workbook) => {
     let options = {
         title       : 'Spara fil som',
         defaultPath : name,
@@ -140,13 +153,14 @@ const storeExportedFile = (name, workbook) => {
     dialog.showSaveDialog(null, options)
         .then((response) => {
             if(!response.canceled) {
-                workbook.xlsx.writeFile(response.filePath)
+                if(workbook){
+                    workbook.xlsx.writeFile(response.filePath)
+                }
             }
         })
         .catch(err => {
             log.error(err)
         })
-
 }
 
 export const exportAddressListName = async (type) => {
@@ -156,7 +170,9 @@ export const exportAddressListName = async (type) => {
     let name = `AddressList_name_${new Date().toISOString().slice(0, 10)}`
 
     if(type === 'XLSX'){
-        generateAddressList(publishers, name)
+        generateAddressList_XLSX(publishers, name)
+    }else{
+        generateAddressList_PDF(publishers, name)
     }
 }
 
@@ -167,7 +183,9 @@ export const exportAddressListGroup = async (type) => {
     let name = `AddressList_group_${new Date().toISOString().slice(0, 10)}`
 
     if(type === 'XLSX'){
-        generateAddressList(publishers, name)
+        generateAddressList_XLSX(publishers, name)
+    }else{
+        generateAddressList_PDF(publishers, name)
     }
 }
 
