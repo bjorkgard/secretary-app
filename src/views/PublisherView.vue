@@ -44,83 +44,6 @@
               @keyup="filterPublishers()"
             >
           </div>
-          <Menu
-            as="div"
-            class="relative"
-          >
-            <div>
-              <MenuButton class="relative -ml-px inline-flex items-center border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:outline-none focus:z-10 dark:bg-slate-700 dark:text-slate-400 dark:border-slate-400">
-                <BarsArrowUpIcon
-                  class="h-5 w-5 text-slate-400"
-                  aria-hidden="true"
-                />
-                <span class="ml-2">Sortera</span>
-                <ChevronDownIcon
-                  class="ml-2.5 -mr-1.5 h-5 w-5 text-slate-400"
-                  aria-hidden="true"
-                />
-              </MenuButton>
-            </div>
-            <transition
-              enter-active-class="transition ease-out duration-200"
-              enter-from-class="transform opacity-0 scale-95"
-              enter-to-class="transform opacity-100 scale-100"
-              leave-active-class="transition ease-in duration-75"
-              leave-from-class="transform opacity-100 scale-100"
-              leave-to-class="transform opacity-0 scale-95"
-            >
-              <MenuItems class="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-slate-800">
-                <MenuItem v-slot="{ active }">
-                  <button
-                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
-                    @click="changeSort('NAME')"
-                  >
-                    Namn
-                  </button>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <button
-                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
-                    @click="changeSort('NAME_REV')"
-                  >
-                    Namn (omvänd)
-                  </button>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <button
-                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
-                    @click="changeSort('EMAIL')"
-                  >
-                    E-postadress
-                  </button>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <button
-                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
-                    @click="changeSort('EMAIL_REV')"
-                  >
-                    E-postadress (omvänd)
-                  </button>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <button
-                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
-                    @click="changeSort('ADDRESS')"
-                  >
-                    Adress
-                  </button>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                  <button
-                    :class="[active ? 'bg-slate-100 dark:bg-slate-500 dark:text-slate-800' : '', 'block px-4 py-2 text-sm text-slate-700 w-full text-left dark:text-slate-400']"
-                    @click="changeSort('ADDRESS_REV')"
-                  >
-                    Adress (omvänd)
-                  </button>
-                </MenuItem>
-              </MenuItems>
-            </transition>
-          </Menu>
           <button
             type="button"
             class="relative -ml-px inline-flex items-center rounded-r-md border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:outline-none dark:bg-slate-700 dark:text-slate-400 dark:border-slate-400"
@@ -147,13 +70,19 @@
                   >
                     Namn
                     <BarsArrowDownIcon
-                      v-if="sort === 'NAME'"
-                      class="w-4 h-4 text-slate-400 self-end ml-2"
-                      @click="changeSort('NAME_REV')"
+                      v-if="sort !== 'NAME_REV'"
+                      :class="[
+                        sort === 'NAME' ? 'text-slate-500' : 'text-slate-300',
+                        'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                      ]"
+                      @click="changeSort(sort === 'NAME' ? 'NAME_REV' : 'NAME')"
                     />
                     <BarsArrowUpIcon
-                      v-if="sort === 'NAME_REV'"
-                      class="w-4 h-4 text-slate-400 self-end ml-2"
+                      v-else
+                      :class="[
+                        sort === 'NAME_REV' ? 'text-slate-500' : 'text-slate-300',
+                        'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                      ]"
                       @click="changeSort('NAME')"
                     />
                   </th>
@@ -161,13 +90,49 @@
                     scope="col"
                     class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter sm:table-cell dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
-                    Telefon
+                    <div class="w-full flex">
+                      Telefon
+                      <BarsArrowDownIcon
+                        v-if="sort !== 'PHONE_REV'"
+                        :class="[
+                          sort === 'PHONE' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
+                        @click="changeSort(sort === 'PHONE' ? 'PHONE_REV' : 'PHONE')"
+                      />
+                      <BarsArrowUpIcon
+                        v-else
+                        :class="[
+                          sort === 'PHONE_REV' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
+                        @click="changeSort('PHONE')"
+                      />
+                    </div>
                   </th>
                   <th
                     scope="col"
                     class="sticky -top-8 z-10 hidden border-b border-slate-300 bg-slate-50 bg-opacity-75 px-3 py-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter sm:table-cell dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
-                    Mobil
+                    <div class="w-full flex">
+                      Mobil
+                      <BarsArrowDownIcon
+                        v-if="sort !== 'CELL_REV'"
+                        :class="[
+                          sort === 'CELL' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
+                        @click="changeSort(sort === 'CELL' ? 'CELL_REV' : 'CELL')"
+                      />
+                      <BarsArrowUpIcon
+                        v-else
+                        :class="[
+                          sort === 'CELL_REV' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
+                        @click="changeSort('CELL')"
+                      />
+                    </div>
                   </th>
                   <th
                     scope="col"
@@ -176,13 +141,19 @@
                     <div class="w-full flex">
                       E-post
                       <BarsArrowDownIcon
-                        v-if="sort === 'EMAIL'"
-                        class="w-4 h-4 text-slate-400 self-end ml-2"
-                        @click="changeSort('EMAIL_REV')"
+                        v-if="sort !== 'EMAIL_REV'"
+                        :class="[
+                          sort === 'EMAIL' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
+                        @click="changeSort(sort === 'EMAIL' ? 'EMAIL_REV' : 'EMAIL')"
                       />
                       <BarsArrowUpIcon
-                        v-if="sort === 'EMAIL_REV'"
-                        class="w-4 h-4 text-slate-400 self-end ml-2"
+                        v-else
+                        :class="[
+                          sort === 'EMAIL_REV' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
                         @click="changeSort('EMAIL')"
                       />
                     </div>
@@ -194,13 +165,19 @@
                     <div class="w-full flex">
                       Adress
                       <BarsArrowDownIcon
-                        v-if="sort === 'ADDRESS'"
-                        class="w-4 h-4 text-slate-400 self-end ml-2"
-                        @click="changeSort('ADDRESS_REV')"
+                        v-if="sort !== 'ADDRESS_REV'"
+                        :class="[
+                          sort === 'ADDRESS' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
+                        @click="changeSort(sort === 'ADDRESS' ? 'ADDRESS_REV' : 'ADDRESS')"
                       />
                       <BarsArrowUpIcon
-                        v-if="sort === 'ADDRESS_REV'"
-                        class="w-4 h-4 text-slate-400 self-end ml-2"
+                        v-else
+                        :class="[
+                          sort === 'ADDRESS_REV' ? 'text-slate-500' : 'text-slate-300',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        ]"
                         @click="changeSort('ADDRESS')"
                       />
                     </div>
@@ -232,7 +209,7 @@
                     <span @click="sendEmail(publisher.email)">{{ publisher.email }}</span>
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'whitespace-nowrap px-2 py-2 text-sm text-slate-500 hidden lg:table-cell dark:text-slate-300 dark:border-transparent']">
-                    <Address :address="publisher.address" />
+                    <Address :address="{address1:publisher.address1, address2:publisher.address2, zip:publisher.zip, city:publisher.city}" />
                   </td>
                   <td :class="[publisherIdx !== publisher.length - 1 ? 'border-b border-slate-200' : '', 'relative whitespace-nowrap py-2 pr-3 pl-3 h-full text-right text-sm font-medium dark:border-transparent']">
                     <div class="w-full h-full flex justify-end text-slate-400 space-x-2 dark:text-slate-300">
@@ -323,7 +300,6 @@ import Address                                   from '@/components/Address.vue'
 import {
     BarsArrowUpIcon,
     BarsArrowDownIcon,
-    ChevronDownIcon,
     DocumentArrowDownIcon,
     MagnifyingGlassIcon,
     PencilIcon,

@@ -40,6 +40,18 @@ export default class PublisherStore extends BaseStore {
             case 'ADDRESS_REV':
                 sort = { 'address.address1': -1 }
                 break
+            case 'CELL':
+                sort = { 'cell.formatted': 1 }
+                break
+            case 'CELL_REV':
+                sort = { 'cell.formatted': -1 }
+                break
+            case 'PHONE':
+                sort = { 'phone.formatted': 1 }
+                break
+            case 'PHONE_REV':
+                sort = { 'phone.formatted': -1 }
+                break
             case 'GROUP':
                 sort = { 'serviceGroup.name': 1, lastName: 1, firstName: 1 }
                 break
