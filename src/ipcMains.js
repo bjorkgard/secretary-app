@@ -17,22 +17,8 @@ const settingsService     = new SettingsService()
 const publisherService    = new PublisherService()
 const serviceGroupService = new ServiceGroupService()
 
-const generateAddressList_PDF = async (publishers, name) => {
-    const rows     = []
-    const settings = await settingsService.find()
-
-
-
-    try{
-        //TODO: Trigger save pdf-file
-    }catch(err){
-        log.error(err)
-    }
-}
-
-const generateAddressList_XLSX = async (publishers, name) => {
-    const rows     = []
-    const settings = await settingsService.find()
+const getPublisherRows = (publishers) => {
+    const rows = []
 
     publishers.map(publisher => {
         let address = publisher.address1
@@ -51,6 +37,26 @@ const generateAddressList_XLSX = async (publishers, name) => {
             '',
         ])
     })
+
+    return rows
+}
+
+const generateAddressList_PDF = async (publishers, name) => {
+    const settings = await settingsService.find()
+    const rows     = getPublisherRows(publishers)
+
+
+
+    try{
+        savePdfFile(`${name}.xlsx`, null)
+    }catch(err){
+        log.error(err)
+    }
+}
+
+const generateAddressList_XLSX = async (publishers, name) => {
+    const settings = await settingsService.find()
+    const rows     = getPublisherRows(publishers)
 
     const workbook   = new Excel.Workbook()
     workbook.creator = 'secretary.jwapp.info'
@@ -139,14 +145,36 @@ const autoWidth = (worksheet, minimalWidth = 5) => {
     })
 }
 
-const saveXlsxFile = (name, workbook) => {
+const savePdfFile = (name, localPath) => {
     let options = {
-        title       : 'Spara fil som',
+        title       : 'Spara fil som ...',
         defaultPath : name,
         buttonLabel : 'Spara',
         filters     : [ {
-            name       : 'Adresslista',
-            extensions : [ 'xlsx', 'xls', 'xlsm', 'xlsb', 'xml', 'csv', 'ods', 'numbers' ],
+            extensions: [ 'pdf' ],
+        } ],
+    }
+
+    dialog.showSaveDialog(null, options)
+        .then((response) => {
+            if(!response.canceled) {
+                if(localPath){
+                    // TODO: write to pdf-file
+                }
+            }
+        })
+        .catch(err => {
+            log.error(err)
+        })
+}
+
+const saveXlsxFile = (name, workbook) => {
+    let options = {
+        title       : 'Spara fil som ...',
+        defaultPath : name,
+        buttonLabel : 'Spara',
+        filters     : [ {
+            extensions: [ 'xlsx', 'xls', 'xlsm', 'xlsb', 'xml', 'csv', 'ods', 'numbers' ],
         } ],
     }
 
