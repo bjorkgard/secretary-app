@@ -1,18 +1,17 @@
 <template>
-  <li class="py-3 pl-3 pr-4 text-sm hover:bg-sky-100">
+  <li class="p-3 text-sm hover:bg-sky-100">
     <Menu
       as="div"
-      class="w-full relative"
+      class="w-full h-full relative"
     >
-      <div>
-        <MenuButton class="w-full flex">
-          <PaperClipIcon
-            class="h-5 w-5 text-slate-500"
-            aria-hidden="true"
-          />
-          <span class="font-medium text-slate-700 ml-2 truncate dark:text-slate-500">{{ object.name }}</span>
-        </MenuButton>
-      </div>
+      <MenuButton class="w-full h-full flex">
+        <PaperClipIcon
+          class="h-5 w-5 text-slate-500"
+          aria-hidden="true"
+        />
+        <span class="font-medium text-slate-700 ml-2 truncate dark:text-slate-500">{{ object.name }}</span>
+      </MenuButton>
+
       <transition
         enter-active-class="transition ease-out duration-100"
         enter-from-class="transform opacity-0 scale-95"
