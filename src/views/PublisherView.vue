@@ -72,16 +72,16 @@
                     <BarsArrowDownIcon
                       v-if="sort !== 'NAME_REV'"
                       :class="[
-                        sort === 'NAME' ? 'text-slate-500' : 'text-slate-300',
-                        'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        sort === 'NAME' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                        'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                       ]"
                       @click="changeSort(sort === 'NAME' ? 'NAME_REV' : 'NAME')"
                     />
                     <BarsArrowUpIcon
                       v-else
                       :class="[
-                        sort === 'NAME_REV' ? 'text-slate-500' : 'text-slate-300',
-                        'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                        sort === 'NAME_REV' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                        'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                       ]"
                       @click="changeSort('NAME')"
                     />
@@ -95,16 +95,16 @@
                       <BarsArrowDownIcon
                         v-if="sort !== 'PHONE_REV'"
                         :class="[
-                          sort === 'PHONE' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'PHONE' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort(sort === 'PHONE' ? 'PHONE_REV' : 'PHONE')"
                       />
                       <BarsArrowUpIcon
                         v-else
                         :class="[
-                          sort === 'PHONE_REV' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'PHONE_REV' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort('PHONE')"
                       />
@@ -119,16 +119,16 @@
                       <BarsArrowDownIcon
                         v-if="sort !== 'CELL_REV'"
                         :class="[
-                          sort === 'CELL' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'CELL' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort(sort === 'CELL' ? 'CELL_REV' : 'CELL')"
                       />
                       <BarsArrowUpIcon
                         v-else
                         :class="[
-                          sort === 'CELL_REV' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'CELL_REV' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort('CELL')"
                       />
@@ -143,16 +143,16 @@
                       <BarsArrowDownIcon
                         v-if="sort !== 'EMAIL_REV'"
                         :class="[
-                          sort === 'EMAIL' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'EMAIL' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort(sort === 'EMAIL' ? 'EMAIL_REV' : 'EMAIL')"
                       />
                       <BarsArrowUpIcon
                         v-else
                         :class="[
-                          sort === 'EMAIL_REV' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'EMAIL_REV' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort('EMAIL')"
                       />
@@ -167,16 +167,16 @@
                       <BarsArrowDownIcon
                         v-if="sort !== 'ADDRESS_REV'"
                         :class="[
-                          sort === 'ADDRESS' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'ADDRESS' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort(sort === 'ADDRESS' ? 'ADDRESS_REV' : 'ADDRESS')"
                       />
                       <BarsArrowUpIcon
                         v-else
                         :class="[
-                          sort === 'ADDRESS_REV' ? 'text-slate-500' : 'text-slate-300',
-                          'w-4 h-4 self-end ml-2 hover:text-slate-700'
+                          sort === 'ADDRESS_REV' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
                         ]"
                         @click="changeSort('ADDRESS')"
                       />
