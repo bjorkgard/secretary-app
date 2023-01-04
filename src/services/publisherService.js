@@ -1,6 +1,5 @@
 import { PublisherSchema } from '@/database/schemas'
 import PublisherStore      from '@/database/publisherStore'
-import log                 from 'electron-log'
 
 const publisherStore = new PublisherStore('publishers.db', PublisherSchema)
 

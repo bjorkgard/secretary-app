@@ -1,6 +1,5 @@
 import { ExportsSchema } from '@/database/schemas'
 import ExportsStore      from '@/database/exportsStore'
-import log               from 'electron-log'
 
 const exportsStore = new ExportsStore('exports.db', ExportsSchema)
 
@@ -46,6 +45,8 @@ const getName = (type) => {
             return 'Adresslista (bokstavsordning)'
         case 'export-address-list-group':
             return 'Adresslista (gruppordning)'
+        case 'export-name-list':
+            return 'Namnlista'
         default:
             return type
     }
