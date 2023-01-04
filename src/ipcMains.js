@@ -10,6 +10,9 @@ import MaintenenceService       from '@/services/maintenenceService'
 import PublisherService         from '@/services/publisherService'
 import ServiceGroupService      from '@/services/serviceGroupService'
 import ExportsService           from '@/services/exportsService'
+import getPublisherRows         from '@/utils/getPublisherRows'
+import getPublisherByFamilyRows from '@/utils/getPublisherByFamilyRows'
+import splitArray               from '@/utils/splitArray'
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 
@@ -20,39 +23,6 @@ const exportsService      = new ExportsService()
 const settingsService     = new SettingsService()
 const publisherService    = new PublisherService()
 const serviceGroupService = new ServiceGroupService()
-
-const getPublisherRows = (publishers) => {
-    const rows = []
-
-    publishers.map(publisher => {
-        let address = publisher.address1
-        if(publisher.address2){
-            address += `\n${publisher.address2}`
-        }
-        address += `\n${publisher.zip} ${publisher.city}`
-
-        let other = ''
-        if(publisher.children.length){
-            other += 'Barn: '
-            publisher.children.map((child, index) => {
-                other += (index > 0 ? ', ' : '') + child.firstName
-            })
-        }
-
-
-        rows.push([
-            publisher.serviceGroup.name,
-            `${publisher.lastName}, ${publisher.firstName}`,
-            address,
-            publisher.phone ? publisher.phone.formatted : '',
-            publisher.cell ? publisher.cell.formatted : '',
-            publisher.email,
-            other,
-        ])
-    })
-
-    return rows
-}
 
 const generateAddressList_PDF = async (publishers, name) => {
     const settings         = await settingsService.find()
@@ -142,7 +112,7 @@ const generateAddressList_XLSX = async (publishers, name) => {
     const rows     = getPublisherRows(publishers)
 
     const workbook   = new Excel.Workbook()
-    workbook.creator = 'secretary.jwapp.info'
+    workbook.creator = settings.congregation.name
     workbook.created = new Date()
 
     const worksheet = workbook.addWorksheet('Sheet1', {
@@ -189,6 +159,163 @@ const generateAddressList_XLSX = async (publishers, name) => {
     worksheet.getRow(2).border    = { bottom: { style: 'medium' } }
 
     worksheet.addRows(rows)
+
+    autoWidth(worksheet)
+
+    worksheet.eachRow((row) => {
+        row.alignment = { vertical: 'middle' }
+    })
+
+    try{
+        saveXlsxFile(`${name}.xlsx`, workbook)
+    }catch(err){
+        log.error(err)
+    }
+}
+
+const generateNameList_PDF = async (publishers, name) => {
+    const settings         = await settingsService.find()
+    const rows             = await getPublisherByFamilyRows(publishers, publisherService)
+    const columns          = splitArray(rows, 3)
+    let publisherTableBody = []
+
+    for (let index = 0; index < columns[ 0 ].length; index++) {
+        publisherTableBody.push([
+            columns[ 0 ][ index ][ 0 ],
+            columns[ 1 ][ index ][ 0 ],
+            columns[ 2 ][ index ][ 0 ],
+        ])
+    }
+
+    // add headers to the table body
+    publisherTableBody.unshift([
+        { text: 'Namn', style: 'tableHeader' },
+        { text: '', style: 'tableHeader' },
+        { text: '', style: 'tableHeader' },
+    ])
+
+    let docDefinition = {
+        info: {
+            title    : 'Name list',
+            author   : `${settings.user.firstname} ${settings.user.lastname}`,
+            subject  : 'Name list for publishers in the congregation',
+            keywords : 'secretary, name, publisher',
+        },
+        pageOrientation : 'portrait',
+        pageSize        : 'A4',
+        pageMargins     : [ 20, 10, 20, 20 ],
+        footer          : function(currentPage, pageCount) {
+            let d = new Date()
+            return [
+                {
+                    columns: [
+                        { text: currentPage.toString() + ' av ' + pageCount, fontSize: 6, margin: [ 10, 0, 0, 0 ] },
+                        { text: d.toLocaleString(app.getLocale()), alignment: 'right', fontSize: 6, margin: [ 0, 0, 10, 0 ] },
+                    ],
+                },
+            ]
+        },
+        content: [
+            { text: settings.congregation.name, style: 'header' },
+            {
+                layout : 'lightHorizontalLines',
+                table  : {
+                    dontBreakRows : true,
+                    headerRows    : 1,
+                    widths        : [ '*', '*', '*' ],
+                    body          : publisherTableBody,
+                },
+                style: 'table',
+            },
+        ],
+        defaultStyles: {
+            fontSize   : 8,
+            lineHeight : 1.2,
+        },
+        styles: {
+            header: {
+                fontSize  : 22,
+                bold      : true,
+                alignment : 'center',
+            },
+            subHeader: {
+                fontSize  : 8,
+                alignment : 'center',
+                margin    : [ 0, 0, 0, 10 ],
+            },
+            tableHeader: {
+                bold     : true,
+                fontSize : 8,
+                color    : 'black',
+            },
+            table: {
+                fontSize : 8,
+                color    : 'black',
+            },
+            tableInactive: {
+                color: 'blue',
+            },
+        },
+    }
+
+    savePdfFile(`${name}.pdf`, docDefinition)
+}
+
+const generateNameList_XLSX = async (publishers, name) => {
+    const settings = await settingsService.find()
+    const rows     = await getPublisherByFamilyRows(publishers, publisherService)
+    const columns  = splitArray(rows, 3)
+
+    const workbook   = new Excel.Workbook()
+    workbook.creator = settings.congregation.name
+    workbook.created = new Date()
+
+    const worksheet = workbook.addWorksheet('Sheet1', {
+        pageSetup: {
+            fitToPage        : true,
+            paperSize        : 9,
+            verticalCentered : true,
+            showGridLines    : false,
+            margins          : {
+                left   : 0.2,
+                right  : 0.2,
+                top    : 0.75,
+                bottom : 0.75,
+                header : 0.3,
+                footer : 0.1,
+            },
+        },
+        headerFooter: {
+            differentFirst : true,
+            firstFooter    : `&L&8&K000000${new Date().toLocaleString('sv-SE', { hour12: false })}&R&8&K000000Sida &P av &N`,
+            oddFooter      : `&L&8&K000000${new Date().toLocaleString('sv-SE', { hour12: false })}&R&8&K000000Sida &P av &N`,
+        },
+        views: [
+            { state: 'frozen', xSplit: 0, ySplit: 2 },
+        ],
+        columns: [
+            { key: 'name1' },
+            { key: 'name2' },
+        ],
+    })
+
+    worksheet.insertRow(1, [ settings.congregation.name ])
+    worksheet.mergeCells('A1:C1')
+    worksheet.insertRow(2, [ 'Namn' ])
+    worksheet.mergeCells('A2:C2')
+    worksheet.getRow(1).font      = { size: 24, bold: true }
+    worksheet.getRow(1).alignment = { horizontal: 'center' }
+    worksheet.getRow(2).font      = { bold: true }
+    worksheet.getRow(2).border    = { bottom: { style: 'medium' } }
+
+
+    for (let index = 0; index < columns[ 0 ].length; index++) {
+        worksheet.insertRow((index+3), [
+            columns[ 0 ][ index ][ 0 ],
+            columns[ 1 ][ index ][ 0 ],
+            columns[ 2 ][ index ][ 0 ],
+        ])
+    }
 
     autoWidth(worksheet)
 
@@ -306,6 +433,19 @@ export const exportAddressListGroup = async (type) => {
         generateAddressList_XLSX(publishers, name)
     }else{
         generateAddressList_PDF(publishers, name)
+    }
+}
+
+export const exportNameList = async (type) => {
+    exportsService.upsert('export-name-list', type)
+    const publishers = await publisherService.contacts()
+
+    let name = `NameList_${new Date().toISOString().slice(0, 10)}`
+
+    if(type === 'XLSX'){
+        generateNameList_XLSX(publishers, name)
+    }else{
+        generateNameList_PDF(publishers, name)
     }
 }
 
@@ -427,6 +567,10 @@ export const enableIPC = () => {
 
     ipcMain.handle('export-address-list-group', (event, args) => {
         exportAddressListGroup(args.type)
+    })
+
+    ipcMain.handle('export-name-list', (event, args) => {
+        exportNameList(args.type)
     })
 
     ipcMain.handle('exportData', async (event, args) => {

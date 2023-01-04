@@ -9,7 +9,7 @@ export default class PublisherStore extends BaseStore {
         let searchQuery         = {}
         searchQuery[ property ] = value
 
-        return this.databaseInstance.find(searchQuery)
+        return this.databaseInstance.find(searchQuery).sort({ lastName: 1, firstName: 1 })
     }
 
     findNew() {
@@ -72,6 +72,6 @@ export default class PublisherStore extends BaseStore {
     }
 
     contacts() {
-        return this.databaseInstance.find({ contactPerson: true }, { firstName: 1, lastName: 1 }).sort({ lastName: 1, firstName: 1 })
+        return this.databaseInstance.find({ contactPerson: true }).sort({ lastName: 1, firstName: 1 })
     }
 }
