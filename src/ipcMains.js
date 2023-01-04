@@ -1,6 +1,8 @@
 import { app, ipcMain, dialog } from 'electron'
 import fs                       from 'fs-extra'
 import Excel                    from 'exceljs'
+import pdfMake                  from 'pdfmake/build/pdfmake'
+import pdfFonts                 from 'pdfmake/build/vfs_fonts'
 import log                      from 'electron-log'
 import DatesService             from '@/services/datesService'
 import SettingsService          from '@/services/settingsService'
@@ -8,6 +10,8 @@ import MaintenenceService       from '@/services/maintenenceService'
 import PublisherService         from '@/services/publisherService'
 import ServiceGroupService      from '@/services/serviceGroupService'
 import ExportsService           from '@/services/exportsService'
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs
 
 const isDevelopment       = process.env.NODE_ENV !== 'production'
 const maintenenceService  = new MaintenenceService()
@@ -17,22 +21,8 @@ const settingsService     = new SettingsService()
 const publisherService    = new PublisherService()
 const serviceGroupService = new ServiceGroupService()
 
-const generateAddressList_PDF = async (publishers, name) => {
-    const rows     = []
-    const settings = await settingsService.find()
-
-
-
-    try{
-        //TODO: Trigger save pdf-file
-    }catch(err){
-        log.error(err)
-    }
-}
-
-const generateAddressList_XLSX = async (publishers, name) => {
-    const rows     = []
-    const settings = await settingsService.find()
+const getPublisherRows = (publishers) => {
+    const rows = []
 
     publishers.map(publisher => {
         let address = publisher.address1
@@ -41,6 +31,15 @@ const generateAddressList_XLSX = async (publishers, name) => {
         }
         address += `\n${publisher.zip} ${publisher.city}`
 
+        let other = ''
+        if(publisher.children.length){
+            other += 'Barn: '
+            publisher.children.map((child, index) => {
+                other += (index > 0 ? ', ' : '') + child.firstName
+            })
+        }
+
+
         rows.push([
             publisher.serviceGroup.name,
             `${publisher.lastName}, ${publisher.firstName}`,
@@ -48,9 +47,99 @@ const generateAddressList_XLSX = async (publishers, name) => {
             publisher.phone ? publisher.phone.formatted : '',
             publisher.cell ? publisher.cell.formatted : '',
             publisher.email,
-            '',
+            other,
         ])
     })
+
+    return rows
+}
+
+const generateAddressList_PDF = async (publishers, name) => {
+    const settings         = await settingsService.find()
+    let publisherTableBody = getPublisherRows(publishers)
+
+    // add headers to the table body
+    publisherTableBody.unshift([
+        { text: 'Grupp', style: 'tableHeader' },
+        { text: 'Namn', style: 'tableHeader' },
+        { text: 'Adress', style: 'tableHeader' },
+        { text: 'Telefon', style: 'tableHeader' },
+        { text: 'Mobil', style: 'tableHeader' },
+        { text: 'E-post', style: 'tableHeader' },
+        { text: 'Övrigt', style: 'tableHeader' },
+    ])
+
+    let docDefinition = {
+        info: {
+            title    : 'Address list',
+            author   : `${settings.user.firstname} ${settings.user.lastname}`,
+            subject  : 'Address list for publishers in the congregation',
+            keywords : 'secretary, address, publisher',
+        },
+        pageOrientation : 'portrait',
+        pageSize        : 'A4',
+        pageMargins     : [ 20, 10, 20, 20 ],
+        footer          : function(currentPage, pageCount) {
+            let d = new Date()
+            return [
+                {
+                    columns: [
+                        { text: currentPage.toString() + ' av ' + pageCount, fontSize: 6, margin: [ 10, 0, 0, 0 ] },
+                        { text: d.toLocaleString(app.getLocale()), alignment: 'right', fontSize: 6, margin: [ 0, 0, 10, 0 ] },
+                    ],
+                },
+            ]
+        },
+        content: [
+            { text: settings.congregation.name, style: 'header' },
+            { text: 'Tillgången är begränsad och sekretessbelagd.\nPersonuppgifter på papper förvaras i låsta arkivskåp som bara auktoriserad personal har tillgång till. (CRPA-Z; sfl 26:2)', style: 'subHeader' },
+            {
+                layout : 'lightHorizontalLines',
+                table  : {
+                    dontBreakRows : true,
+                    headerRows    : 1,
+                    widths        : [ 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*' ],
+                    body          : publisherTableBody,
+                },
+                style: 'table',
+            },
+        ],
+        defaultStyles: {
+            fontSize   : 8,
+            lineHeight : 1.2,
+        },
+        styles: {
+            header: {
+                fontSize  : 22,
+                bold      : true,
+                alignment : 'center',
+            },
+            subHeader: {
+                fontSize  : 8,
+                alignment : 'center',
+                margin    : [ 0, 0, 0, 10 ],
+            },
+            tableHeader: {
+                bold     : true,
+                fontSize : 8,
+                color    : 'black',
+            },
+            table: {
+                fontSize : 8,
+                color    : 'black',
+            },
+            tableInactive: {
+                color: 'blue',
+            },
+        },
+    }
+
+    savePdfFile(`${name}.pdf`, docDefinition)
+}
+
+const generateAddressList_XLSX = async (publishers, name) => {
+    const settings = await settingsService.find()
+    const rows     = getPublisherRows(publishers)
 
     const workbook   = new Excel.Workbook()
     workbook.creator = 'secretary.jwapp.info'
@@ -93,7 +182,7 @@ const generateAddressList_XLSX = async (publishers, name) => {
 
     worksheet.insertRow(1, [ settings.congregation.name ])
     worksheet.mergeCells('A1:G1')
-    worksheet.insertRow(2, [ 'Tjänstegrupp', 'Namn', 'Adress', 'Telefon', 'Mobil', 'E-post', 'Övrigt' ])
+    worksheet.insertRow(2, [ 'Grupp', 'Namn', 'Adress', 'Telefon', 'Mobil', 'E-post', 'Övrigt' ])
     worksheet.getRow(1).font      = { size: 24, bold: true }
     worksheet.getRow(1).alignment = { horizontal: 'center' }
     worksheet.getRow(2).font      = { bold: true }
@@ -139,18 +228,49 @@ const autoWidth = (worksheet, minimalWidth = 5) => {
     })
 }
 
-const saveXlsxFile = (name, workbook) => {
-    let options = {
-        title       : 'Spara fil som',
+const savePdfFile = (name, docDefinition) => {
+    let dialogOptions = {
+        title       : 'Spara fil som ...',
         defaultPath : name,
         buttonLabel : 'Spara',
         filters     : [ {
-            name       : 'Adresslista',
-            extensions : [ 'xlsx', 'xls', 'xlsm', 'xlsb', 'xml', 'csv', 'ods', 'numbers' ],
+            extensions: [ 'pdf' ],
         } ],
     }
 
-    dialog.showSaveDialog(null, options)
+    dialog.showSaveDialog(null, dialogOptions)
+        .then((response) => {
+            if(!response.canceled) {
+                if(docDefinition){
+                    const pdfDocGenerator = pdfMake.createPdf(docDefinition)
+                    pdfDocGenerator.getBuffer((data) => {
+                        fs.writeFileSync(response.filePath, data, (error) => {
+                            if (err) {
+                                log.error(error)
+                            } else {
+                                log.info('PDF Generated Successfully')
+                            }
+                        })
+                    })
+                }
+            }
+        })
+        .catch(err => {
+            log.error(err)
+        })
+}
+
+const saveXlsxFile = (name, workbook) => {
+    let dialogOptions = {
+        title       : 'Spara fil som ...',
+        defaultPath : name,
+        buttonLabel : 'Spara',
+        filters     : [ {
+            extensions: [ 'xlsx', 'xls', 'xlsm', 'xlsb', 'xml', 'csv', 'ods', 'numbers' ],
+        } ],
+    }
+
+    dialog.showSaveDialog(null, dialogOptions)
         .then((response) => {
             if(!response.canceled) {
                 if(workbook){
