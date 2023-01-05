@@ -30,7 +30,7 @@ const generateAddressList_PDF = async (publishers, name) => {
 
     // add headers to the table body
     publisherTableBody.unshift([
-        { text: 'Grupp', style: 'tableHeader' },
+        { text: 'Gr.', style: 'tableHeader' },
         { text: 'Namn', style: 'tableHeader' },
         { text: 'Adress', style: 'tableHeader' },
         { text: 'Telefon', style: 'tableHeader' },
@@ -48,7 +48,7 @@ const generateAddressList_PDF = async (publishers, name) => {
         },
         pageOrientation : 'portrait',
         pageSize        : 'A4',
-        pageMargins     : [ 20, 10, 20, 20 ],
+        pageMargins     : [ 15, 10, 15, 20 ],
         footer          : function(currentPage, pageCount) {
             let d = new Date()
             return [
@@ -64,11 +64,11 @@ const generateAddressList_PDF = async (publishers, name) => {
             { text: settings.congregation.name, style: 'header' },
             { text: 'Tillgången är begränsad och sekretessbelagd.\nPersonuppgifter på papper förvaras i låsta arkivskåp som bara auktoriserad personal har tillgång till. (CRPA-Z; sfl 26:2)', style: 'subHeader' },
             {
-                layout : 'lightHorizontalLines',
+                layout : 'addressListLayout',
                 table  : {
                     dontBreakRows : true,
                     headerRows    : 1,
-                    widths        : [ 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', '*' ],
+                    widths        : [ 'auto', 'auto', 75, 52, 52, 'auto', '*' ],
                     body          : publisherTableBody,
                 },
                 style: 'table',
@@ -369,6 +369,30 @@ const savePdfFile = (name, docDefinition) => {
         .then((response) => {
             if(!response.canceled) {
                 if(docDefinition){
+
+                    pdfMake.tableLayouts = {
+                        addressListLayout: {
+                            hLineWidth: function (i, node) {
+                              if (i === 0 || i === node.table.body.length) {
+                                return 0
+                              }
+                              return (i === node.table.headerRows) ? 2 : 1
+                            },
+                            vLineWidth: function (i) {
+                              return 0
+                            },
+                            hLineColor: function (i) {
+                              return i === 1 ? 'black' : '#aaa'
+                            },
+                            paddingLeft: function (i) {
+                              return i === 0 ? 0 : 4
+                            },
+                            paddingRight: function (i, node) {
+                              return (i === node.table.widths.length - 1) ? 0 : 4
+                            },
+                          },
+                    }
+
                     const pdfDocGenerator = pdfMake.createPdf(docDefinition)
                     pdfDocGenerator.getBuffer((data) => {
                         fs.writeFileSync(response.filePath, data, (error) => {
