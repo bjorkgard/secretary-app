@@ -46,6 +46,13 @@ export default class ServiceGroupService {
     async update(serviceGroupId, data) {
         const serviceGroup = parseServiceGroupModel(data)
 
+        const publishers = await publisherService.findBy('serviceGroup.value', serviceGroupId)
+        publishers.forEach(async publisher => {
+            publisher.serviceGroup.name = data.name
+
+            await publisherService.update(publisher._id, publisher)
+        })
+
         return await serviceGroupStore.update(serviceGroupId, serviceGroup)
     }
 
