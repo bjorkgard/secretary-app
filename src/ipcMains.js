@@ -181,9 +181,9 @@ const generateNameList_PDF = async (publishers, name) => {
 
     for (let index = 0; index < columns[ 0 ].length; index++) {
         publisherTableBody.push([
-            columns[ 0 ][ index ][ 0 ],
-            columns[ 1 ][ index ][ 0 ],
-            columns[ 2 ][ index ][ 0 ],
+            columns[ 0 ][ index ] ? columns[ 0 ][ index ][ 0 ] : '',
+            columns[ 1 ][ index ] ? columns[ 1 ][ index ][ 0 ] : '',
+            columns[ 2 ][ index ] ? columns[ 2 ][ index ][ 0 ] : '',
         ])
     }
 
@@ -311,9 +311,9 @@ const generateNameList_XLSX = async (publishers, name) => {
 
     for (let index = 0; index < columns[ 0 ].length; index++) {
         worksheet.insertRow((index+3), [
-            columns[ 0 ][ index ][ 0 ],
-            columns[ 1 ][ index ][ 0 ],
-            columns[ 2 ][ index ][ 0 ],
+            columns[ 0 ][ index ] ? columns[ 0 ][ index ][ 0 ] : '',
+            columns[ 1 ][ index ] ? columns[ 1 ][ index ][ 0 ] : '',
+            columns[ 2 ][ index ] ? columns[ 2 ][ index ][ 0 ] : '',
         ])
     }
 
