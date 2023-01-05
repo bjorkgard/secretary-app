@@ -66,25 +66,27 @@
                 <tr class="divide-x divide-slate-200 dark:divide-none">
                   <th
                     scope="col"
-                    class="sticky -top-8 z-10 flex border-b border-slate-300 bg-slate-50 bg-opacity-75 py-3 px-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
+                    class="sticky -top-8 z-10 border-b border-slate-300 bg-slate-50 bg-opacity-75 py-3 px-3 text-left text-sm font-bold text-slate-900 backdrop-blur backdrop-filter dark:bg-slate-800 dark:text-slate-300 dark:border-transparent"
                   >
-                    Namn
-                    <BarsArrowDownIcon
-                      v-if="sort !== 'NAME_REV'"
-                      :class="[
-                        sort === 'NAME' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
-                        'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
-                      ]"
-                      @click="changeSort(sort === 'NAME' ? 'NAME_REV' : 'NAME')"
-                    />
-                    <BarsArrowUpIcon
-                      v-else
-                      :class="[
-                        sort === 'NAME_REV' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
-                        'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
-                      ]"
-                      @click="changeSort('NAME')"
-                    />
+                    <div class="w-full flex">
+                      Namn
+                      <BarsArrowDownIcon
+                        v-if="sort !== 'NAME_REV'"
+                        :class="[
+                          sort === 'NAME' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
+                        ]"
+                        @click="changeSort(sort === 'NAME' ? 'NAME_REV' : 'NAME')"
+                      />
+                      <BarsArrowUpIcon
+                        v-else
+                        :class="[
+                          sort === 'NAME_REV' ? 'text-slate-500 dark:text-slate-300' : 'text-slate-300 dark:text-slate-500',
+                          'w-4 h-4 self-end ml-2 hover:text-slate-700 dark:hover:text-slate-200'
+                        ]"
+                        @click="changeSort('NAME')"
+                      />
+                    </div>
                   </th>
                   <th
                     scope="col"
