@@ -9,13 +9,26 @@ const getPublisherRows = (publishers) => {
         address += `\n${publisher.zip} ${publisher.city}`
 
         let other = ''
+
+        if(publisher.status.value === 'INACTIVE'){
+            other += `${publisher.status.name}\n`
+        }
+
+        if(publisher.appointments.length){
+            publisher.appointments.map(appointment => {
+                other += `${appointment.type.name}, `
+            })
+
+            other = other.slice(0, -2) + '\n'
+        }
+
+        // Children
         if(publisher.children.length){
             other += 'Barn: '
             publisher.children.map((child, index) => {
                 other += (index > 0 ? ', ' : '') + child.firstName
             })
         }
-
 
         rows.push([
             publisher.serviceGroup.name,
