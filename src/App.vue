@@ -1,10 +1,10 @@
 <template>
-  <div class="w-screen h-screen flex flex-col no-drag overflow-hidden">
+  <div class="w-full h-screen flex flex-col no-drag">
     <header v-if="currentRoute !== 'about'">
       <HeaderMenu />
     </header>
-    <div class="grow flex">
-      <aside class="sm:w-min bg-white shadow dark:bg-slate-800">
+    <div class="grow flex overflow-hidden">
+      <aside class="sm:w-min flex flex-col bg-white shadow overflow-y-auto dark:bg-slate-800">
         <NavigationMenu />
       </aside>
       <main class="p-8 grow overflow-y-auto">

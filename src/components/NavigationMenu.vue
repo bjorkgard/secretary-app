@@ -1,5 +1,5 @@
 <template>
-  <nav class="h-full">
+  <nav>
     <ul
       v-if="currentRoute"
       class="flex flex-col overflow-hidden space-y-2 mx-2 sm:mx-4 mt-2 h-full"
