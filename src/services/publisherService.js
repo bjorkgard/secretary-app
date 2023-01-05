@@ -1,6 +1,5 @@
 import { PublisherSchema } from '@/database/schemas'
 import PublisherStore      from '@/database/publisherStore'
-import log                 from 'electron-log'
 
 const publisherStore = new PublisherStore('publishers.db', PublisherSchema)
 
@@ -97,6 +96,8 @@ const parsePublisher = (data) => {
         emergencyEmail  : '',
         children        : [],
         appointments    : [],
+        createdAt       : '',
+        updatedAt       : '',
     }
 
     publisherModel.id              = data._id
@@ -126,6 +127,8 @@ const parsePublisher = (data) => {
     publisherModel.emergencyEmail  = data.emergency.email ? data.emergency.email : ''
     publisherModel.children        = data.children
     publisherModel.appointments    = data.appointments
+    publisherModel.createdAt       = data.createdAt.toLocaleString('sv-SE', { hour12: false })
+    publisherModel.updatedAt       = data.updatedAt.toLocaleString('sv-SE', { hour12: false })
 
     return publisherModel
 }
@@ -203,9 +206,13 @@ export default class PublisherService {
     }
 
     async find(data) {
-        const publishers = await publisherStore.find(data)
+        let publishers = await publisherStore.find(data)
 
-        return publishers
+        const parsedPublishers = publishers.map((pub) => {
+            return parsePublisher(pub)
+        })
+
+        return parsedPublishers
     }
 
     async findNew() {

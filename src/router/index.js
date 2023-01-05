@@ -24,17 +24,22 @@ const routes = [
     {
         path      : '/publishers',
         name      : 'publishers',
-        component : () => import(/* webpackChunkName: "home" */ '../views/PublisherView.vue'),
+        component : () => import(/* webpackChunkName: "publishers" */ '../views/PublisherView.vue'),
     },
     {
         path      : '/publishers/add',
         name      : 'publishers.add',
-        component : () => import(/* webpackChunkName: "home" */ '../views/PublisherFormView.vue'),
+        component : () => import(/* webpackChunkName: "publishersForm" */ '../views/PublisherFormView.vue'),
     },
     {
         path      : '/publishers/:id',
         name      : 'publishers.edit',
-        component : () => import(/* webpackChunkName: "home" */ '../views/PublisherFormView.vue'),
+        component : () => import(/* webpackChunkName: "publishersForm2" */ '../views/PublisherFormView.vue'),
+    },
+    {
+        path      : '/exports',
+        name      : 'exports',
+        component : () => import(/* webpackChunkName: "exports" */ '../views/ExportView.vue'),
     },
     {
         path      : '/settings',

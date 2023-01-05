@@ -1,4 +1,3 @@
-import log       from 'electron-log'
 import BaseStore from './baseStore'
 
 export default class PublisherStore extends BaseStore {
@@ -10,7 +9,7 @@ export default class PublisherStore extends BaseStore {
         let searchQuery         = {}
         searchQuery[ property ] = value
 
-        return this.databaseInstance.find(searchQuery)
+        return this.databaseInstance.find(searchQuery).sort({ lastName: 1, firstName: 1 })
     }
 
     findNew() {
@@ -41,6 +40,21 @@ export default class PublisherStore extends BaseStore {
             case 'ADDRESS_REV':
                 sort = { 'address.address1': -1 }
                 break
+            case 'CELL':
+                sort = { 'cell.formatted': 1 }
+                break
+            case 'CELL_REV':
+                sort = { 'cell.formatted': -1 }
+                break
+            case 'PHONE':
+                sort = { 'phone.formatted': 1 }
+                break
+            case 'PHONE_REV':
+                sort = { 'phone.formatted': -1 }
+                break
+            case 'GROUP':
+                sort = { 'serviceGroup.name': 1, lastName: 1, firstName: 1 }
+                break
             default:
                 sort = { lastName: 1, firstName: 1 }
         }
@@ -53,10 +67,11 @@ export default class PublisherStore extends BaseStore {
             ] }
         }
 
+
         return this.databaseInstance.find(query).sort(sort)
     }
 
     contacts() {
-        return this.databaseInstance.find({ contactPerson: true }, { firstName: 1, lastName: 1 }).sort({ lastName: 1, firstName: 1 })
+        return this.databaseInstance.find({ contactPerson: true }).sort({ lastName: 1, firstName: 1 })
     }
 }
