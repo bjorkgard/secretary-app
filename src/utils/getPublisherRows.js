@@ -10,6 +10,10 @@ const getPublisherRows = (publishers) => {
 
         let other = ''
 
+        if(publisher.status.value === 'INACTIVE'){
+            other += `${publisher.status.name}\n`
+        }
+
         if(publisher.appointments.length){
             publisher.appointments.map(appointment => {
                 other += `${appointment.type.name}, `
