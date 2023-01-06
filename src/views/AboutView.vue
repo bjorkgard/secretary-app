@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-1 flex-col pl-40">
+    <div class="flex flex-1 flex-col pl-36">
       <main class="flex-1">
         <div class="mx-auto max-w-7xl">
           <Secretary v-if="selectedTarget.target === 'about'" />
