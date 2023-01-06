@@ -1,7 +1,8 @@
-import { ipcMain }            from 'electron'
+import { ipcMain }    from 'electron'
 import {
     exportAddressListName,
     exportAddressListGroup,
+    exportNameList,
 } from '@/ipcMains'
 
 export default {
@@ -45,10 +46,21 @@ export default {
             ],
         },
         {
-            label : 'Namnlista',
-            click : () => {
-                ipcMain.emit('export-name-list', { function: 'exportNameList' })
-            },
+            label   : 'Namnlista',
+            submenu : [
+                {
+                    label : 'PDF',
+                    click : () => {
+                        exportNameList('PDF')
+                    },
+                },
+                {
+                    label : 'XLSX',
+                    click : () => {
+                        exportNameList('XLSX')
+                    },
+                },
+            ],
         },
       ],
 
