@@ -26,22 +26,14 @@
               />
             </div>
             <input
-              id="mobile-search-candidate"
-              v-model="searchQuery"
-              type="text"
-              name="mobile-search-candidate"
-              class="block w-full rounded-none rounded-l-md border-slate-300 pl-10 sm:hidden placeholder-slate-500 text-slate-800 focus:outline-none dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:bg-slate-50 dark:focus:text-slate-900 dark:border-slate-400"
-              placeholder="Filtrera"
-              @keyup="filterPublishers()"
-            >
-            <input
               id="desktop-search-candidate"
               v-model="searchQuery"
-              type="text"
+              type="search"
               name="desktop-search-candidate"
-              class="hidden w-full rounded-none rounded-l-md border-slate-300 pl-10 sm:block sm:text-sm placeholder-slate-500 text-slate-800 focus:outline-none dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:bg-slate-50 dark:focus:text-slate-900 dark:border-slate-400"
+              class="w-full rounded-none rounded-l-md border-slate-300 pl-10 sm:text-sm placeholder-slate-500 text-slate-800 focus:outline-none dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:bg-slate-600 dark:focus:text-slate-400 dark:border-slate-400"
               placeholder="Filtrera"
               @keyup="filterPublishers()"
+              @click="searchQuery?filterPublishers():null"
             >
           </div>
           <button
