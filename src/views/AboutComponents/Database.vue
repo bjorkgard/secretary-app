@@ -1,27 +1,27 @@
 <template>
-  <div>
+  <div class="-ml-36">
     <h2 class="font-medium text-lg text-slate-500 dark:text-slate-400">
       Databasstatistik
     </h2>
-  </div>
-  <div class="mt-2 border-t border-slate-300 dark:border-slate-500">
-    <dl class="divide-y divide-slate-300 dark:divide-slate-500">
-      <div
-        v-for="database in databases"
-        :key="database.name"
-        class="grid grid-cols-3 gap-4 py-2"
-      >
-        <dt class="text-sm font-medium text-slate-500 dark:text-slate-400">
-          {{ database.name }}
-        </dt>
-        <dd class="flex text-sm text-slate-500 col-span-2 mt-0 dark:text-slate-400">
-          <span class="flex-grow">{{ database.count }} poster</span>
-          <span class="ml-4 flex-shrink-0">
-            {{ database.size }}
-          </span>
-        </dd>
-      </div>
-    </dl>
+    <div class="mt-2 border-t border-slate-300 dark:border-slate-500">
+      <dl class="divide-y divide-slate-300 dark:divide-slate-500">
+        <div
+          v-for="database in databases"
+          :key="database.name"
+          class="grid grid-cols-3 gap-4 py-2"
+        >
+          <dt class="text-sm font-medium text-slate-500 dark:text-slate-400">
+            {{ database.name }}
+          </dt>
+          <dd class="flex text-sm text-slate-500 col-span-2 mt-0 dark:text-slate-400">
+            <span class="flex-grow">{{ database.count }} poster</span>
+            <span class="ml-4 flex-shrink-0">
+              {{ database.size }}
+            </span>
+          </dd>
+        </div>
+      </dl>
+    </div>
   </div>
 </template>
 
