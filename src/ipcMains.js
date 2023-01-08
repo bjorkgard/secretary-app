@@ -488,6 +488,10 @@ export const enableIPC = () => {
         return app.getVersion()
     })
 
+    ipcMain.handle('generate-backup', async() => {
+        backupDatabases()
+    })
+
     /*** ServiceGroup store */
     ipcMain.handle('statsServiceGroups', async () => {
         return await serviceGroupService.stats()
@@ -576,6 +580,29 @@ export const enableIPC = () => {
 
     ipcMain.handle('updateSettings', async (event, settingsId, data) => {
         return await settingsService.update(settingsId, data)
+    })
+
+    /**
+     * Warnings store
+     */
+    ipcMain.handle('getWarnings', async () => {
+        const now    = new Date()
+        let warnings = []
+        const backup = await datesService.findByType('backup')
+
+        if(backup){
+            const fourteenDaysInMs = 14 * 24 * 60 * 60 * 1000
+            const timeDiffInMs     = now.getTime() - backup.date.getTime()
+
+            if(timeDiffInMs >= fourteenDaysInMs){
+                backup.label = 'Det är dags att göra en ny backup'
+                warnings.push(backup)
+            }
+        }else{
+            warnings.push({ label: 'Det saknas en backup', type: 'backup', date: null, id: null })
+        }
+
+        return warnings
     })
 
     /**
@@ -762,7 +789,7 @@ export const enableIPC = () => {
         log.info('Backup start', new Date())
 
         const date         = new Date()
-        const dateString   = date.toLocaleDateString()
+        const dateString   = date.toLocaleDateString('sv')
         const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
 
         datesService.upsert('backup', date)

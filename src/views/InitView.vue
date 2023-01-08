@@ -16,18 +16,21 @@
 </template>
 
 <script setup>
-import { ipcRenderer }      from 'electron'
-import { onMounted, ref }   from 'vue'
-import Registration         from '@/components/Registration.vue'
-import router               from '@/router'
-import { useSettingsStore } from '@/stores'
+import { ipcRenderer }                        from 'electron'
+import { onMounted, ref }                     from 'vue'
+import Registration                           from '@/components/Registration.vue'
+import router                                 from '@/router'
+import { useSettingsStore, useWarningsStore } from '@/stores'
 
 const settingsStore    = useSettingsStore()
+const warningsStore    = useWarningsStore()
 const showRegistration = ref(false)
 const settings         = ref(null)
+const warnings         = ref([])
 
 const initializeData = async () => {
     settings.value = await ipcRenderer.invoke('getSettings')
+    warnings.value = await ipcRenderer.invoke('getWarnings')
 
     if (settings.value) {
         // TODO: Check if it is time to start reports
@@ -35,6 +38,7 @@ const initializeData = async () => {
         // TODO: If congregation is online. Retrive data from server
         // TODO: ...
         settingsStore.set(settings.value)
+        warningsStore.set(warnings.value)
         router.push({ name: 'home' })
     } else {
         showRegistration.value = true
