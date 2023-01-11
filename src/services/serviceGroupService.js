@@ -83,6 +83,10 @@ export default class ServiceGroupService {
         return serviceGroups
     }
 
+    async deleteAll() {
+        await serviceGroupStore.deleteAll()
+    }
+
     drop() {
         serviceGroupStore.drop({})
     }

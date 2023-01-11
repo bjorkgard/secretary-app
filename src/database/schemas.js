@@ -1,8 +1,12 @@
 const Congregation = {
     type       : 'object',
     properties : {
-        name   : { type: 'string' },
-        number : { type: 'string' },
+        name    : { type: 'string', nullable: false },
+        number  : { type: 'string', nullable: false },
+        co      : { type: 'string', nullable: true },
+        address : { type: 'string', nullable: true },
+        zip     : { type: 'string', nullable: true },
+        city    : { type: 'string', nullable: true },
     },
     required: [ 'name', 'number' ],
 }

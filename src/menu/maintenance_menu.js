@@ -17,6 +17,13 @@ export default {
         },
         { type: 'separator' },
         {
+            label: 'Importera från Secretary',
+            click() {
+                ipcMain.emit('import-old-secretary', { function: 'importSecretary' })
+            },
+        },
+        { type: 'separator' },
+        {
             label: 'Radera databas',
             click() {
                 ipcMain.emit('show-confirmation-dialog', { function: 'destroyDatabases' })
