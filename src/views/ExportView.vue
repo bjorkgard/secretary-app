@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <div class="border-b border-slate-200 pb-5 sm:flex sm:items-center sm:justify-between dark:border-slate-500">
-      <h3 class="text-lg font-medium leading-9 text-slate-900 dark:text-slate-400">
+      <h3 class="text-3xl font-bold tracking-tight leading-9 text-slate-900 dark:text-slate-400">
         Exportera
       </h3>
     </div>
