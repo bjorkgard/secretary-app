@@ -438,7 +438,7 @@ const validationSchema = [
         }),
         phone : yup.string().nullable(),
         cell  : yup.string().nullable(),
-        email : yup.string().email(),
+        email : yup.string().email().nullable(),
     }),
     yup.object({
         serviceGroup : yup.mixed().required('Obligatorisk'),
