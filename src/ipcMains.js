@@ -836,32 +836,33 @@ export const enableIPC = () => {
                     generateTemporaryBackup().then(async ()=>{
                         log.info('Start import old secretary')
 
-                            let secretary                = JSON.parse(data.toString())
-                            const newPublisherService    = new PublisherService()
-                            const newServiceGroupService = new ServiceGroupService()
+                        let secretary                = JSON.parse(data.toString())
+                        const newPublisherService    = new PublisherService()
+                        const newServiceGroupService = new ServiceGroupService()
 
-                            // Import data
-                            const settings = {
-                                identifier   : uuidv4(),
-                                congregation : {
-                                    name    : secretary.name,
-                                    number  : secretary.number,
-                                    co      : secretary.co,
-                                    address : secretary.address,
-                                    zip     : secretary.zip,
-                                    city    : secretary.city,
-                                },
-                                user: {
-                                    firstname : oldSettings.user.firstname,
-                                    lastname  : oldSettings.user.lastname,
-                                    email     : oldSettings.user.email,
-                                },
-                            }
+                        // Import data
+                        const settings = {
+                            identifier   : uuidv4(),
+                            congregation : {
+                                name    : secretary.name,
+                                number  : secretary.number,
+                                co      : secretary.co,
+                                address : secretary.address,
+                                zip     : secretary.zip,
+                                city    : secretary.city,
+                            },
+                            user: {
+                                firstname : oldSettings.user.firstname,
+                                lastname  : oldSettings.user.lastname,
+                                email     : oldSettings.user.email,
+                            },
+                        }
 
-                            await settingsService.update(oldSettings.id, settings)
+                        await settingsService.update(oldSettings.id, settings)
 
-                            if(secretary.groups){
-                                secretary.groups.forEach(async group => {
+                        if(secretary.groups){
+                            secretary.groups.forEach(async group => {
+                                if(!group.hidden){
                                     let serviceGroup = await newServiceGroupService.create({ name: group.name })
 
                                     // add contacts
@@ -892,7 +893,7 @@ export const enableIPC = () => {
                                                 firstName       : pub.firstname,
                                                 lastName        : pub.lastname,
                                                 birthday        : pub.birthday,
-                                                gender          : pub.gender === 'woman' ? 'female' : 'man',
+                                                gender          : pub.gender === 'woman' ? 'female' : 'male',
                                                 baptised        : pub.baptised,
                                                 baptisedUnknown : pub.unknown_baptised,
                                                 hope            : pub.hope,
@@ -1002,21 +1003,18 @@ export const enableIPC = () => {
                                                     }
                                                 })
                                             })
-
                                         }
-
                                     })
-
-
-                                })
-                            }
-
-                            datesService.upsert('import', date)
-                            log.info('Done import old secretary')
-
-                            return new Promise((resolve, reject) => {
-                                setTimeout(() => resolve(result * 2), 3000)
+                                }
                             })
+                        }
+
+                        datesService.upsert('import', date)
+                        log.info('Done import old secretary')
+
+                        return new Promise((resolve, reject) => {
+                            setTimeout(() => resolve(result * 2), 3000)
+                        })
 
                     }).then(() => {
                         removeTemporaryBackup()
