@@ -233,6 +233,10 @@ export default class PublisherService {
         return parsePublisher(publisher)
     }
 
+    async deleteAll() {
+        await publisherStore.deleteAll()
+    }
+
     drop() {
         publisherStore.drop({})
     }

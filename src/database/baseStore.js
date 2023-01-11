@@ -67,6 +67,10 @@ export default class BaseStore {
         return this.databaseInstance.remove({ _id })
     }
 
+    async deleteAll() {
+        return await this.databaseInstance.removeMany({})
+    }
+
     async findOneById(_id) {
         return await this.databaseInstance.findOne({ _id })
     }
