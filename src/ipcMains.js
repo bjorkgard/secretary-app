@@ -1,18 +1,20 @@
-import { app, ipcMain, dialog } from 'electron'
-import fs                       from 'fs-extra'
-import Excel                    from 'exceljs'
-import pdfMake                  from 'pdfmake/build/pdfmake'
-import pdfFonts                 from 'pdfmake/build/vfs_fonts'
-import log                      from 'electron-log'
-import DatesService             from '@/services/datesService'
-import SettingsService          from '@/services/settingsService'
-import MaintenenceService       from '@/services/maintenenceService'
-import PublisherService         from '@/services/publisherService'
-import ServiceGroupService      from '@/services/serviceGroupService'
-import ExportsService           from '@/services/exportsService'
-import getPublisherRows         from '@/utils/getPublisherRows'
-import getPublisherByFamilyRows from '@/utils/getPublisherByFamilyRows'
-import splitArray               from '@/utils/splitArray'
+import { app, ipcMain, dialog }       from 'electron'
+import fs                             from 'fs-extra'
+import Excel                          from 'exceljs'
+import pdfMake                        from 'pdfmake/build/pdfmake'
+import pdfFonts                       from 'pdfmake/build/vfs_fonts'
+import { v4 as uuidv4 }               from 'uuid'
+import log                            from 'electron-log'
+import DatesService                   from '@/services/datesService'
+import SettingsService                from '@/services/settingsService'
+import MaintenenceService             from '@/services/maintenenceService'
+import PublisherService               from '@/services/publisherService'
+import ServiceGroupService            from '@/services/serviceGroupService'
+import ExportsService                 from '@/services/exportsService'
+import getPublisherRows               from '@/utils/getPublisherRows'
+import getPublisherByFamilyRows       from '@/utils/getPublisherByFamilyRows'
+import splitArray                     from '@/utils/splitArray'
+import { parsePhoneNumberFromString } from 'libphonenumber-js'
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 
@@ -781,6 +783,351 @@ export const enableIPC = () => {
             })
         })
     })
+
+    const translateImport = (type) => {
+        let value = ''
+        switch(type){
+            case 'pioneer':
+                value = 'Pionjär'
+                break
+            case 'special_pioneer':
+                value = 'Specialpionjär'
+                break
+            case 'aux_pioneer':
+                value = 'Kontinuerlig hjälppionjär'
+                break
+            case 'elder':
+                value = 'Äldste'
+                break
+            case 'ministerial_servant':
+                value = 'Församlingstjänare'
+                break
+            case 'active':
+                value = 'Regelbunden'
+                break
+            case 'irregular':
+                value = 'Oregelbunden'
+                break
+            case 'inactive':
+                value = 'Overksam'
+                break
+        }
+
+        return value
+    }
+
+    ipcMain.on('import-old-secretary', async () => {
+        const date        = new Date()
+        const oldSettings = await settingsService.find()
+
+        let options = {
+            title       : 'Importera från Secretary',
+            message     : 'OBS: All befintlig data kommer att ersättas om du fortsätter',
+            buttonLabel : 'Importera',
+            filters     : [
+                { name: 'json', extensions: [ 'json' ] },
+            ],
+            properties: [ 'openFile' ],
+        }
+
+        dialog.showOpenDialog(null, options).then(result => {
+            fs.readFile(result.filePaths[ 0 ], (err, data) => {
+                if (!err) {
+                    generateTemporaryBackup().then(async ()=>{
+                        log.info('Start import old secretary')
+
+                            let secretary                = JSON.parse(data.toString())
+                            const newPublisherService    = new PublisherService()
+                            const newServiceGroupService = new ServiceGroupService()
+
+                            // Import data
+                            const settings = {
+                                identifier   : uuidv4(),
+                                congregation : {
+                                    name    : secretary.name,
+                                    number  : secretary.number,
+                                    co      : secretary.co,
+                                    address : secretary.address,
+                                    zip     : secretary.zip,
+                                    city    : secretary.city,
+                                },
+                                user: {
+                                    firstname : oldSettings.user.firstname,
+                                    lastname  : oldSettings.user.lastname,
+                                    email     : oldSettings.user.email,
+                                },
+                            }
+
+                            await settingsService.update(oldSettings.id, settings)
+
+                            if(secretary.groups){
+                                secretary.groups.forEach(async group => {
+                                    let serviceGroup = await newServiceGroupService.create({ name: group.name })
+
+                                    // add contacts
+                                    group.publishers.forEach( pub => {
+                                        if(pub.contact){
+                                            let appointments = []
+                                            pub.appointments.map(appointment => {
+                                                let type = {
+                                                    type: {
+                                                        name  : translateImport(appointment.type.toString()),
+                                                        value : appointment.type.toString().toUpperCase(),
+                                                    },
+                                                    date: appointment.date,
+                                                }
+                                                appointments.push(type)
+                                            })
+                                            let children = []
+                                            pub.children.map(child => {
+                                                children.push({ firstName: child.firstname, birthday: child.birthday })
+                                            })
+                                            let status   = { name: translateImport(pub.status), value: pub.status.toString().toUpperCase() }
+                                            let cellObj  = pub.cell ? parsePhoneNumberFromString(pub.cell, 'SE') : null
+                                            let phoneObj = pub.phone ? parsePhoneNumberFromString(pub.phone, 'SE') : null
+
+                                            let publisher = {
+                                                s290            : pub.gdpr,
+                                                registerCard    : pub.personalDataCard === 1 ? true : false,
+                                                firstName       : pub.firstname,
+                                                lastName        : pub.lastname,
+                                                birthday        : pub.birthday,
+                                                gender          : pub.gender === 'woman' ? 'female' : 'man',
+                                                baptised        : pub.baptised,
+                                                baptisedUnknown : pub.unknown_baptised,
+                                                hope            : pub.hope,
+                                                contactPerson   : pub.contact,
+                                                contact         : null,
+                                                address1        : pub.address,
+                                                address2        : null,
+                                                zip             : pub.zip,
+                                                city            : pub.city,
+                                                phone           : phoneObj ? {
+                                                    countryCallingCode : phoneObj.countryCallingCode,
+                                                    nationalNumber     : phoneObj.nationalNumber,
+                                                    number             : phoneObj.number,
+                                                    country            : phoneObj.country,
+                                                    countryCode        : phoneObj.countryCode,
+                                                    valid              : true,
+                                                    formatted          : phoneObj.format('NATIONAL'),
+                                                    type               : 'phone',
+                                                } : null,
+                                                cell: cellObj ? {
+                                                    countryCallingCode : cellObj.countryCallingCode,
+                                                    nationalNumber     : cellObj.nationalNumber,
+                                                    number             : cellObj.number,
+                                                    country            : cellObj.country,
+                                                    countryCode        : cellObj.countryCode,
+                                                    valid              : true,
+                                                    formatted          : cellObj.format('NATIONAL'),
+                                                    type               : 'cell',
+                                                } : null,
+                                                email          : pub.email,
+                                                status         : status,
+                                                information    : pub.information,
+                                                emergencyName  : '',
+                                                emergencyPhone : '',
+                                                emergencyEmail : '',
+                                                children       : children,
+                                                appointments   : appointments,
+                                                serviceGroup   : { name: serviceGroup.name, value: serviceGroup.id },
+                                            }
+
+                                            newPublisherService.create(publisher).then(newPublisher => {
+                                                group.publishers.forEach(async p => {
+                                                    if(p.family_id === pub.id){
+                                                        let appointments = []
+                                                        p.appointments.map(appointment => {
+                                                            let type = {
+                                                                type: {
+                                                                    name  : translateImport(appointment.type.toString()),
+                                                                    value : appointment.type.toString().toUpperCase(),
+                                                                },
+                                                                date: appointment.date,
+                                                            }
+                                                            appointments.push(type)
+                                                        })
+                                                        let children = []
+                                                        let status   = { name: translateImport(p.status), value: p.status.toString().toUpperCase() }
+                                                        let cellObj  = p.cell ? parsePhoneNumberFromString(p.cell, 'SE') : null
+                                                        let phoneObj = p.phone ? parsePhoneNumberFromString(p.phone, 'SE') : null
+
+                                                        let publisher = {
+                                                            s290            : p.gdpr,
+                                                            registerCard    : p.personalDataCard === 1 ? true : false,
+                                                            firstName       : p.firstname,
+                                                            lastName        : p.lastname,
+                                                            birthday        : p.birthday,
+                                                            gender          : p.gender === 'woman' ? 'female' : 'man',
+                                                            baptised        : p.baptised,
+                                                            baptisedUnknown : p.unknown_baptised,
+                                                            hope            : p.hope,
+                                                            contactPerson   : p.contact,
+                                                            contact         : { name: `${newPublisher.lastName}, ${newPublisher.firstName}`, value: newPublisher._id },
+                                                            address1        : p.address,
+                                                            address2        : null,
+                                                            zip             : p.zip,
+                                                            city            : p.city,
+                                                            phone           : phoneObj ? {
+                                                                countryCallingCode : phoneObj.countryCallingCode,
+                                                                nationalNumber     : phoneObj.nationalNumber,
+                                                                number             : phoneObj.number,
+                                                                country            : phoneObj.country,
+                                                                countryCode        : phoneObj.countryCode,
+                                                                valid              : true,
+                                                                formatted          : phoneObj.format('NATIONAL'),
+                                                                type               : 'phone',
+                                                            } : null,
+                                                            cell: cellObj ? {
+                                                                countryCallingCode : cellObj.countryCallingCode,
+                                                                nationalNumber     : cellObj.nationalNumber,
+                                                                number             : cellObj.number,
+                                                                country            : cellObj.country,
+                                                                countryCode        : cellObj.countryCode,
+                                                                valid              : true,
+                                                                formatted          : cellObj.format('NATIONAL'),
+                                                                type               : 'cell',
+                                                            } : null,
+                                                            email          : p.email,
+                                                            status         : status,
+                                                            information    : p.information,
+                                                            emergencyName  : '',
+                                                            emergencyPhone : '',
+                                                            emergencyEmail : '',
+                                                            children       : children,
+                                                            appointments   : appointments,
+                                                            serviceGroup   : { name: serviceGroup.name, value: serviceGroup.id },
+                                                        }
+                                                        await newPublisherService.create(publisher)
+                                                    }
+                                                })
+                                            })
+
+                                        }
+
+                                    })
+
+
+                                })
+                            }
+
+                            datesService.upsert('import', date)
+                            log.info('Done import old secretary')
+
+                            return new Promise((resolve, reject) => {
+                                setTimeout(() => resolve(result * 2), 3000)
+                            })
+
+                    }).then(() => {
+                        removeTemporaryBackup()
+                        return new Promise((resolve, reject) => {
+                            setTimeout(() => resolve(result * 2), 1000)
+                        })
+                    }).then(() => {
+                        const responseOptions = {
+                            type      : 'info',
+                            buttons   : [ 'OK' ],
+                            defaultId : 0,
+                            title     : 'Importen är klar',
+                            message   : 'Importen av secretary är klar',
+                            detail    : 'Applikationen kommer nu att avslutas och när du startar den nästa gång kommer den nya databasen att läsas in.',
+                        }
+
+                        dialog.showMessageBox(null, responseOptions).then(() => {
+                            app.quit()
+                        })
+                    })
+                }
+            })
+        })
+
+
+    })
+
+    const generateTemporaryBackup = async () => {
+        const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
+
+        return new Promise((resolve, reject) => {
+            try {
+                fs.readdir(userDataPath, (err, files) => {
+                    if (err) { log.error(err)}
+
+                    files.forEach(async file => {
+                        if (file === '.DS_Store') { return}
+
+                        await fs.copyFile(`${userDataPath}/${file}`, `${userDataPath}/backup_${file}`)
+                    })
+                })
+                serviceGroupService.deleteAll()
+                publisherService.deleteAll()
+
+                log.info('Backup created')
+                resolve('Backup created')
+            } catch (err) {
+                log.error(err)
+                reject(new Error(err))
+            }
+        })
+
+    }
+
+    const removeTemporaryBackup = async () => {
+        log.info('Remove temporary backup')
+        const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
+
+        try {
+            fs.readdir(userDataPath, (err, files) => {
+                if (err) { log.error(err)}
+
+                files.forEach(async file => {
+                    if (file === '.DS_Store') { return}
+
+                    if(file.startsWith('backup_')){
+                        await fs.remove(`${userDataPath}/${file}`)
+                    }
+
+                })
+            })
+        } catch (err) {
+            log.error(err)
+        }
+        log.info('Temporary backup remove done')
+
+        return 'done'
+    }
+
+    const restoreTemporaryBackup = async () => {
+        log.info('Restore temporary backup')
+        const userDataPath = isDevelopment ? './db': app.getPath('userData') + '/db'
+
+        try {
+            fs.readdir(userDataPath, (err, files) => {
+                if (err) { log.error(err)}
+
+                files.forEach(async file => {
+                    if (file === '.DS_Store') { return}
+
+                    if(!file.startsWith('backup_')){
+                        await fs.remove(`${userDataPath}/${file}`)
+                    }
+
+                })
+                files.forEach(async file => {
+                    if (file === '.DS_Store') { return}
+
+                    if(file.startsWith('backup_')){
+                        await fs.rename(`${userDataPath}/${file}`, `${userDataPath}/${file.replace('backup_', '')}`)
+                    }
+
+                })
+            })
+        } catch (err) {
+            log.error(err)
+        }
+        log.info('Restore backup done')
+
+        return 'done'
+    }
 
     /**
      * Internal main functions
