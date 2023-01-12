@@ -844,12 +844,15 @@ export const enableIPC = () => {
                         const settings = {
                             identifier   : uuidv4(),
                             congregation : {
-                                name    : secretary.name,
-                                number  : secretary.number,
-                                co      : secretary.co,
-                                address : secretary.address,
-                                zip     : secretary.zip,
-                                city    : secretary.city,
+                                name               : secretary.name,
+                                number             : secretary.number,
+                                co                 : secretary.co,
+                                address            : secretary.address,
+                                zip                : secretary.zip,
+                                city               : secretary.city,
+                                organizationNumber : secretary.org_no,
+                                phone              : secretary.phone,
+                                email              : secretary.email,
                             },
                             user: {
                                 firstname : oldSettings.user.firstname,

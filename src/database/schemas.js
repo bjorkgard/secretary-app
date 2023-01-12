@@ -1,12 +1,15 @@
 const Congregation = {
     type       : 'object',
     properties : {
-        name    : { type: 'string', nullable: false },
-        number  : { type: 'string', nullable: false },
-        co      : { type: 'string', nullable: true },
-        address : { type: 'string', nullable: true },
-        zip     : { type: 'string', nullable: true },
-        city    : { type: 'string', nullable: true },
+        name               : { type: 'string', nullable: false },
+        number             : { type: 'string', nullable: false },
+        co                 : { type: 'string', nullable: true },
+        address            : { type: 'string', nullable: true },
+        zip                : { type: 'string', nullable: true },
+        city               : { type: 'string', nullable: true },
+        organizationNumber : { type: 'string', nullable: true },
+        phone              : { type: 'string', nullable: true },
+        email              : { type: 'string', nullable: true },
     },
     required: [ 'name', 'number' ],
 }
