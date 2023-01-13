@@ -3,7 +3,9 @@ import {
     createWebHashHistory,
     createWebHistory,
 } from 'vue-router'
-import InitView from '../views/InitView.vue'
+import InitView             from '../views/InitView.vue'
+import CongregationSettings from '../views/Settings/Congregation.vue'
+const CircuitOverseer = () => import('../views/Settings/CircuitOverseer.vue')
 
 const routes = [
     {
@@ -45,6 +47,10 @@ const routes = [
         path      : '/settings',
         name      : 'settings',
         component : () => import(/* webpackChunkName: "settings" */ '../views/SettingsView.vue'),
+        children  : [
+            { path: '', name: 'congregationSettings', components: { settings: CongregationSettings } },
+            { path: '/circuitOverseer', name: 'circuitOverseer', components: { settings: CircuitOverseer } },
+        ],
     },
 ]
 

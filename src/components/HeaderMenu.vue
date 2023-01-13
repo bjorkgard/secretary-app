@@ -49,9 +49,10 @@
           </Menu>
           <button
             type="button"
-            class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+            class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-sky-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
             title="Inställningar"
             tabindex="-1"
+            @click="showSettings"
           >
             <span class="sr-only">View Settings</span>
             <CogIcon
@@ -61,7 +62,7 @@
           </button>
           <button
             type="button"
-            class="flex-shrink-0 hidden rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+            class="flex-shrink-0 hidden rounded-full bg-white p-1 text-slate-400 hover:text-sky-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
             title="Notiser"
             tabindex="-1"
           >
@@ -74,7 +75,7 @@
 
           <button
             type="button"
-            class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-slate-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
+            class="flex-shrink-0 rounded-full bg-white p-1 text-slate-400 hover:text-sky-500 focus:outline-none dark:bg-slate-800 dark:text-slate-400 dark:hover:text-white"
             title="Avsluta"
             tabindex="-1"
             @click="abortApplication"
@@ -97,6 +98,7 @@ import { Menu, MenuButton, MenuItem, MenuItems }        from '@headlessui/vue'
 import { BellIcon, CogIcon, ArrowRightOnRectangleIcon } from '@heroicons/vue/24/outline'
 import { ExclamationTriangleIcon }                      from '@heroicons/vue/24/solid'
 import { useWarningsStore }                             from '@/stores'
+import router                                           from '@/router'
 
 const warnings = useWarningsStore()
 
@@ -106,6 +108,10 @@ const handle_warning_call = (type) => {
     }
 
     warnings.remove(type)
+}
+
+const showSettings = () => {
+    router.push({ name: 'settings' })
 }
 
 const abortApplication = () => {

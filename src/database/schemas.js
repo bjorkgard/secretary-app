@@ -1,12 +1,30 @@
+const Phone = {
+    type       : 'object',
+    properties : {
+        country            : { type: 'string', nullable: true },
+        countryCallingCode : { type: 'string', nullable: true },
+        countryCode        : { type: 'string', nullable: true },
+        formatted          : { type: 'string', nullable: true },
+        nationalNumber     : { type: 'string', nullable: true },
+        number             : { type: 'string', nullable: true },
+        type               : { type: 'string', nullable: true },
+        valid              : { type: 'boolean', nullable: true },
+    },
+    required: [],
+}
+
 const Congregation = {
     type       : 'object',
     properties : {
-        name    : { type: 'string', nullable: false },
-        number  : { type: 'string', nullable: false },
-        co      : { type: 'string', nullable: true },
-        address : { type: 'string', nullable: true },
-        zip     : { type: 'string', nullable: true },
-        city    : { type: 'string', nullable: true },
+        name               : { type: 'string', nullable: false },
+        number             : { type: 'string', nullable: false },
+        co                 : { type: 'string', nullable: true },
+        address            : { type: 'string', nullable: true },
+        zip                : { type: 'string', nullable: true },
+        city               : { type: 'string', nullable: true },
+        organizationNumber : { type: 'string', nullable: true },
+        phone              : { type: 'object', properties: { Phone }, nullable: true },
+        email              : { type: 'string', nullable: true },
     },
     required: [ 'name', 'number' ],
 }
@@ -19,6 +37,21 @@ const User = {
         email     : { type: 'string' },
     },
     required: [ 'firstname', 'lastname', 'email' ],
+}
+
+const CircuitOverseer = {
+    type       : 'object',
+    properties : {
+        firstName : { type: 'string', nullable: true },
+        lastName  : { type: 'string', nullable: true },
+        address1  : { type: 'string', nullable: true },
+        address2  : { type: 'string', nullable: true },
+        zip       : { type: 'string', nullable: true },
+        city      : { type: 'string', nullable: true },
+        phone     : { type: 'object', properties: { Phone }, nullable: true },
+        email     : { type: 'string', nullable: true },
+    },
+    required: [],
 }
 
 const Settings = {
@@ -71,13 +104,14 @@ export const ServiceGroupSchema = {
 export const SettingsSchema = {
     type       : 'object',
     properties : {
-        _id          : { type: 'string', nullable: true },
-        identifier   : { type: 'string' },
-        congregation : Congregation,
-        user         : User,
-        settings     : Settings,
-        createdAt    : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
-        updatedAt    : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        _id             : { type: 'string', nullable: true },
+        identifier      : { type: 'string' },
+        circuitOverseer : CircuitOverseer,
+        congregation    : Congregation,
+        user            : User,
+        settings        : Settings,
+        createdAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        updatedAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
     },
     required             : [],
     additionalProperties : false,
@@ -92,21 +126,6 @@ const Address = {
         city     : { type: 'string' },
     },
     required: [ 'address1', 'zip', 'city' ],
-}
-
-const Phone = {
-    type       : 'object',
-    properties : {
-        country            : { type: 'string', nullable: true },
-        countryCallingCode : { type: 'string', nullable: true },
-        countryCode        : { type: 'string', nullable: true },
-        formatted          : { type: 'string', nullable: true },
-        nationalNumber     : { type: 'string', nullable: true },
-        number             : { type: 'string', nullable: true },
-        type               : { type: 'string', nullable: true },
-        valid              : { type: 'boolean', nullable: true },
-    },
-    required: [],
 }
 
 const Emergency = {

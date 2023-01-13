@@ -260,7 +260,7 @@ const props = defineProps({
  */
 const input             = ref(null)
 const phone             = ref('')
-const activeCountryCode = ref('')
+const activeCountryCode = ref('SE')
 const finishMounted     = ref(false)
 const parsedPlaceholder = ref(props.placeholder)
 
