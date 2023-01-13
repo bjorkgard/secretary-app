@@ -6,12 +6,12 @@
           v-if="show"
           @submit="onSubmit"
         >
-          <div class="shadow sm:rounded-md">
-            <div class="bg-white py-6 px-4 sm:p-6">
+          <div class="shadow rounded-md overflow-hidden">
+            <div class="bg-white py-6 px-4 sm:p-6 dark:bg-slate-900">
               <div>
                 <h2
                   id="payment-details-heading"
-                  class="text-lg font-medium leading-6 text-slate-900"
+                  class="text-lg font-medium leading-6 text-slate-900 dark:text-slate-400"
                 >
                   Församlingen
                 </h2>
@@ -96,7 +96,7 @@
                 </div>
               </div>
             </div>
-            <div class="bg-slate-50 px-4 py-3 text-right sm:px-6">
+            <div class="bg-slate-50 px-4 py-3 text-right sm:px-6 dark:bg-slate-900">
               <Button />
             </div>
           </div>

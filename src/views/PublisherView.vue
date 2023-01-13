@@ -1,51 +1,50 @@
 <template>
   <div class="flex flex-col">
-    <div class="border-b border-slate-200 pb-3 sm:flex sm:items-center sm:justify-between dark:border-slate-500">
-      <h3 class="text-3xl font-bold tracking-tight leading-6 text-slate-900 dark:text-slate-400">
-        Förkunnare
-      </h3>
-      <div class="mt-3 sm:mt-0 sm:ml-4">
-        <label
-          for="mobile-search-candidate"
-          class="sr-only"
-        >
-          Filtrera
-        </label>
-        <label
-          for="desktop-search-candidate"
-          class="sr-only"
-        >
-          Filtrera
-        </label>
-        <div class="flex rounded-md shadow-sm">
-          <div class="relative flex-grow focus-within:z-10">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <MagnifyingGlassIcon
-                class="h-5 w-5 text-slate-400"
-                aria-hidden="true"
-              />
-            </div>
-            <input
-              id="desktop-search-candidate"
-              v-model="searchQuery"
-              type="search"
-              name="desktop-search-candidate"
-              class="w-full rounded-none rounded-l-md border-slate-300 pl-10 sm:text-sm placeholder-slate-500 text-slate-800 focus:outline-none dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:bg-slate-600 dark:focus:text-slate-400 dark:border-slate-400"
-              placeholder="Filtrera"
-              @keyup="filterPublishers()"
-              @click="searchQuery?filterPublishers():null"
-            >
-          </div>
-          <button
-            type="button"
-            class="cursor-pointer relative -ml-px inline-flex items-center rounded-r-md border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:outline-none dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-400 dark:border-slate-400 dark:hover:text-slate-800"
-            @click="addPublisher"
+    <PageHeader text="Förkunnare">
+      <template #actions>
+        <div class="mt-3 sm:mt-0 sm:ml-4">
+          <label
+            for="mobile-search-candidate"
+            class="sr-only"
           >
-            Lägg till
-          </button>
+            Filtrera
+          </label>
+          <label
+            for="desktop-search-candidate"
+            class="sr-only"
+          >
+            Filtrera
+          </label>
+          <div class="flex rounded-md shadow-sm">
+            <div class="relative flex-grow focus-within:z-10">
+              <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <MagnifyingGlassIcon
+                  class="h-5 w-5 text-slate-400"
+                  aria-hidden="true"
+                />
+              </div>
+              <input
+                id="desktop-search-candidate"
+                v-model="searchQuery"
+                type="search"
+                name="desktop-search-candidate"
+                class="w-full rounded-none rounded-l-md border-slate-300 pl-10 sm:text-sm placeholder-slate-500 text-slate-800 focus:outline-none dark:text-slate-300 dark:border-transparent dark:bg-slate-700 focus:placeholder-slate-400 dark:placeholder-slate-400 dark:focus:bg-slate-600 dark:focus:text-slate-400 dark:border-slate-400"
+                placeholder="Filtrera"
+                @keyup="filterPublishers()"
+                @click="searchQuery?filterPublishers():null"
+              >
+            </div>
+            <button
+              type="button"
+              class="cursor-pointer relative -ml-px inline-flex items-center rounded-r-md border border-slate-300 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 focus:outline-none dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-400 dark:border-slate-400 dark:hover:text-slate-800"
+              @click="addPublisher"
+            >
+              Lägg till
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
+      </template>
+    </PageHeader>
     <div class="mt-3 flex flex-col dark:border dark:border-slate-500">
       <div class="-my-2">
         <div class="inline-block min-w-full py-2 align-middle">
@@ -290,6 +289,7 @@ import { onBeforeUnmount, onMounted, ref }       from 'vue'
 import { ipcRenderer, shell }                    from 'electron'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import router                                    from '@/router'
+import PageHeader                                from '@/components/PageHeader.vue'
 import Address                                   from '@/components/Address.vue'
 import {
     BarsArrowUpIcon,
