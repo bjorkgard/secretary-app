@@ -839,6 +839,7 @@ export const enableIPC = () => {
                         let secretary                = JSON.parse(data.toString())
                         const newPublisherService    = new PublisherService()
                         const newServiceGroupService = new ServiceGroupService()
+                        let phoneObj                 = secretary.phone ? parsePhoneNumberFromString(secretary.phone, 'SE') : null
 
                         // Import data
                         const settings = {
@@ -851,8 +852,17 @@ export const enableIPC = () => {
                                 zip                : secretary.zip,
                                 city               : secretary.city,
                                 organizationNumber : secretary.org_no,
-                                phone              : secretary.phone,
-                                email              : secretary.email,
+                                phone              : phoneObj ? {
+                                    countryCallingCode : phoneObj.countryCallingCode,
+                                    nationalNumber     : phoneObj.nationalNumber,
+                                    number             : phoneObj.number,
+                                    country            : phoneObj.country,
+                                    countryCode        : phoneObj.countryCode,
+                                    valid              : true,
+                                    formatted          : phoneObj.format('NATIONAL'),
+                                    type               : 'phone',
+                                } : null,
+                                email: secretary.email,
                             },
                             user: {
                                 firstname : oldSettings.user.firstname,

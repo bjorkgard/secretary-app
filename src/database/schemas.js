@@ -1,3 +1,18 @@
+const Phone = {
+    type       : 'object',
+    properties : {
+        country            : { type: 'string', nullable: true },
+        countryCallingCode : { type: 'string', nullable: true },
+        countryCode        : { type: 'string', nullable: true },
+        formatted          : { type: 'string', nullable: true },
+        nationalNumber     : { type: 'string', nullable: true },
+        number             : { type: 'string', nullable: true },
+        type               : { type: 'string', nullable: true },
+        valid              : { type: 'boolean', nullable: true },
+    },
+    required: [],
+}
+
 const Congregation = {
     type       : 'object',
     properties : {
@@ -8,7 +23,7 @@ const Congregation = {
         zip                : { type: 'string', nullable: true },
         city               : { type: 'string', nullable: true },
         organizationNumber : { type: 'string', nullable: true },
-        phone              : { type: 'string', nullable: true },
+        phone              : { type: 'object', properties: { Phone }, nullable: true },
         email              : { type: 'string', nullable: true },
     },
     required: [ 'name', 'number' ],
@@ -95,21 +110,6 @@ const Address = {
         city     : { type: 'string' },
     },
     required: [ 'address1', 'zip', 'city' ],
-}
-
-const Phone = {
-    type       : 'object',
-    properties : {
-        country            : { type: 'string', nullable: true },
-        countryCallingCode : { type: 'string', nullable: true },
-        countryCode        : { type: 'string', nullable: true },
-        formatted          : { type: 'string', nullable: true },
-        nationalNumber     : { type: 'string', nullable: true },
-        number             : { type: 'string', nullable: true },
-        type               : { type: 'string', nullable: true },
-        valid              : { type: 'boolean', nullable: true },
-    },
-    required: [],
 }
 
 const Emergency = {
