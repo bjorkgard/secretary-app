@@ -4,7 +4,7 @@
       <HeaderMenu />
     </header>
     <div class="grow flex overflow-hidden">
-      <aside class="sm:w-min flex flex-col bg-white shadow overflow-y-auto dark:bg-slate-800">
+      <aside class="min-w-min flex flex-col bg-white shadow overflow-y-auto dark:bg-slate-800">
         <NavigationMenu />
       </aside>
       <main class="p-8 grow overflow-y-auto">
