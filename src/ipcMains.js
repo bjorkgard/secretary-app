@@ -30,6 +30,12 @@ const generateAddressList_PDF = async (publishers, name) => {
     const settings         = await settingsService.find()
     let publisherTableBody = getPublisherRows(publishers)
 
+    let coAddress = settings.circuitOverseer.address1
+    if(settings.circuitOverseer.address2){
+        coAddress += `\n${settings.circuitOverseer.address2}`
+    }
+    coAddress += `\n${settings.circuitOverseer.zip} ${settings.circuitOverseer.city}`
+
     // add headers to the table body
     publisherTableBody.unshift([
         { text: 'Gr.', style: 'tableHeader' },
@@ -75,6 +81,28 @@ const generateAddressList_PDF = async (publishers, name) => {
                 },
                 style: 'table',
             },
+            { text: 'Kretstillsyningsmannen', style: 'coHeader' },
+            {
+                layout : 'addressListLayout',
+                table  : {
+                    dontBreakRows : true,
+                    headerRows    : 1,
+                    widths        : [ '*', '*', 52, '*' ],
+                    body          : [
+                        [
+                            { text: 'Namn', style: 'tableHeader' },
+                            { text: 'Adress', style: 'tableHeader' },
+                            { text: 'Telefon', style: 'tableHeader' },
+                            { text: 'E-postadress', style: 'tableHeader' },
+                        ],
+                        [ `${settings.circuitOverseer.lastName}, ${settings.circuitOverseer.firstName}`,
+                        coAddress,
+                        settings.circuitOverseer.phone ? settings.circuitOverseer.phone.formatted : '',
+                        settings.circuitOverseer.email ],
+                    ],
+                },
+                style: 'table',
+            },
         ],
         defaultStyles: {
             fontSize   : 8,
@@ -90,6 +118,13 @@ const generateAddressList_PDF = async (publishers, name) => {
                 fontSize  : 8,
                 alignment : 'center',
                 margin    : [ 0, 0, 0, 10 ],
+            },
+            coHeader: {
+                fontSize  : 8,
+                bold      : true,
+                alignment : 'left',
+                color     : 'black',
+                margin    : [ 0, 10, 0, 0 ],
             },
             tableHeader: {
                 bold     : true,
@@ -112,6 +147,12 @@ const generateAddressList_PDF = async (publishers, name) => {
 const generateAddressList_XLSX = async (publishers, name) => {
     const settings = await settingsService.find()
     const rows     = getPublisherRows(publishers)
+
+    let coAddress = settings.circuitOverseer.address1
+    if(settings.circuitOverseer.address2){
+        coAddress += `\n${settings.circuitOverseer.address2}`
+    }
+    coAddress += `\n${settings.circuitOverseer.zip} ${settings.circuitOverseer.city}`
 
     const workbook   = new Excel.Workbook()
     workbook.creator = settings.congregation.name
@@ -161,6 +202,12 @@ const generateAddressList_XLSX = async (publishers, name) => {
     worksheet.getRow(2).border    = { bottom: { style: 'medium' } }
 
     worksheet.addRows(rows)
+    worksheet.addRow([ '', '', '', '', '', '', '' ])
+    worksheet.addRow([ '', '', '', '', '', '', '' ])
+    let row  = worksheet.addRow([ '', 'Kretstillsyningsmannen', '', '', '', '', '' ])
+    row.font = { size: 12, bold: true }
+    row.mergeCells
+    worksheet.addRow([ '', `${settings.circuitOverseer.lastName}, ${settings.circuitOverseer.firstName}`, coAddress, '', settings.circuitOverseer.phone.formatted, settings.circuitOverseer.email, '' ])
 
     autoWidth(worksheet)
 
@@ -387,10 +434,10 @@ const savePdfFile = (name, docDefinition) => {
                               return i === 1 ? 'black' : '#aaa'
                             },
                             paddingLeft: function (i) {
-                              return i === 0 ? 0 : 4
+                              return i === 0 ? 0 : 2
                             },
                             paddingRight: function (i, node) {
-                              return (i === node.table.widths.length - 1) ? 0 : 4
+                              return (i === node.table.widths.length - 1) ? 0 : 2
                             },
                           },
                     }
