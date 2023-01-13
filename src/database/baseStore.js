@@ -63,6 +63,8 @@ export default class BaseStore {
 
         if (isValid) {
             return this.databaseInstance.update({ _id }, data)
+        } else {
+            log.error('invalid', data)
         }
     }
 

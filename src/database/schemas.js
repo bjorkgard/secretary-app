@@ -39,6 +39,21 @@ const User = {
     required: [ 'firstname', 'lastname', 'email' ],
 }
 
+const CircuitOverseer = {
+    type       : 'object',
+    properties : {
+        firstName : { type: 'string', nullable: true },
+        lastName  : { type: 'string', nullable: true },
+        address1  : { type: 'string', nullable: true },
+        address2  : { type: 'string', nullable: true },
+        zip       : { type: 'string', nullable: true },
+        city      : { type: 'string', nullable: true },
+        phone     : { type: 'object', properties: { Phone }, nullable: true },
+        email     : { type: 'string', nullable: true },
+    },
+    required: [],
+}
+
 const Settings = {
     type       : 'object',
     properties : {
@@ -89,13 +104,14 @@ export const ServiceGroupSchema = {
 export const SettingsSchema = {
     type       : 'object',
     properties : {
-        _id          : { type: 'string', nullable: true },
-        identifier   : { type: 'string' },
-        congregation : Congregation,
-        user         : User,
-        settings     : Settings,
-        createdAt    : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
-        updatedAt    : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        _id             : { type: 'string', nullable: true },
+        identifier      : { type: 'string' },
+        circuitOverseer : CircuitOverseer,
+        congregation    : Congregation,
+        user            : User,
+        settings        : Settings,
+        createdAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        updatedAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
     },
     required             : [],
     additionalProperties : false,

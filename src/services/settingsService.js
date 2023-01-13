@@ -22,6 +22,16 @@ const parseSettingsModel = (data) => {
             lastname  : '',
             email     : '',
         },
+        circuitOverseer: {
+            firstName : '',
+            lastName  : '',
+            address1  : '',
+            address2  : '',
+            zip       : '',
+            city      : '',
+            phone     : '',
+            email     : '',
+        },
         settings: {
             online: false,
         },
@@ -40,6 +50,14 @@ const parseSettingsModel = (data) => {
     settings.user.firstname                  = data.user.firstname
     settings.user.lastname                   = data.user.lastname
     settings.user.email                      = data.user.email
+    settings.circuitOverseer.firstName       = data.circuitOverseer ? data.circuitOverseer.firstName : ''
+    settings.circuitOverseer.lastName        = data.circuitOverseer ? data.circuitOverseer.lastName : ''
+    settings.circuitOverseer.address1        = data.circuitOverseer ? data.circuitOverseer.address1 : ''
+    settings.circuitOverseer.address2        = data.circuitOverseer ? data.circuitOverseer.address2 : ''
+    settings.circuitOverseer.zip             = data.circuitOverseer ? data.circuitOverseer.zip : ''
+    settings.circuitOverseer.city            = data.circuitOverseer ? data.circuitOverseer.city : ''
+    settings.circuitOverseer.phone           = data.circuitOverseer ? data.circuitOverseer.phone : ''
+    settings.circuitOverseer.email           = data.circuitOverseer ? data.circuitOverseer.email : ''
     settings.settings.online                 = data.settings ? data.settings.online : false
 
     return settings
@@ -65,6 +83,16 @@ const parseSettings = (data) => {
             lastname  : '',
             email     : '',
         },
+        circuitOverseer: {
+            firstName : '',
+            lastName  : '',
+            address1  : '',
+            address2  : '',
+            zip       : '',
+            city      : '',
+            phone     : '',
+            email     : '',
+        },
         settings: {
             online: false,
         },
@@ -86,6 +114,14 @@ const parseSettings = (data) => {
     settingsModel.user.firstname                  = data.user.firstname
     settingsModel.user.lastname                   = data.user.lastname
     settingsModel.user.email                      = data.user.email
+    settingsModel.circuitOverseer.firstName       = data.circuitOverseer ? data.circuitOverseer.firstName : ''
+    settingsModel.circuitOverseer.lastName        = data.circuitOverseer ? data.circuitOverseer.lastName : ''
+    settingsModel.circuitOverseer.address1        = data.circuitOverseer ? data.circuitOverseer.address1 : ''
+    settingsModel.circuitOverseer.address2        = data.circuitOverseer ? data.circuitOverseer.address2 : ''
+    settingsModel.circuitOverseer.zip             = data.circuitOverseer ? data.circuitOverseer.zip : ''
+    settingsModel.circuitOverseer.city            = data.circuitOverseer ? data.circuitOverseer.city : ''
+    settingsModel.circuitOverseer.phone           = data.circuitOverseer ? data.circuitOverseer.phone : ''
+    settingsModel.circuitOverseer.email           = data.circuitOverseer ? data.circuitOverseer.email : ''
     settingsModel.settings.online                 = data.settings.online ? data.settings.online : false
     settingsModel.createdAt                       = data.createdAt.toLocaleString('sv-SE', { hour12: false })
     settingsModel.updatedAt                       = data.updatedAt.toLocaleString('sv-SE', { hour12: false })
