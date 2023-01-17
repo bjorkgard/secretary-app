@@ -37,6 +37,7 @@ onMounted(async () => {
     const settingsStat     = await ipcRenderer.invoke('statsSettings')
     const publisherStat    = await ipcRenderer.invoke('statsPublishers')
     const serviceGroupStat = await ipcRenderer.invoke('statsServiceGroups')
+    const tasksStat        = await ipcRenderer.invoke('statsTasks')
 
     let database = {
         name  : 'Dates',
@@ -70,6 +71,13 @@ onMounted(async () => {
         name  : 'Settings',
         count : settingsStat.count,
         size  : settingsStat.size,
+    }
+    databases.value.push(database)
+
+    database = {
+        name  : 'Tasks',
+        count : tasksStat.count,
+        size  : tasksStat.size,
     }
     databases.value.push(database)
 })

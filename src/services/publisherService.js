@@ -35,6 +35,7 @@ const parsePublisherModel = (data, address) => {
         },
         children     : [],
         appointments : [],
+        tasks        : [],
     }
 
     publisher.s290             = data.s290
@@ -63,6 +64,7 @@ const parsePublisherModel = (data, address) => {
     publisher.emergency.email  = data.emergencyEmail !== '' ? data.emergencyEmail : null
     publisher.children         = data.children ? data.children : []
     publisher.appointments     = data.appointments ? data.appointments : []
+    publisher.tasks            = data.tasks ? data.tasks : []
 
     return publisher
 }
@@ -96,6 +98,7 @@ const parsePublisher = (data) => {
         emergencyEmail  : '',
         children        : [],
         appointments    : [],
+        tasks           : [],
         createdAt       : '',
         updatedAt       : '',
     }
@@ -127,6 +130,7 @@ const parsePublisher = (data) => {
     publisherModel.emergencyEmail  = data.emergency.email ? data.emergency.email : ''
     publisherModel.children        = data.children
     publisherModel.appointments    = data.appointments
+    publisherModel.tasks           = data.tasks
     publisherModel.createdAt       = data.createdAt.toLocaleString('sv-SE', { hour12: false })
     publisherModel.updatedAt       = data.updatedAt.toLocaleString('sv-SE', { hour12: false })
 

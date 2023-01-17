@@ -75,6 +75,19 @@ export const DatesSchema = {
     additionalProperties : false,
 }
 
+export const TasksSchema = {
+    type       : 'object',
+    properties : {
+        _id       : { type: 'string', nullable: true },
+        type      : { type: 'string', nullable: false },
+        mandatory : { type: 'boolean' },
+        createdAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+        updatedAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
+    },
+    required             : [ 'type' ],
+    additionalProperties : false,
+}
+
 export const ExportsSchema = {
     type       : 'object',
     properties : {
@@ -147,6 +160,14 @@ const Child = {
     required: [ 'firstName' ],
 }
 
+const Task = {
+    type       : 'object',
+    properties : {
+        id: { type: 'string' },
+    },
+    required: [ 'id' ],
+}
+
 const SelectOption = {
     type       : 'object',
     properties : {
@@ -190,6 +211,7 @@ export const PublisherSchema = {
         emergency       : Emergency,
         children        : { type: 'array', items: Child },
         appointments    : { type: 'array', items: Appointment },
+        tasks           : { type: 'array', default: [] },
         createdAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
         updatedAt       : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
     },

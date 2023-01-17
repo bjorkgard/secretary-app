@@ -118,6 +118,7 @@ app.on('ready', async () => {
     app.setAppUserModelId('se.bjorkgard.secretary')
     enableIPC()
     setApplicationMenu()
+    ipcMain.emit('seedDB')
 
     if (isDevelopment && !process.env.IS_TEST) {
         // Install Vue Devtools

@@ -52,6 +52,11 @@ const routes = [
             { path: '/circuitOverseer', name: 'circuitOverseer', components: { settings: CircuitOverseer } },
         ],
     },
+    {
+        path      : '/tasks',
+        name      : 'tasks',
+        component : () => import(/* webpackChunkName: "exports" */ '../views/TaskView.vue'),
+    },
 ]
 
 const router = createRouter({

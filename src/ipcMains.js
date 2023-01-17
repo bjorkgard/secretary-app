@@ -11,6 +11,7 @@ import MaintenenceService             from '@/services/maintenenceService'
 import PublisherService               from '@/services/publisherService'
 import ServiceGroupService            from '@/services/serviceGroupService'
 import ExportsService                 from '@/services/exportsService'
+import TasksService                   from '@/services/tasksService'
 import getPublisherRows               from '@/utils/getPublisherRows'
 import getPublisherByFamilyRows       from '@/utils/getPublisherByFamilyRows'
 import splitArray                     from '@/utils/splitArray'
@@ -25,6 +26,7 @@ const exportsService      = new ExportsService()
 const settingsService     = new SettingsService()
 const publisherService    = new PublisherService()
 const serviceGroupService = new ServiceGroupService()
+const tasksService        = new TasksService()
 
 const generateAddressList_PDF = async (publishers, name) => {
     const settings         = await settingsService.find()
@@ -541,6 +543,15 @@ export const enableIPC = () => {
         backupDatabases()
     })
 
+    /*** Task store */
+    ipcMain.handle('statsTasks', async () => {
+        return await tasksService.stats()
+    })
+
+    ipcMain.handle('getAllTasks', async (event, args) => {
+        return await tasksService.findAll(args)
+    })
+
     /*** ServiceGroup store */
     ipcMain.handle('statsServiceGroups', async () => {
         return await serviceGroupService.stats()
@@ -709,6 +720,10 @@ export const enableIPC = () => {
                 eval(arg.function+'()')
             }
         })
+    })
+
+    ipcMain.on('seedDB', () => {
+        maintenenceService.seed()
     })
 
     ipcMain.on('generate-backup', (arg) => {
@@ -992,6 +1007,7 @@ export const enableIPC = () => {
                                                 children       : children,
                                                 appointments   : appointments,
                                                 serviceGroup   : { name: serviceGroup.name, value: serviceGroup.id },
+                                                tasks          : [],
                                             }
 
                                             newPublisherService.create(publisher).then(newPublisher => {

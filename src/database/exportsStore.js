@@ -1,7 +1,7 @@
 import BaseStore from './baseStore'
 import log       from 'electron-log'
 
-export default class DatesStore extends BaseStore {
+export default class ExportsStore extends BaseStore {
     constructor(fileName, schema) {
         super(fileName, schema)
     }

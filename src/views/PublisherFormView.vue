@@ -321,6 +321,37 @@
           />
         </FieldArray>
       </FormStep>
+      <FormStep
+        title="Församlingsuppgifter"
+        subtitle="Välj de uppgifter förkunnaren har."
+      >
+        <div class="flex flex-wrap col-span-6">
+          <div
+            v-for="task in tasks"
+            :key="task.id"
+            class="relative flex items-start p-2"
+          >
+            <div class="flex h-5 items-center">
+              <Field
+                :id="task.id"
+                :aria-describedby="task.type"
+                name="tasks"
+                type="checkbox"
+                :value="task.id"
+                class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+              />
+            </div>
+            <div class="ml-1 text-sm">
+              <label
+                :for="task.id"
+                class="font-medium text-gray-700"
+              >
+                {{ task.type }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </FormStep>
     </FormWizard>
   </div>
 </template>
@@ -329,7 +360,7 @@
 import { onMounted, ref, computed } from 'vue'
 import { useRoute }                 from 'vue-router'
 import { ipcRenderer }              from 'electron'
-import { FieldArray }               from 'vee-validate'
+import { Field, FieldArray }        from 'vee-validate'
 import * as yup                     from 'yup'
 import log                          from 'electron-log'
 import { XMarkIcon }                from '@heroicons/vue/24/outline'
@@ -350,6 +381,7 @@ const route = useRoute()
 const contactPerson        = ref(false)
 const contacts             = ref([])
 const serviceGroups        = ref([])
+const tasks                = ref([])
 const phoneObject          = ref(null)
 const cellObject           = ref(null)
 const emergencyPhoneObject = ref(null)
@@ -393,6 +425,7 @@ const compServiceGroups = computed(() => {
 const initializeData = async () => {
     contacts.value      = await ipcRenderer.invoke('getContacts')
     serviceGroups.value = await ipcRenderer.invoke('getServiceGroups')
+    tasks.value         = await ipcRenderer.invoke('getAllTasks')
 
     if(route.params.id){
         publisher.value     = await ipcRenderer.invoke('getPublisher', { id: route.params.id })
@@ -450,6 +483,9 @@ const validationSchema = [
         emergencyPhone : yup.string().nullable(),
         emergencyEmail : yup.string().email(),
     }),
+    yup.object({
+        tasks: yup.array().of(yup.string().required()).required(),
+    }),
 ]
 
 formValues.value = {
@@ -463,6 +499,7 @@ formValues.value = {
     children        : [],
     status          : status.value[ 0 ],
     serviceGroup    : null,
+    tasks           : [],
 }
 
 const toggleContactPerson = () => {

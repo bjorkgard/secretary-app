@@ -213,6 +213,19 @@
                       >
                         <PencilIcon class="h-5 w-5" />
                       </router-link>
+                      <div class="relative">
+                        <button
+                          class="hover:text-sky-700 focus:outline-none dark:hover:text-slate-400"
+                          title="Uppgifter"
+                          @click="showTasksForm(publisher.id)"
+                        >
+                          <Square3Stack3DIcon class="h-5 w-5" />
+                        </button>
+                        <span
+                          v-if="publisher.tasks.length"
+                          class="absolute -ml-3 -mt-1 inline-flex items-center rounded-full bg-sky-800 h-4 w-4 justify-center text-[10px] font-medium text-sky-100"
+                        >{{ publisher.tasks.length }}</span>
+                      </div>
                       <Menu
                         as="div"
                         class="relative inline-block text-left"
@@ -281,6 +294,63 @@
         </div>
       </div>
     </div>
+    <Dialog
+      :show="showForm"
+      @close="hideTasksForm"
+    >
+      <template #body>
+        <form
+          id="tasksForm"
+          ref="tasksForm"
+          class="w-full"
+          @submit="onSubmit"
+        >
+          <div class="mt-3 w-full text-center sm:mt-0 sm:text-left">
+            <h3 class="text-lg font-medium leading-6 text-slate-900 dark:text-slate-400">
+              Uppgifter för {{ publisher.firstName }} {{ publisher.lastName }}
+            </h3>
+            <div class="mt-2">
+              <p class="text-sm text-slate-500">
+                Välj de uppgifter som förkunnaren har och tryck på Spara.
+              </p>
+              <div class="mt-2 flex flex-wrap">
+                <div
+                  v-for="task in tasks"
+                  :key="task.id"
+                  class="relative flex items-start p-2"
+                >
+                  <div class="flex h-5 items-center">
+                    <Field
+                      :id="task.id"
+                      :aria-describedby="task.type"
+                      name="tasks"
+                      type="checkbox"
+                      :value="task.id"
+                      class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                    />
+                  </div>
+                  <div class="ml-1 text-sm">
+                    <label
+                      :for="task.id"
+                      class="font-medium text-gray-700"
+                    >
+                      {{ task.type }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </template>
+      <template #footer>
+        <Button
+          form="tasksForm"
+          :disabled="isSubmitting"
+        />
+        <SecondaryButton @click="hideTasksForm" />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -288,6 +358,8 @@
 import { onBeforeUnmount, onMounted, ref }       from 'vue'
 import { ipcRenderer, shell }                    from 'electron'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { Field, useForm }                        from 'vee-validate'
+import log                                       from 'electron-log'
 import router                                    from '@/router'
 import PageHeader                                from '@/components/PageHeader.vue'
 import Address                                   from '@/components/Address.vue'
@@ -297,17 +369,57 @@ import {
     DocumentArrowDownIcon,
     MagnifyingGlassIcon,
     PencilIcon,
+    Square3Stack3DIcon,
     TrashIcon,
 } from '@heroicons/vue/20/solid'
+import Dialog          from '@/components/Dialog.vue'
+import SecondaryButton from '@/components/form/SecondaryButton.vue'
+import Button          from '@/components/form/Button.vue'
 
 const publishers     = ref([])
+const publisher      = ref(null)
 const sort           = ref('NAME')
 const searchQuery    = ref('')
 const typingInterval = ref(500)
 const typingTimer    = ref('')
+const tasks          = ref([])
+const showForm       = ref(false)
+const tasksForm      = ref(null)
+
+const { handleSubmit, isSubmitting, setValues } = useForm({
+    initialValues: {
+        tasks: [],
+    },
+})
+
+const showTasksForm = async (publisherId) => {
+    publisher.value = await ipcRenderer.invoke('getPublisher', { id: publisherId })
+    setValues({ tasks: publisher.value.tasks })
+    showForm.value = true
+}
+
+const hideTasksForm = () => {
+    showForm.value = false
+}
+
+const onSubmit = handleSubmit(async (values, { resetForm }) => {
+    if(publisher.value){
+        let updatedPublisher   = publisher.value
+        updatedPublisher.tasks = values.tasks
+
+        await ipcRenderer.invoke('updatePublisher', publisher.value.id, JSON.parse(JSON.stringify(updatedPublisher)) ).then((response) => {
+            ipcRenderer.send('show-notification', { title: `Uppgifterna för ${updatedPublisher.firstName} är uppdaterade`, body: null })
+        })
+    }
+
+    getPublishers()
+    hideTasksForm()
+    resetForm()
+})
 
 const initializeData = async () => {
     getPublishers()
+    getTasks()
     ipcRenderer.on('confirmedDeletion', (event, args) => {
         ipcRenderer.invoke('deletePublisher', { id: args.id }).then((resp) => {
             if(resp){
@@ -341,6 +453,12 @@ const addPublisher = () => {
 
 const getPublishers = async () => {
     publishers.value = await ipcRenderer.invoke('getPublishers', { sort: sort.value, searchQuery: searchQuery.value })
+}
+
+const getTasks = async () => {
+    ipcRenderer.invoke('getAllTasks', { countPublishers: false }).then((response) => {
+        tasks.value = response
+    })
 }
 
 const sendEmail = (email) => {
