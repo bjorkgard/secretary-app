@@ -552,6 +552,10 @@ export const enableIPC = () => {
         return await tasksService.findAll(args)
     })
 
+    ipcMain.handle('storeTask', async (event, args) => {
+        return await tasksService.create(args)
+    })
+
     /*** ServiceGroup store */
     ipcMain.handle('statsServiceGroups', async () => {
         return await serviceGroupService.stats()

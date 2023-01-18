@@ -359,7 +359,6 @@ import { onBeforeUnmount, onMounted, ref }       from 'vue'
 import { ipcRenderer, shell }                    from 'electron'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { Field, useForm }                        from 'vee-validate'
-import log                                       from 'electron-log'
 import router                                    from '@/router'
 import PageHeader                                from '@/components/PageHeader.vue'
 import Address                                   from '@/components/Address.vue'
@@ -377,7 +376,7 @@ import SecondaryButton from '@/components/form/SecondaryButton.vue'
 import Button          from '@/components/form/Button.vue'
 
 const publishers     = ref([])
-const publisher      = ref(null)
+const pub            = ref(null)
 const sort           = ref('NAME')
 const searchQuery    = ref('')
 const typingInterval = ref(500)
@@ -393,8 +392,8 @@ const { handleSubmit, isSubmitting, setValues } = useForm({
 })
 
 const showTasksForm = async (publisherId) => {
-    publisher.value = await ipcRenderer.invoke('getPublisher', { id: publisherId })
-    setValues({ tasks: publisher.value.tasks })
+    pub.value = await ipcRenderer.invoke('getPublisher', { id: publisherId })
+    setValues({ tasks: pub.value.tasks })
     showForm.value = true
 }
 
@@ -403,11 +402,11 @@ const hideTasksForm = () => {
 }
 
 const onSubmit = handleSubmit(async (values, { resetForm }) => {
-    if(publisher.value){
-        let updatedPublisher   = publisher.value
+    if(pub.value){
+        let updatedPublisher   = pub.value
         updatedPublisher.tasks = values.tasks
 
-        await ipcRenderer.invoke('updatePublisher', publisher.value.id, JSON.parse(JSON.stringify(updatedPublisher)) ).then((response) => {
+        await ipcRenderer.invoke('updatePublisher', pub.value.id, JSON.parse(JSON.stringify(updatedPublisher)) ).then(() => {
             ipcRenderer.send('show-notification', { title: `Uppgifterna för ${updatedPublisher.firstName} är uppdaterade`, body: null })
         })
     }
