@@ -80,6 +80,7 @@ export const TasksSchema = {
     properties : {
         _id       : { type: 'string', nullable: true },
         type      : { type: 'string', nullable: false },
+        name      : { type: 'string', nullable: false },
         mandatory : { type: 'boolean' },
         createdAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },
         updatedAt : { type: 'object', format: 'custom-date-time', nullable: true, required: [] },

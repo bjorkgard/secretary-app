@@ -9,10 +9,12 @@ const publisherService = new PublisherService()
 const parseTaskModel = (data) => {
     const task = {
         type      : '',
+        name      : '',
         mandatory : false,
     }
 
     task.type      = data.type
+    task.name      = data.name
     task.mandatory = data.mandatory
 
     return task
@@ -22,11 +24,13 @@ const parseTask = (data) => {
     const taskModel = {
         id        : '',
         type      : '',
+        name      : '',
         mandatory : false,
     }
 
     taskModel.id        = data._id
     taskModel.type      = data.type
+    taskModel.name      = data.name
     taskModel.mandatory = data.mandatory
 
     return taskModel
@@ -58,7 +62,7 @@ export default class TasksService {
                 }
             }
 
-            t.name = task.type
+            t.name = task.name||task.type
 
             parsedTasks.push(t)
         }
@@ -67,6 +71,13 @@ export default class TasksService {
         parsedTasks.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
 
         return parsedTasks
+    }
+
+    async create(data) {
+        const task    = parseTaskModel(data)
+        const newTask = await tasksStore.create(task)
+
+        return parseTask(newTask)
     }
 
     upsert(type, mandatory) {
