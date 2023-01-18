@@ -338,13 +338,13 @@
                 name="tasks"
                 type="checkbox"
                 :value="task.id"
-                class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                class="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500 focus:ring-offset-white dark:focus:ring-offset-slate-800"
               />
             </div>
             <div class="ml-1 text-sm">
               <label
                 :for="task.id"
-                class="font-medium text-gray-700"
+                class="font-medium text-slate-700 dark:text-slate-400"
               >
                 {{ task.type }}
               </label>
