@@ -1,7 +1,6 @@
 import { TasksSchema }  from '@/database/schemas'
 import TasksStore       from '@/database/tasksStore'
 import PublisherService from '@/services/publisherService'
-import log              from 'electron-log'
 
 const tasksStore       = new TasksStore('tasks.db', TasksSchema)
 const publisherService = new PublisherService()
@@ -82,6 +81,10 @@ export default class TasksService {
 
     upsert(type, mandatory) {
         tasksStore.upsert(type, mandatory)
+    }
+
+    async delete(data) {
+        return await tasksStore.delete(data.id)
     }
 
     drop() {

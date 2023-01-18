@@ -556,6 +556,10 @@ export const enableIPC = () => {
         return await tasksService.create(args)
     })
 
+    ipcMain.handle('deleteTask', async (event, args) => {
+        return await tasksService.delete(args)
+    })
+
     /*** ServiceGroup store */
     ipcMain.handle('statsServiceGroups', async () => {
         return await serviceGroupService.stats()
