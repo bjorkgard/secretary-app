@@ -36,7 +36,7 @@
     "pdfmake": "^0.2.7",
     "pinia": "^2.0.24",
     "pinia-plugin-persistedstate": "^2.4.0",
-    "postcss": "^8.4.19",
+    "postcss": "^8.4.31",
     "register-service-worker": "^1.7.2",
     "tailwindcss": "^3.2.4",
     "uuid": "^9.0.0",
